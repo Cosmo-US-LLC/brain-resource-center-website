@@ -89,7 +89,7 @@ function SideEffectsComparison() {
           </div>
 
           {/* Center Image */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] md:w-[300px] lg:w-[600px] h-[300px] md:h-[500px] lg:h-[700px] z-10">
+          <div className="absolute left-1/2 bottom-[0px] -translate-x-1/2  w-[200px] md:w-[300px] lg:w-[600px] h-[300px] md:h-[500px] lg:h-[700px] z-20">
             <img
               src="/images/home/side_effects/comparison_person.webp"
               alt="Person comparison - sad vs happy"

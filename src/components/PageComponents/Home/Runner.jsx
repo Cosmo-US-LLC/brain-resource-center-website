@@ -8,6 +8,21 @@ const usps = [
   "Personalized",
   "Effective",
   "Non-Invasive",
+  "Evidence-Based Treatment",
+  "Medication-Free",
+  "Personalized",
+  "Effective",
+  "Non-Invasive",
+  "Evidence-Based Treatment",
+  "Medication-Free",
+  "Personalized",
+  "Effective",
+  "Non-Invasive",
+  "Evidence-Based Treatment",
+  "Medication-Free",
+  "Personalized",
+  "Effective",
+  "Non-Invasive",
 ];
 
 function Runner() {
