@@ -1,0 +1,80 @@
+import React from "react";
+import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+
+const stats = [
+  {
+    id: 1,
+    percentage: "40-50%",
+    description:
+      "of patients see a meaningful reduction in symptoms after a full course of rTMS",
+  },
+  {
+    id: 2,
+    percentage: "25-35%",
+    description:
+      "of users achieve clinical remission with rTMS (symptoms minimal or absent)",
+  },
+  {
+    id: 3,
+    percentage: "65-70%",
+    description:
+      "of patients experience symptom improvement with psychotherapy",
+  },
+];
+
+function OurResults() {
+  return (
+    <section className="py-16 bg-white md:py-20">
+      <div className="max-w-[1280px] mx-auto px-4 md:px-8">
+        <div className="flex flex-col gap-6 lg:flex-row lg:gap-12">
+          {/* Left Side - Image with Overlay */}
+          <div className="relative flex-shrink-0 w-full lg:w-[60%] min-h-[400px] lg:min-h-[544px] rounded-xl overflow-hidden">
+            <img
+              src="/images/home/our_results/our_results_img.webp"
+              alt="Happy patient after successful treatment"
+              className="object-cover absolute inset-0 w-full h-full"
+            />
+            {/* Content Overlay */}
+            <div className="absolute inset-0 p-8 md:p-12 lg:p-[61px] flex flex-col justify-between">
+              {/* Heading */}
+              <h2 className="font-serif font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-white capitalize max-w-[319px]">
+                Our Results Speak
+              </h2>
+
+              {/* CTA Button - Light style */}
+              <Link
+                to="/book"
+                className="inline-flex items-center gap-2 bg-gray-50 text-[#004f97] font-bold px-6 py-4 rounded-full w-fit hover:bg-white transition-colors"
+              >
+                Book Appointment
+                <ArrowRight size={24} />
+              </Link>
+            </div>
+          </div>
+
+          {/* Right Side - Stats */}
+          <div className="flex flex-col flex-1 gap-4">
+            {stats.map((stat) => (
+              <div
+                key={stat.id}
+                className="bg-[#f1f8ff] rounded-xl p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-5"
+              >
+                {/* Percentage */}
+                <p className="font-serif font-semibold text-[36px] md:text-[48px] lg:text-[54px] leading-[1.1] text-[#004f97] shrink-0">
+                  {stat.percentage}
+                </p>
+                {/* Description */}
+                <p className="text-[#002f5b] text-sm md:text-base leading-5">
+                  {stat.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default OurResults;
