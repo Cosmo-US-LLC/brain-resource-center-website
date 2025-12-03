@@ -45,10 +45,10 @@ function OurResults() {
               {/* CTA Button - Light style */}
               <Link
                 to="/book"
-                className="inline-flex items-center gap-2 bg-gray-50 text-[#004f97] font-bold px-6 py-4 rounded-full w-fit hover:bg-white transition-colors"
+                className="inline-flex items-center bg-gray-50 gap-2 text-[#004f97] font-bold px-6 py-4 rounded-full w-fit hover:!bg-[#004f97] hover:text-white transition-colors group"
               >
                 Book Appointment
-                <ArrowRight size={24} />
+                <ArrowRight size={24} className="group-hover:text-white" />
               </Link>
             </div>
           </div>
@@ -58,14 +58,14 @@ function OurResults() {
             {stats.map((stat) => (
               <div
                 key={stat.id}
-                className="bg-[#f1f8ff] rounded-xl p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-5"
+                className="bg-[#f1f8ff] min-h-[171px] rounded-xl p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-5"
               >
                 {/* Percentage */}
-                <p className="font-serif font-semibold text-[36px] md:text-[48px] lg:text-[54px] leading-[1.1] text-[#004f97] shrink-0">
+                <p className="font-[LTSuperiorSerif] font-[600] text-[36px] md:text-[54px] lg:text-[54px] leading-[1.1] text-[#004f97] shrink-0">
                   {stat.percentage}
                 </p>
                 {/* Description */}
-                <p className="text-[#002f5b] text-sm md:text-base leading-5">
+                <p className="text-[#002f5b] text-sm md:text-[16px] leading-5">
                   {stat.description}
                 </p>
               </div>

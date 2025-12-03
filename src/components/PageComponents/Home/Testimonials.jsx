@@ -97,8 +97,8 @@ function TestimonialCard({ testimonial }) {
 
 function Testimonials() {
   return (
-    <section className="py-16 bg-white md:py-20">
-      <div className="max-w-[1280px] mx-auto px-4 md:px-8">
+    <section className="py-16 bg-white md:py-20 ">
+      <div className="max-w-[1280px] mx-auto px-4 md:px-8 relative">
         {/* Header */}
         <div className="flex justify-between items-center mb-10 md:mb-12">
           <h2 className="font-serif font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-[#004f97]">
@@ -118,7 +118,7 @@ function Testimonials() {
             {testimonials.map((testimonial) => (
               <CarouselItem
                 key={testimonial.id}
-                className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
+                className="pl-4 basis-full sm:basis-1/2 lg:basis-[45%]"
               >
                 <TestimonialCard testimonial={testimonial} />
               </CarouselItem>
@@ -126,7 +126,7 @@ function Testimonials() {
           </CarouselContent>
 
           {/* Custom Navigation */}
-          <div className="flex gap-3 justify-end items-center mt-8">
+          <div className="flex gap-3 md:absolute md:-top-33 md:right-0 justify-end items-center mt-8">
             <CarouselPrevious
               variant="ghost"
               className="static translate-y-0 w-11 h-11 bg-[#f1f8ff] rounded-full hover:bg-[#e1f0ff]"
