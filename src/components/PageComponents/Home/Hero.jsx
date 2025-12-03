@@ -65,7 +65,7 @@ function Hero() {
                     <span className="font-bold text-[28px] sm:text-[36px] text-[#002f5b] leading-none">
                       4.7
                     </span>
-                    <span className="font-bold text-[14px] sm:text-[16px] text-[#002f5b] mb-1">
+                    <span className="font-bold text-[14px] sm:text-[16px] text-[#002f5b] mb-[-1px]">
                       /5
                     </span>
                   </div>

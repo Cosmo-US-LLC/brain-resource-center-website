@@ -113,8 +113,8 @@ function TherapyRightForMe() {
               </div>
 
               {/* Title & Description */}
-              <div className="mb-6 text-center px-6 md:px-8 md:mb-8">
-                <h3 className="font-serif font-semibold text-lg md:text-[22px] leading-7 text-[#004f97] mb-2">
+              <div className="mb-6 text-center md:mb-8">
+                <h3 className="font-serif px-6 md:px-8  font-semibold text-lg md:text-[22px] leading-7 text-[#004f97] mb-2">
                   {reason.title}
                 </h3>
                 <p className="text-[#002f5b] text-sm md:text-[16px] leading-5 max-w-[185px] mx-auto">

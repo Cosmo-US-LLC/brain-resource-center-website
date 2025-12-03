@@ -52,32 +52,37 @@ function WhatToExpect() {
           <div className="flex flex-col flex-1 gap-4 justify-center">
             {/* Step Cards */}
             <div className="flex flex-col gap-4">
-              {steps.map((step) => (
-                <div
-                  key={step.id}
-                  className="bg-white border border-[#004f97] rounded-xl p-6 md:p-8 flex gap-5 md:gap-6 items-start"
-                >
-                  {/* Icon */}
-                  <div className="shrink-0 w-14 h-14 md:w-16 md:h-16 bg-[#004f97] rounded-full flex items-center justify-center">
-                    <img
-                      src={step.icon}
-                      alt={step.title}
-                      className="object-contain w-7 h-7 md:w-8 md:h-8"
-                    />
-                  </div>
+              {steps.map((step, idx) => {
+                let descWidth = "max-w-[350px]";
+                if (idx === 1) descWidth = "max-w-[390px]";
+                if (idx === 2) descWidth = "max-w-[430px]";
+                return (
+                  <div
+                    key={step.id}
+                    className="bg-white min-h-[173px] border border-[#004f97] rounded-xl p-6 md:p-8 flex gap-5 md:gap-6 items-start"
+                  >
+                    {/* Icon */}
+                    <div className="shrink-0 w-14 h-14 md:w-16 md:h-16 bg-[#004f97] rounded-full flex items-center justify-center">
+                      <img
+                        src={step.icon}
+                        alt={step.title}
+                        className="object-contain w-7 h-7 md:w-8 md:h-8"
+                      />
+                    </div>
 
-                  {/* Content */}
-                  <div className="flex flex-col gap-3">
-                    <h3 className="text-[#004f97] max-w-[330px]"
-                    dangerouslySetInnerHTML={{ __html: step.title }}
-                    >
-                    </h3>
-                    <p className="text-[#002f5b] desc max-w-[330px]">
-                      {step.description}
-                    </p>
+                    {/* Content */}
+                    <div className="flex flex-col gap-3">
+                      <h3 className="text-[#004f97] max-w-[330px]"
+                        dangerouslySetInnerHTML={{ __html: step.title }}
+                      >
+                      </h3>
+                      <p className={`text-[#002f5b] desc ${descWidth}`}>
+                        {step.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* CTA Button */}
