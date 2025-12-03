@@ -15,14 +15,14 @@ const steps = [
   {
     id: 2,
     icon: "/images/home/what_to_expect/medical-notes.svg",
-    title: "Comprehensive Assessment",
+    title: "Comprehensive <br/> Assessment",
     description:
       "Through neurofeedback and neuropsychological screening, we identify the specific brain patterns linked to your depression, creating an objective, data-driven foundation for treatment.",
   },
   {
     id: 3,
     icon: "/images/home/what_to_expect/notes-edit.svg",
-    title: "Tailored Treatment Plan",
+    title: "Tailored <br/> Treatment Plan",
     description:
       "Integrate Cognitive Behavioral Therapy (CBT), Interpersonal Therapy (IPT), and advanced neuromodulation therapies to deliver targeted, drug-free symptom relief and long-term emotional resilience.",
   },
@@ -68,8 +68,9 @@ function WhatToExpect() {
 
                   {/* Content */}
                   <div className="flex flex-col gap-3">
-                    <h3 className="text-[#004f97] max-w-[330px]">
-                      {step.title}
+                    <h3 className="text-[#004f97] max-w-[330px]"
+                    dangerouslySetInnerHTML={{ __html: step.title }}
+                    >
                     </h3>
                     <p className="text-[#002f5b] desc max-w-[330px]">
                       {step.description}

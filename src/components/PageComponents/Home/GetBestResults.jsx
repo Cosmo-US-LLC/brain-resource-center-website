@@ -4,15 +4,15 @@ import { Link } from "react-router-dom";
 
 function GetBestResults() {
   return (
-    <section className="overflow-hidden relative py-16 md:py-20">
+    <section className="overflow-hidden relative  py-16 md:py-20">
       {/* Background with blur and overlay */}
       <div className="absolute inset-0">
         <img
-          src="/images/home/get_best_results/get_best_results_img.webp"
+          src="/images/home/get_best_results/get_best_results_bg.webp"
           alt=""
-          className="object-cover absolute inset-0 w-full h-full blur-sm scale-105"
+          className="object-cover posation-left absolute inset-0 w-full h-full  "
         />
-        <div className="absolute inset-0 bg-[#004f97]/80 mix-blend-multiply" />
+        {/* <div className="absolute inset-0 bg-[#004f97]/80 mix-blend-multiply" /> */}
       </div>
 
       {/* Content */}
@@ -33,22 +33,20 @@ function GetBestResults() {
             </p>
             <Link
               to="/book"
-              className="inline-flex items-center gap-2 bg-white text-[#004f97] font-bold px-6 py-4 rounded-full w-fit hover:bg-gray-100 transition-colors"
+              className="inline-flex items-center bg-gray-50 gap-2 text-[#004f97] font-bold px-6 py-4 rounded-full w-fit hover:!bg-[#004f97] hover:text-white transition-colors group"
             >
               Book Appointment
-              <ArrowRight size={24} />
+              <ArrowRight size={24} className="group-hover:text-white" />
             </Link>
           </div>
 
           {/* Right - Image */}
-          <div className="shrink-0 w-full max-w-[301px] lg:w-[301px]">
-            <div className="relative aspect-[301/300] rounded-xl overflow-hidden">
-              <img
+          <div className="w-full   max-w-[301px] lg:w-[655px]">
+           <img
                 src="/images/home/get_best_results/get_best_results_img.webp"
                 alt="Expert consultation"
-                className="object-cover absolute inset-0 w-full h-full"
+                className="object-cover max-w-[301px] lg:w-[655px] absolute top-0 right-0"
               />
-            </div>
           </div>
         </div>
       </div>

@@ -74,14 +74,15 @@ function AboutSection() {
           </div>
 
           {/* Right Side - Image */}
-          <div className="shrink-0 w-full lg:w-[500px] xl:w-[600px]">
-            <div className="relative aspect-[600/750] rounded-xl overflow-hidden">
-              <img
-                src="/images/home/about_section/about_section_img.webp"
-                alt="Brain Resource Center facility"
-                className="object-cover absolute inset-0 w-full h-full"
+          <div className=" w-full lg:w-[500px] xl:w-[600px]">
+            <video
+                src="/images/home/about_section/about_section.mp4"
+                className="w-[600px] h-[750px] object-cover rounded-xl mx-auto"
+                controls
+                muted
+                type="video/mp4"
+                playsInline
               />
-            </div>
           </div>
         </div>
       </div>
