@@ -6,7 +6,7 @@ function GetBestResults() {
   return (
     <section className="overflow-hidden relative  py-16 md:py-20">
       {/* Background with blur and overlay */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 ">
         <img
           src="/images/home/get_best_results/get_best_results_bg.webp"
           alt=""
@@ -41,7 +41,7 @@ function GetBestResults() {
           </div>
 
           {/* Right - Image */}
-          <div className="w-full   max-w-[301px] lg:w-[655px]">
+          <div className="w-full max-md:hidden  max-w-[301px] lg:w-[655px]">
            <img
                 src="/images/home/get_best_results/get_best_results_img.webp"
                 alt="Expert consultation"

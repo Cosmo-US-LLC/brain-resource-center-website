@@ -54,19 +54,42 @@ function FAQ() {
 
           {/* Right Side - FAQs */}
           <div className="flex-1">
-            <Accordion type="single" collapsible defaultValue="faq-1" className="flex flex-col gap-4">
+            <Accordion
+              type="single"
+              collapsible
+              defaultValue="faq-1"
+              className="flex flex-col gap-4"
+            >
               {faqs.map((faq) => (
                 <AccordionItem
                   key={faq.id}
                   value={faq.id}
                   className="bg-white rounded-xl border border-gray-200 data-[state=open]:border-[#004f97] overflow-hidden"
                 >
-                  <AccordionTrigger hideIcon className="px-6 py-6 md:px-8 md:py-7 hover:no-underline group">
+                  <AccordionTrigger
+                    hideIcon
+                    className="px-6 py-6 md:px-8 md:py-7 hover:no-underline group"
+                  >
                     <span className="font-serif font-semibold text-lg md:text-[22px] leading-7 text-[#004f97] text-left pr-4">
                       {faq.question}
                     </span>
                     <div className="shrink-0 w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center bg-[#f1f8ff] group-data-[state=open]:bg-[#004f97] transition-colors">
-                      <ChevronDown className="w-5 h-5 text-[#004f97] group-data-[state=open]:text-white transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                      {/* <ChevronDown  /> */}
+
+                      <svg
+                        className="w-5 h-5 text-[#004f97] group-data-[state=open]:text-white transition-transform duration-200 group-data-[state=open]:rotate-180"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                      >
+                        <path
+                          d="M15.8281 13.3333C15.2098 13.3333 14.2865 13.9442 13.5115 14.5625C12.5115 15.3575 11.639 16.3075 10.9731 17.3967C10.474 18.2133 9.99479 19.2033 9.99479 20M9.99479 20C9.99479 19.2033 9.51562 18.2125 9.01646 17.3967C8.34979 16.3075 7.47729 15.3575 6.47896 14.5625C5.70312 13.9442 4.77812 13.3333 4.16146 13.3333M9.99479 20L9.99479 6.19245e-07"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                        />
+                      </svg>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 md:px-8 pb-6 md:pb-7 pt-0">
@@ -85,4 +108,3 @@ function FAQ() {
 }
 
 export default FAQ;
-

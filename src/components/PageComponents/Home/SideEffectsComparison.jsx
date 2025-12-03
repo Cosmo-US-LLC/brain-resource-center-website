@@ -36,60 +36,16 @@ function SideEffectsComparison() {
 
         {/* Comparison Card */}
         <div className="relative bg-[#004f97] rounded-xl overflow-hidden min-h-[600px] lg:min-h-[800px]">
-          {/* Background Pattern - Left */}
-          <div className="absolute inset-0 opacity-10 pointer-events-none">
-            <svg
-              className="absolute top-0 left-0 w-1/2 h-full"
-              viewBox="0 0 400 800"
-              fill="none"
-              preserveAspectRatio="xMinYMid slice"
-            >
-              <pattern
-                id="pattern-left"
-                x="0"
-                y="0"
-                width="40"
-                height="40"
-                patternUnits="userSpaceOnUse"
-              >
-                <path
-                  d="M0 20L20 0L40 20L20 40Z"
-                  stroke="white"
-                  strokeWidth="0.5"
-                  fill="none"
-                />
-              </pattern>
-              <rect width="100%" height="100%" fill="url(#pattern-left)" />
-            </svg>
-            <svg
-              className="absolute top-0 right-0 w-1/2 h-full"
-              viewBox="0 0 400 800"
-              fill="none"
-              preserveAspectRatio="xMaxYMid slice"
-            >
-              <pattern
-                id="pattern-right"
-                x="0"
-                y="0"
-                width="60"
-                height="60"
-                patternUnits="userSpaceOnUse"
-              >
-                <circle
-                  cx="30"
-                  cy="30"
-                  r="20"
-                  stroke="white"
-                  strokeWidth="0.5"
-                  fill="none"
-                />
-              </pattern>
-              <rect width="100%" height="100%" fill="url(#pattern-right)" />
-            </svg>
+          <div className="">
+           
+            <img className="absolute  max-w-[450px] max-md:hidden bottom-[0%] left-[0%]" src="/images/home/side_effects/vector (1).png" alt="vector" />
+            <img className="absolute max-w-[500px] max-md:hidden bottom-[0%] right-[0%]" src="/images/home/side_effects/vector (2).png" alt="vector" />
+         
           </div>
+          {/* Background Pattern - Left */}
 
           {/* Center Image */}
-          <div className="absolute left-1/2 bottom-[0px] -translate-x-1/2  w-[200px] md:w-[300px] lg:w-[600px] h-[300px] md:h-[500px] lg:h-[700px] z-20">
+          <div className="absolute left-1/2 bottom-[0px] max-md:hidden -translate-x-1/2  w-[200px] md:w-[300px] lg:w-[600px] h-[300px] md:h-[500px] lg:h-[700px] z-20">
             <img
               src="/images/home/side_effects/comparison_person.webp"
               alt="Person comparison - sad vs happy"
@@ -98,7 +54,7 @@ function SideEffectsComparison() {
           </div>
 
           {/* Center Divider Line */}
-          <div className="absolute top-0 bottom-0 left-1/2 z-20 w-px -translate-x-1/2 bg-white/30" />
+          <div className="absolute top-0 bottom-0 left-1/2 z-20 w-px max-md:hidden -translate-x-1/2 bg-white" />
 
           <div className="relative z-10 flex flex-col lg:flex-row min-h-[600px] lg:min-h-[800px]">
             {/* Left Side - Anti-Depressants */}
