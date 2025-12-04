@@ -24,20 +24,20 @@ const faqs = [
     id: "faq-3",
     question: "What is rTMS and how does it help with depression?",
     answer:
-      "rTMS (Repetitive Transcranial Magnetic Stimulation) uses gentle magnetic pulses to stimulate brain regions that regulate mood. This FDA-approved therapy can help rebalance brain activity and reduce depression symptoms without relying on medication.",
+      "rTMS is a non-invasive treatment that uses gentle magnetic pulses to stimulate brain areas involved in mood. It helps reduce depression symptoms by improving how the brain functions over time.",
   },
-  {
-    id: "faq-4",
-    question: "Are the treatments at Brain Resource Center safe?",
-    answer:
-      "Yes, all our treatments are non-invasive and FDA-approved. Neurofeedback, rTMS, and CBT have been extensively researched and proven safe with minimal side effects compared to traditional medications.",
-  },
-  {
-    id: "faq-5",
-    question: "How long does it take to see results?",
-    answer:
-      "Results vary depending on the individual and treatment type. Many patients begin noticing improvements within 2-4 weeks of starting treatment, with optimal results typically achieved after completing a full course of therapy.",
-  },
+  // {
+  //   id: "faq-4",
+  //   question: "Are the treatments at Brain Resource Center safe?",
+  //   answer:
+  //     "Yes, all our treatments are non-invasive and FDA-approved. Neurofeedback, rTMS, and CBT have been extensively researched and proven safe with minimal side effects compared to traditional medications.",
+  // },
+  // {
+  //   id: "faq-5",
+  //   question: "How long does it take to see results?",
+  //   answer:
+  //     "Results vary depending on the individual and treatment type. Many patients begin noticing improvements within 2-4 weeks of starting treatment, with optimal results typically achieved after completing a full course of therapy.",
+  // },
 ];
 
 function FAQ() {
