@@ -134,7 +134,7 @@ function AboutSection() {
                   key={index}
                   className={`flex flex-col justify-center w-[100%] max-w-[48%] min-h-[124px] md:max-w-[157px] bg-[#F1F8FF] items-center gap-3 py-4 rounded-[12px] ${
                     index !== features.length - 1
-                      ? "border-b border-gray-200"
+                      ? ""
                       : ""
                   }`}
                 >
