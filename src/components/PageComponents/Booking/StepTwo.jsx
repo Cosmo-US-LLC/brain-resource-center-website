@@ -1,5 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import { ArrowLeft, Clock } from "lucide-react";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import PaymentSection from "./PaymentSection";
+import { createPaymentIntent } from "@/services/stripe";
 
 function formatNiceDate(iso) {
   try {
@@ -49,6 +53,9 @@ function MeetingOption({ type, selected, onClick, icon, label }) {
   );
 }
 
+const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+const stripePromise = publishableKey ? loadStripe(publishableKey) : null;
+
 export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
   const {
     condition = "My condition isn't listed",
@@ -67,8 +74,22 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
   const [termsChecked, setTermsChecked] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
+  const [clientSecret, setClientSecret] = useState("");
+  const [initializingPayment, setInitializingPayment] = useState(false);
+  const [paymentSetupError, setPaymentSetupError] = useState("");
+  const [paymentResult, setPaymentResult] = useState(null);
 
   const paymentRef = useRef(null);
+
+  const formattedPrice = useMemo(
+    () =>
+      new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 0,
+      }).format(price),
+    [price],
+  );
 
   const isFormValid = () => {
     return fullName.trim() && /^\S+@\S+\.\S+$/.test(email) && phone.trim() && termsChecked;
@@ -87,16 +108,60 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
     price,
   });
 
+  const initializePayment = async (payload) => {
+    setPaymentSetupError("");
+    setInitializingPayment(true);
+    try {
+      const { clientSecret: secret } = await createPaymentIntent({
+        amount: Math.round((payload.price || price) * 100),
+        metadata: {
+          customer_name: payload.fullName,
+          customer_email: payload.email,
+          meeting_preference: payload.meetingPref,
+          preferred_date: payload.selectedDateIso,
+          preferred_time: payload.selectedTime,
+          condition: payload.condition,
+        },
+      });
+      setClientSecret(secret);
+    } catch (error) {
+      setPaymentSetupError(error.message || "Unable to initialize payment.");
+    } finally {
+      setInitializingPayment(false);
+    }
+  };
+
   const handleFormSubmit = async () => {
     if (!isFormValid()) return;
     setSubmitting(true);
     try {
-      if (onConfirm) await onConfirm(buildPayload());
+      const payload = buildPayload();
+      if (onConfirm) await onConfirm(payload);
+      setPaymentResult(null);
+      await initializePayment(payload);
       setShowPayment(true);
       paymentRef.current?.scrollIntoView({ behavior: "smooth" });
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handlePayLater = () => {
+    const payload = { ...buildPayload(), paid: false };
+    setPaymentResult({
+      status: "pending",
+      message: "You chose to pay later. We'll remind you before your consultation.",
+    });
+    onConfirm?.(payload);
+  };
+
+  const handlePayNowSuccess = (paymentSummary) => {
+    const payload = { ...buildPayload(), paid: true, ...paymentSummary };
+    setPaymentResult({
+      status: "success",
+      message: "Payment successful. A receipt has been sent to your email.",
+    });
+    onPayNow?.(payload);
   };
 
   return (
@@ -117,9 +182,9 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
       </div>
 
       <div className="max-w-2xl mx-auto bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm p-8 lg:p-12">
-        <h1 className="font-serif text-3xl lg:text-4xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+        <div className="font-serif text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
           Your Information
-        </h1>
+        </div>
         <p className="text-gray-600 dark:text-gray-400 mb-8">
           Please provide your details to complete the booking
         </p>
@@ -233,31 +298,62 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
 
         {showPayment && (
           <div ref={paymentRef} className="border-t border-gray-200 dark:border-gray-700 pt-8">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Payment</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Consultation Fee: <span className="font-semibold text-[#004F97] text-lg">${price}</span>
-            </p>
+            <div className="mb-6">
+              <div className="text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Payment</div>
+              <p className="text-gray-600 dark:text-gray-400">
+                Consultation Fee: <span className="font-semibold text-[#004F97] text-lg">{formattedPrice}</span>
+              </p>
+            </div>
 
-            <div className="StripeElement mb-4">
-              <div className="h-12 flex items-center px-3 rounded-md border border-gray-300 bg-white text-sm text-gray-700">
-                Secure card input (Stripe Element placeholder)
+            {initializingPayment && (
+              <div className="p-4 border rounded-xl bg-blue-50 text-blue-900 mb-4">Initializing secure checkout…</div>
+            )}
+
+            {paymentSetupError && (
+              <div className="p-4 border border-red-200 rounded-xl bg-red-50 text-red-700 mb-4">{paymentSetupError}</div>
+            )}
+
+            {stripePromise && clientSecret && !paymentSetupError && (
+              <Elements
+                stripe={stripePromise}
+                options={{
+                  clientSecret,
+                  appearance: {
+                    theme: "flat",
+                    variables: {
+                      colorPrimary: "#004F97",
+                      colorBackground: "#ffffff",
+                      colorText: "#0f172a",
+                      borderRadius: "8px",
+                    },
+                  },
+                }}
+              >
+                <PaymentSection
+                  amount={price}
+                  clientSecret={clientSecret}
+                  bookingDetails={buildPayload()}
+                  onPayLater={handlePayLater}
+                  onPaymentCompleted={handlePayNowSuccess}
+                />
+              </Elements>
+            )}
+
+            {!stripePromise && (
+              <div className="p-4 border border-yellow-200 rounded-xl bg-yellow-50 text-yellow-800">
+                Stripe publishable key is missing. Please add <code>VITE_STRIPE_PUBLISHABLE_KEY</code> to your environment.
               </div>
-            </div>
+            )}
 
-            <div className="flex flex-col gap-3">
-              <button
-                onClick={() => onPayNow && onPayNow(buildPayload())}
-                className="inline-flex items-center justify-center gap-2 w-full bg-[#004F97] hover:bg-[#004F97]/90 text-white h-12 text-base font-medium rounded-md"
+            {paymentResult && (
+              <div
+                className={`mt-4 rounded-xl p-4 ${
+                  paymentResult.status === "success" ? "bg-green-50 text-green-800" : "bg-blue-50 text-blue-900"
+                }`}
               >
-                Pay Now
-              </button>
-              <button
-                onClick={() => onConfirm && onConfirm({ ...buildPayload(), paid: false })}
-                className="inline-flex items-center justify-center gap-2 w-full bg-[#004F97] hover:bg-[#004F97]/90 text-white h-12 text-base font-medium rounded-md"
-              >
-                Pay Later
-              </button>
-            </div>
+                {paymentResult.message}
+              </div>
+            )}
           </div>
         )}
       </div>

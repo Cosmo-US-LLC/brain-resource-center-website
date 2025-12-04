@@ -6,6 +6,14 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { CreditCard, Lock, Shield } from "lucide-react";
 
 const cardElementStyle = {
   style: {
@@ -43,7 +51,9 @@ export default function PaymentSection({
 }) {
   const stripe = useStripe();
   const elements = useElements();
-  const [cardholderName, setCardholderName] = useState(bookingDetails?.fullName || "");
+  const [cardholderName, setCardholderName] = useState(
+    bookingDetails?.fullName || ""
+  );
   const [country, setCountry] = useState("US");
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
@@ -67,23 +77,27 @@ export default function PaymentSection({
     const cardNumberElement = elements.getElement(CardNumberElement);
 
     try {
-      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: cardNumberElement,
-          billing_details: {
-            name: cardholderName || bookingDetails?.fullName,
-            email: bookingDetails?.email,
-            phone: bookingDetails?.phone,
-            address: {
-              country,
+      const { error: stripeError, paymentIntent } =
+        await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: cardNumberElement,
+            billing_details: {
+              name: cardholderName || bookingDetails?.fullName,
+              email: bookingDetails?.email,
+              phone: bookingDetails?.phone,
+              address: {
+                country,
+              },
             },
           },
-        },
-        receipt_email: bookingDetails?.email,
-      });
+          receipt_email: bookingDetails?.email,
+        });
 
       if (stripeError) {
-        setError(stripeError.message || "Unable to process payment. Please verify your card details.");
+        setError(
+          stripeError.message ||
+            "Unable to process payment. Please verify your card details."
+        );
         return;
       }
 
@@ -92,7 +106,10 @@ export default function PaymentSection({
         paymentStatus: paymentIntent?.status,
       });
     } catch (submissionError) {
-      setError(submissionError.message || "Something went wrong while processing the payment.");
+      setError(
+        submissionError.message ||
+          "Something went wrong while processing the payment."
+      );
     } finally {
       setProcessing(false);
     }
@@ -100,7 +117,6 @@ export default function PaymentSection({
 
   return (
     <div className="">
-
       <div className="mb-4 flex items-center gap-2 text-[#0E8A00] text-sm font-medium">
         <span role="img" aria-label="secure">
           🔒
@@ -108,66 +124,83 @@ export default function PaymentSection({
         Secure, fast checkout with Link
       </div>
 
-      <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="cardholder">
+      <label
+        className="block text-sm font-medium text-gray-700 mb-1"
+        htmlFor="cardholder"
+      >
         Name on card
       </label>
       <input
         id="cardholder"
-        className="w-full h-12 px-3 rounded-md border border-gray-300 mb-4 focus:outline-none focus:ring-2 focus:ring-[#004F97]"
+        className="w-full h-9 px-3 rounded-[5px] border border-gray-300 mb-4 focus:outline-none"
         placeholder="John Smith"
         value={cardholderName}
         onChange={(event) => setCardholderName(event.target.value)}
       />
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-1">Card number</label>
-        <div className="flex h-12 items-center px-3 rounded-md border border-gray-300 bg-white">
+      <div className="mb-4 mt-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Card number
+        </label>
+        <div className="flex h-11 items-center px-3 rounded-[5px] border border-[#E6E6E6] bg-white shadow shadow-neutral-500/5">
           <CardNumberElement options={cardElementStyle} className="w-full" />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Expiration date</label>
-          <div className="flex h-12 items-center px-3 rounded-md border border-gray-300 bg-white">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Expiration date
+          </label>
+          <div className="flex h-11 items-center px-3 rounded-[5px] border border-[#E6E6E6] bg-white shadow shadow-neutral-500/5">
             <CardExpiryElement options={cardElementStyle} className="w-full" />
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Security code</label>
-          <div className="flex h-12 items-center px-3 rounded-md border border-gray-300 bg-white">
-            <CardCvcElement options={cardElementStyle} className="w-full" />
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="country">
-            Country
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Security code
           </label>
-          <select
-            id="country"
-            className="w-full h-12 px-3 rounded-md border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-[#004F97]"
-            value={country}
-            onChange={(event) => setCountry(event.target.value)}
-          >
-            {countries.map((countryOption) => (
-              <option key={countryOption.code} value={countryOption.code}>
-                {countryOption.name}
-              </option>
-            ))}
-          </select>
+          <div className="flex h-11 items-center px-3 rounded-[5px] border border-[#E6E6E6] bg-white shadow shadow-neutral-500/5 relative">
+            <CardCvcElement options={cardElementStyle} className="w-full" />
+            <div className="absolute right-5 text-[#96969D]">
+              <CreditCard className="w-7 h-7 stroke-1" />
+              <div className="absolute right-0 bottom-0 pl-0.5 bg-white text-[9px] font-mono">123</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-4 mb-4">
-        <div className="flex items-center gap-3 text-sm text-gray-600">
+      <div className="mb-4">
+        <label
+          className="block text-sm font-medium text-gray-700 mb-1"
+          htmlFor="country"
+        >
+          Country
+        </label>
+        <Select id="country" value={country} onChange={setCountry}>
+          <SelectTrigger className="w-full h-11 px-3 rounded-[5px] border border-[#E6E6E6] bg-white focus:outline-none shadow shadow-neutral-500/5">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {countries.map((countryOption) => (
+              <SelectItem key={countryOption.code} value={countryOption.code}>
+                {countryOption.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="bg-[#F9FAFB] rounded-xl p-4 mb-4">
+        <div className="flex items-center gap-3 text-sm text-[#4B5564]">
           <span role="img" aria-label="ssl">
-            🔐
+            <Lock className="w-4 h-4 text-[#1A4F97]" />
           </span>
           256-bit SSL encrypted payment
         </div>
-        <div className="flex items-center gap-3 text-sm text-gray-600 mt-2">
+        <div className="flex items-center gap-3 text-sm text-[#4B5564] mt-2">
           <span role="img" aria-label="pci">
-            🛡️
+            <Shield className="w-4 h-4 text-[#1A4F97]" />
           </span>
           PCI DSS compliant secure checkout
         </div>
@@ -180,14 +213,14 @@ export default function PaymentSection({
           type="button"
           onClick={handleSubmit}
           disabled={processing || !clientSecret}
-          className="bg-[#004F97] hover:bg-[#003d73] text-white h-12 rounded-md font-medium disabled:opacity-50 disabled:pointer-events-none"
+          className="bg-[#1A4F97] hover:bg-[#1A4F97] text-white h-12 rounded-[5px] font-medium disabled:opacity-50 disabled:pointer-events-none"
         >
           {processing ? "Processing..." : "Pay Now"}
         </button>
         <button
           type="button"
           onClick={() => onPayLater?.()}
-          className="bg-[#1F4DA1] hover:bg-[#173c7c] text-white h-12 rounded-md font-medium"
+          className="bg-[#1A4F97] hover:bg-[#1A4F97] text-white h-12 rounded-[5px] font-medium"
         >
           Pay Later
         </button>
