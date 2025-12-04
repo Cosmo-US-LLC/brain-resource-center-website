@@ -6,7 +6,7 @@ import process from "process";
 
 dotenv.config();
 
-const PORT = Number(process.env.PAYMENTS_PORT || process.env.PORT || 3000);
+const PORT = Number(3434);
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
 if (!stripeSecretKey) {
