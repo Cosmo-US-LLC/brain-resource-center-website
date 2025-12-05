@@ -6,7 +6,7 @@ import process from "process";
 
 dotenv.config();
 
-const PORT = Number(3434);
+const PORT = Number(process.env.PAYMENTS_PORT || process.env.PORT || 3434);
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
 if (!stripeSecretKey) {
@@ -16,21 +16,16 @@ if (!stripeSecretKey) {
 const stripe = new Stripe(stripeSecretKey);
 const app = express();
 
-const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS?.split(",").map((origin) => origin.trim());
+const allowedOrigins =
+  process.env.CORS_ALLOWED_ORIGINS?.split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean) ?? [];
+const corsOptions = {
+  origin: allowedOrigins.length === 0 || allowedOrigins.includes("*") ? true : allowedOrigins,
+  credentials: true,
+};
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || !allowedOrigins || allowedOrigins.includes("*")) {
-        return callback(null, true);
-      }
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error("Not allowed by CORS"));
-    },
-  }),
-);
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get("/health", (_, res) => {
