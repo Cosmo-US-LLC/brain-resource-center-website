@@ -22,7 +22,7 @@ function formatNiceDate(iso) {
 function TextInput({ label, value, onChange, placeholder, type = "text", id }) {
   return (
     <div>
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor={id}>
+      <label className="text-sm font-medium text-gray-700 " htmlFor={id}>
         {label}
       </label>
       <input
@@ -31,7 +31,7 @@ function TextInput({ label, value, onChange, placeholder, type = "text", id }) {
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 mt-1.5"
+        className="flex h-9 w-full rounded-md border-[1px] border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground outline-none  mt-1.5"
       />
     </div>
   );
@@ -48,7 +48,7 @@ function MeetingOption({ type, selected, onClick, icon, label }) {
       }`}
     >
       {icon}
-      <span className="font-medium text-gray-900 dark:text-gray-100">{label}</span>
+      <span className="font-medium text-gray-900 ">{label}</span>
     </button>
   );
 }
@@ -181,11 +181,11 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
         </span>
       </div>
 
-      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm p-8 lg:p-12">
-        <div className="font-serif text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+      <div className="max-w-2xl mx-auto bg-white rounded-2xl border border-gray-200 shadow-sm p-8 lg:p-12">
+        <div className="font-serif text-[36px] font-semibold text-gray-900  mb-3">
           Your Information
         </div>
-        <p className="text-gray-600 dark:text-gray-400 mb-8">
+        <p className="text-gray-600 text-[14px] mb-8">
           Please provide your details to complete the booking
         </p>
 
@@ -194,14 +194,14 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
           <TextInput id="email" type="email" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="john@example.com" />
 
           <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="phone">
+            <label className="text-sm font-medium text-gray-700 " htmlFor="phone">
               Phone Number
             </label>
             <div className="flex gap-2 mt-1.5">
               <select
                 value={countryCode}
                 onChange={(e) => setCountryCode(e.target.value)}
-                className="flex h-9 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none"
+                className="flex h-9 items-center justify-between rounded-md border-[1px] border-input bg-background px-3 py-2 text-sm outline-none"
                 style={{ width: 96 }}
               >
                 <option value="+1">+1</option>
@@ -216,13 +216,13 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="(555) 123-4567"
-                className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                className="flex h-9 w-full rounded-md border-[1px] border-input bg-background px-3 py-2 text-base outline-none "
               />
             </div>
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
+            <label className="text-sm font-medium text-gray-700  mb-3 block">
               How would you prefer to meet?
             </label>
             <div className="grid grid-cols-2 gap-3">
@@ -254,7 +254,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="issues">
+            <label className="text-sm font-medium text-gray-700 " htmlFor="issues">
               What specific issues or concerns would you like to address? (Optional)
             </label>
             <textarea
@@ -262,7 +262,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
               value={issues}
               onChange={(e) => setIssues(e.target.value)}
               placeholder="Please share any relevant details..."
-              className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base min-h-[100px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 mt-1.5"
+              className="flex w-full rounded-md border-[1px] border-input bg-background px-3 py-2 text-base min-h-[100px] outline-none  mt-1.5"
             />
           </div>
 
@@ -299,7 +299,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
         {showPayment && (
           <div ref={paymentRef} className="border-t border-gray-200 dark:border-gray-700 pt-8">
             <div className="mb-6">
-              <div className="text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Payment</div>
+              <div className="text-3xl font-semibold text-gray-900  mb-2">Payment</div>
               <p className="text-gray-600 dark:text-gray-400">
                 Consultation Fee: <span className="font-semibold text-[#004F97] text-lg">{formattedPrice}</span>
               </p>
