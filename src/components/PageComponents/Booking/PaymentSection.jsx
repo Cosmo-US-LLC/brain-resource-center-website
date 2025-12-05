@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CreditCard, Lock, Shield } from "lucide-react";
+import { countries } from "@/lib/utils";
 
 const cardElementStyle = {
   style: {
@@ -31,16 +32,6 @@ const cardElementStyle = {
     },
   },
 };
-
-const countries = [
-  { code: "US", name: "United States" },
-  { code: "CA", name: "Canada" },
-  { code: "GB", name: "United Kingdom" },
-  { code: "PK", name: "Pakistan" },
-  { code: "AU", name: "Australia" },
-  { code: "DE", name: "Germany" },
-  { code: "FR", name: "France" },
-];
 
 export default function PaymentSection({
   // amount,
@@ -117,13 +108,6 @@ export default function PaymentSection({
 
   return (
     <div className="">
-      <div className="mb-4 flex items-center gap-2 text-[#0E8A00] text-sm font-medium">
-        <span role="img" aria-label="secure">
-          🔒
-        </span>
-        Secure, fast checkout with Link
-      </div>
-
       <label
         className="block text-sm font-medium text-gray-700 mb-1"
         htmlFor="cardholder"
@@ -181,7 +165,7 @@ export default function PaymentSection({
           <SelectTrigger className="w-full h-11 px-3 rounded-[5px] border border-[#E6E6E6] bg-white focus:outline-none shadow shadow-neutral-500/5">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="max-h-[40svh] min-h-50 overflow-y-auto border-neutral-200">
             {countries.map((countryOption) => (
               <SelectItem key={countryOption.code} value={countryOption.code}>
                 {countryOption.name}
