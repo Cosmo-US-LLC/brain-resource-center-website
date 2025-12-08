@@ -5,6 +5,61 @@ import { loadStripe } from "@stripe/stripe-js";
 import PaymentSection from "./PaymentSection";
 import { createPaymentIntent } from "@/services/stripe";
 
+const trackKlaviyoEvent = (payload) => {
+    // 1. Ensure the klaviyo queue exists (from your index.html setup)
+    const klaviyo = window.klaviyo || [];
+
+    // This variable will track if the push operation succeeded
+    let trackingInitiated = false; 
+
+    // Check if the queue is an array (which means the library hasn't initialized yet)
+    if (Array.isArray(klaviyo)) {
+        // console.log("Klaviyo event queued for tracking:", payload); // <-- Removing this generic one
+
+        // 2. Queue the 'identify' command
+        klaviyo.push(['identify', {
+            $email: payload.email,
+            "Full Name": payload.fullName,
+            "Phone Number": payload.phone,
+        }]);
+
+        // 3. Queue the 'track' command
+        klaviyo.push(['track', "Booked Consultation", {
+            "Full Name": payload.fullName,
+            "Issues Noted": payload.issues,
+            condition: payload.condition,
+            meetingPref: payload.meetingPref,
+            selectedDateIso: payload.selectedDateIso,
+            selectedTime: payload.selectedTime,
+            price: payload.price,
+            "Payment Status": payload.paid ? "Paid in Full" : "Payment Due",
+            ChargeID: payload.ChargeID || "",
+        }]);
+        
+        // 4. Update the global object if necessary (based on your prior setup)
+        window.klaviyo = klaviyo;
+        trackingInitiated = true; // Tracking initiated via the queue
+
+    } else if (typeof klaviyo.identify === 'function') {
+        // If it's already fully initialized, run the methods directly (fallback/safety check)
+        klaviyo.identify({ $email: payload.email, "Full Name": payload.fullName, "Phone Number": payload.phone });
+        klaviyo.track("Booked Consultation", { 
+            "Full Name": payload.fullName,
+            // ... all other tracking properties
+        });
+        trackingInitiated = true; // Tracking initiated directly
+    
+    } else {
+        // Fallback for complete failure to load
+        console.error("Klaviyo object found but methods are not ready. Tracking skipped.");
+    }
+
+    if (trackingInitiated) {
+        // This is the message you want to see!
+        console.log(`✅ Klaviyo Event 'Booked Consultation' Submitted for: ${payload.email}`);
+    }
+};
+
 function formatNiceDate(iso) {
   try {
     const d = new Date(iso);
@@ -148,6 +203,8 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
 
   const handlePayLater = () => {
     const payload = { ...buildPayload(), paid: false };
+
+    trackKlaviyoEvent(payload);
     setPaymentResult({
       status: "pending",
       message: "You chose to pay later. We'll remind you before your consultation.",
@@ -157,6 +214,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
 
   const handlePayNowSuccess = (paymentSummary) => {
     const payload = { ...buildPayload(), paid: true, ...paymentSummary };
+    trackKlaviyoEvent(payload);
     setPaymentResult({
       status: "success",
       message: "Payment successful. A receipt has been sent to your email.",
