@@ -139,9 +139,7 @@ function Header() {
   const [openDropdown, setOpenDropdown] = useState(null);
   const scrolled = useScrolled();
 
-  const navLinks = [
-    
-  ];
+  const navLinks = [];
 
   const handleDropdownToggle = (label) => {
     setOpenDropdown(openDropdown === label ? null : label);
@@ -215,34 +213,12 @@ function Header() {
               <SheetHeader className="p-6 border-b border-gray-100">
                 <SheetTitle className="text-left">
                   <div className="flex gap-1 items-center">
-                    <svg
-                      width="32"
-                      height="35"
-                      viewBox="0 0 42 45"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="shrink-0"
-                    >
-                      <circle cx="21" cy="22.5" r="18" fill="#004f97" />
-                      <ellipse cx="16" cy="20" rx="3" ry="4" fill="#fff" />
-                      <ellipse cx="26" cy="20" rx="3" ry="4" fill="#fff" />
-                      <path
-                        d="M15 28c2 2 5 3 6 3s4-1 6-3"
-                        stroke="#fff"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                    <div className="font-black text-[#004f97] text-[14px] leading-[78%]">
-                      <p className="m-0">brain</p>
-                      <p className="m-0">resource</p>
-                      <p className="m-0">center</p>
-                    </div>
+                    <Logo />
                   </div>
                 </SheetTitle>
               </SheetHeader>
 
-              <nav className="flex flex-col py-4">
+              {/* <nav className="flex flex-col py-4">
                 {navLinks.map((link) =>
                   link.dropdown ? (
                     <div key={link.label} className="flex flex-col">
@@ -290,7 +266,7 @@ function Header() {
                     </NavLink>
                   )
                 )}
-              </nav>
+              </nav> */}
 
               {/* Mobile CTAs */}
               <div className="flex flex-col gap-3 p-6 mt-auto border-t border-gray-100">

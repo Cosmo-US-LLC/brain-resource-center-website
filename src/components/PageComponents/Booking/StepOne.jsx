@@ -32,21 +32,11 @@ export default function StepOne({ onContinue }) {
     "My condition isn't listed",
   ];
 
-  const dateOptionsIso = [
-    "2025-12-05",
-    "2025-12-06",
-    "2025-12-08",
-    "2025-12-09",
-    "2025-12-10",
-    "2025-12-11",
-    "2025-12-12",
-    "2025-12-13",
-    "2025-12-14",
-    "2025-12-15",
-    "2025-12-16",
-    "2025-12-17",
-    "2025-12-18",
-  ];
+  const dateOptionsIso = Array.from({ length: 11 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() + i);
+    return d.toISOString().slice(0, 10);
+  });
 
   const times = [
     { time: "9:00am", booked: false },
@@ -67,7 +57,9 @@ export default function StepOne({ onContinue }) {
   const [customCondition, setCustomCondition] = useState("");
   const [showConditionDropdown, setShowConditionDropdown] = useState(false);
 
-  const [selectedDateIso, setSelectedDateIso] = useState("2025-12-05");
+  // Set default date to today in ISO format (yyyy-mm-dd)
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const [selectedDateIso, setSelectedDateIso] = useState(todayIso);
   const [showDateDropdown, setShowDateDropdown] = useState(false);
   const [showNativeDateInput, setShowNativeDateInput] = useState(false);
 
