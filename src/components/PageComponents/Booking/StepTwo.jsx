@@ -6,59 +6,31 @@ import PaymentSection from "./PaymentSection";
 import { createPaymentIntent } from "@/services/stripe";
 
 const trackKlaviyoEvent = (payload) => {
-    // 1. Ensure the klaviyo queue exists (from your index.html setup)
-    const klaviyo = window.klaviyo || [];
+  const _learnq = window._learnq || [];
 
-    // This variable will track if the push operation succeeded
-    let trackingInitiated = false; 
+  _learnq.push(["identify", {
+    $email: payload.email,
+    FullName: payload.fullName,
+    Phone: payload.phone
+  }]);
 
-    // Check if the queue is an array (which means the library hasn't initialized yet)
-    if (Array.isArray(klaviyo)) {
-        // console.log("Klaviyo event queued for tracking:", payload); // <-- Removing this generic one
-
-        // 2. Queue the 'identify' command
-        klaviyo.push(['identify', {
-            $email: payload.email,
-            "Full Name": payload.fullName,
-            "Phone Number": payload.phone,
-        }]);
-
-        // 3. Queue the 'track' command
-        klaviyo.push(['track', "Booked Consultation", {
-            "Full Name": payload.fullName,
-            "Issues Noted": payload.issues,
-            condition: payload.condition,
-            meetingPref: payload.meetingPref,
-            selectedDateIso: payload.selectedDateIso,
-            selectedTime: payload.selectedTime,
-            price: payload.price,
-            "Payment Status": payload.paid ? "Paid in Full" : "Payment Due",
-            ChargeID: payload.ChargeID || "",
-        }]);
-        
-        // 4. Update the global object if necessary (based on your prior setup)
-        window.klaviyo = klaviyo;
-        trackingInitiated = true; // Tracking initiated via the queue
-
-    } else if (typeof klaviyo.identify === 'function') {
-        // If it's already fully initialized, run the methods directly (fallback/safety check)
-        klaviyo.identify({ $email: payload.email, "Full Name": payload.fullName, "Phone Number": payload.phone });
-        klaviyo.track("Booked Consultation", { 
-            "Full Name": payload.fullName,
-            // ... all other tracking properties
-        });
-        trackingInitiated = true; // Tracking initiated directly
-    
-    } else {
-        // Fallback for complete failure to load
-        console.error("Klaviyo object found but methods are not ready. Tracking skipped.");
-    }
-
-    if (trackingInitiated) {
-        // This is the message you want to see!
-        console.log(`✅ Klaviyo Event 'Booked Consultation' Submitted for: ${payload.email}`);
-    }
+  _learnq.push(["track", "Booked Consultation", {
+    FullName: payload.fullName,
+    IssuesNoted: payload.issues,
+    condition: payload.condition,
+    meetingPref: payload.meetingPref,
+    selectedDateIso: payload.selectedDateIso,
+    selectedTime: payload.selectedTime,
+    price: payload.price,
+    PaymentStatus: payload.paid ? "Paid" : "Pending",
+    ChargeID: payload.ChargeID || "",
+    SubmittedAt: new Date().toISOString(),
+    PhoneNumber: payload.phone
+  }]);
+// console.log(" Klaviyo Event Sent (Check Payload Below):");
+//   console.log(payload)
 };
+
 
 function formatNiceDate(iso) {
   try {
@@ -124,6 +96,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
   const [email, setEmail] = useState("");
   const [countryCode, setCountryCode] = useState("+1");
   const [phone, setPhone] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const [meetingPref, setMeetingPref] = useState("in_person");
   const [issues, setIssues] = useState("");
   const [termsChecked, setTermsChecked] = useState(true);
@@ -146,8 +119,19 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
     [price],
   );
 
+  const isValidPhone = (value) => {
+    const digits = value.replace(/\D/g, "");
+    return digits.length >= 7;
+  };
+
   const isFormValid = () => {
-    return fullName.trim() && /^\S+@\S+\.\S+$/.test(email) && phone.trim() && termsChecked;
+    return (
+      fullName.trim() &&
+      /^\S+@\S+\.\S+$/.test(email) &&
+      phone.trim() &&
+      isValidPhone(phone) &&
+      termsChecked
+    );
   };
 
   const buildPayload = () => ({
@@ -272,11 +256,21 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
                 id="phone"
                 type="tel"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  if (!isValidPhone(e.target.value)) {
+                    setPhoneError("Please enter a valid phone number.");
+                  } else {
+                    setPhoneError("");
+                  }
+                }}
                 placeholder="(555) 123-4567"
-                className="flex h-9 w-full rounded-md border-[1px] border-input bg-background px-3 py-2 text-base outline-none "
+                className={`flex h-9 w-full rounded-md border-[1px] border-input bg-background px-3 py-2 text-base outline-none ${phoneError ? 'border-red-500' : ''}`}
               />
             </div>
+              {phoneError && (
+                <div className="text-red-600 text-xs mt-1">{phoneError}</div>
+              )}
           </div>
 
           <div>

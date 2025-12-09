@@ -15,6 +15,13 @@ function formatNiceDate(iso) {
 }
 
 export default function StepOne({ onContinue }) {
+    
+    const isPastDate = (iso) => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const date = new Date(iso);
+      return date < today;
+    };
   const conditions = [
     "ADHD",
     "Bipolar Disorder",
@@ -36,6 +43,9 @@ export default function StepOne({ onContinue }) {
     "2025-12-13",
     "2025-12-14",
     "2025-12-15",
+    "2025-12-16",
+    "2025-12-17",
+    "2025-12-18",
   ];
 
   const times = [
@@ -87,14 +97,14 @@ export default function StepOne({ onContinue }) {
     });
   };
 
-  // Helper to check if condition is filled
+  
   const isConditionFilled = condition && (condition !== "My condition isn't listed" || customCondition);
-  // Track if user has ever selected a date
+  
   const [dateWasEverSelected, setDateWasEverSelected] = useState(false);
-  // Track if user has ever selected a time
+  
   const [timeWasEverSelected, setTimeWasEverSelected] = useState(false);
 
-  // Only show time after user has ever selected a date
+  
   const isDateSelected = isConditionFilled && dateWasEverSelected;
   const isTimeFilled = isDateSelected && (selectedTime || timeWasEverSelected);
 
@@ -110,7 +120,7 @@ export default function StepOne({ onContinue }) {
           </p>
 
           <div className="">
-            {/* Step 1: Condition */}
+            
             <div className="!mb-0" ref={conditionRef}>
               <label className="text-base font-medium text-gray-900" htmlFor="condition">
                 What do you need treatment for?
@@ -152,7 +162,7 @@ export default function StepOne({ onContinue }) {
               )}
             </div>
 
-            {/* Step 2: Date (only if condition filled) */}
+            
             {isConditionFilled && (
               <div
                 ref={dateRef}
@@ -175,7 +185,7 @@ export default function StepOne({ onContinue }) {
 
                 {showDateDropdown && (
                   <div className="mt-2 border-[1px] border-input rounded-md bg-white  shadow p-2 max-h-60 overflow-y-auto">
-                    {dateOptionsIso.map((iso) => (
+                    {dateOptionsIso.filter((iso) => !isPastDate(iso)).map((iso) => (
                       <button
                         key={iso}
                         onClick={() => {
@@ -183,7 +193,7 @@ export default function StepOne({ onContinue }) {
                           setShowDateDropdown(false);
                           setDateWasEverSelected(true);
                         }}
-                        className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
+                        className="w-full text-left px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
                       >
                         {formatNiceDate(iso)}
                       </button>
@@ -214,7 +224,7 @@ export default function StepOne({ onContinue }) {
               </div>
             )}
 
-            {/* Step 3: Time (only if date actively selected) */}
+            
             {isDateSelected && (
               <div
                 className="transition-all duration-500 ease-in-out opacity-0 translate-y-4 animate-fadein"
@@ -248,7 +258,7 @@ export default function StepOne({ onContinue }) {
             )}
           </div>
 
-          {/* Selected time and continue button at bottom, only if time filled */}
+          
           {isTimeFilled && (
             <>
               <div

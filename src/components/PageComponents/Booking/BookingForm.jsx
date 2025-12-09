@@ -19,10 +19,10 @@ export default function BookingForm() {
       )}
 
       {step === 2 && (
-        <StepTwo
-          data={bookingData}
-          onBack={() => setStep(1)}
-        />
+       <StepTwo
+         booking={bookingData} 
+         onBack={() => setStep(1)}
+        />
       )}
     </div>
   );
