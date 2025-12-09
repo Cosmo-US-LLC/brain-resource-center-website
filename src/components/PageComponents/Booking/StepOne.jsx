@@ -109,8 +109,8 @@ export default function StepOne({ onContinue }) {
   const isTimeFilled = isDateSelected && (selectedTime || timeWasEverSelected);
 
   return (
-    <div className="max-w-6xl mx-auto px-6 lg:px-8 py-0 lg:py-0">
-      <div className="max-w-3xl mx-auto px-0 !py-0">
+    <div className="max-w-6xl mx-auto px-0 lg:px-8 py-0 lg:py-0">
+      <div className="md:max-w-3xl mx-auto px-0 !py-0">
         <div className="bg-white rounded-2xl border border-gray-200  shadow-sm p-8 lg:p-12">
           <h2 className="font-serif text-[36px] lg:!text-[36px] font-semibold text-gray-900 mb-3 text-center">
             Book Your Consultation
@@ -265,8 +265,9 @@ export default function StepOne({ onContinue }) {
                 className="transition-all duration-500 ease-in-out opacity-0 translate-y-4 animate-fadein"
                 style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}
               >
-                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mt-6 flex items-center gap-2 text-blue-900 dark:text-blue-100">
-                  <svg
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mt-6 flex items-center gap-2 text-blue-900 dark:text-blue-100 ">
+                 <div>
+                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
@@ -280,6 +281,7 @@ export default function StepOne({ onContinue }) {
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                   </svg>
+                 </div>
                   <span className="font-medium">
                     Selected: {formatNiceDate(selectedDateIso)} at {selectedTime}
                   </span>

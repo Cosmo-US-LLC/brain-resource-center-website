@@ -140,25 +140,7 @@ function Header() {
   const scrolled = useScrolled();
 
   const navLinks = [
-    { to: "/who-we-help", label: "Who We Help" },
-    {
-      label: "Assessments",
-      dropdown: [
-        { to: "/assessments/cognitive", label: "Cognitive Assessment" },
-        { to: "/assessments/mental-health", label: "Mental Health Assessment" },
-        { to: "/assessments/neurological", label: "Neurological Assessment" },
-      ],
-    },
-    {
-      label: "Treatments",
-      dropdown: [
-        { to: "/treatments/rtms", label: "rTMS Therapy" },
-        { to: "/treatments/neurofeedback", label: "Neurofeedback" },
-        { to: "/treatments/counseling", label: "Counseling" },
-      ],
-    },
-    { to: "/about", label: "About Us" },
-    { to: "/contact", label: "Contact Us" },
+    
   ];
 
   const handleDropdownToggle = (label) => {
@@ -214,7 +196,7 @@ function Header() {
             {/* CTAs */}
             <SecondaryCTA to="tel:1800960879" className="ml-3">
               <Phone size={16} />
-              1800 960 879
+              212-877-2130
             </SecondaryCTA>
             <PrimaryCTA to="/book">Book Appointment</PrimaryCTA>
           </div>

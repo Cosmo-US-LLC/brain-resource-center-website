@@ -8,7 +8,7 @@ export default function BookingForm() {
   const [bookingData, setBookingData] = useState(null);
 
   return (
-    <div className="max-w-3xl mx-auto p-8">
+    <div className="max-w-3xl mx-auto px-4 md:p-8">
       {step === 1 && (
         <StepOne
           onContinue={(data) => {
