@@ -198,7 +198,7 @@ function Header() {
               <Phone size={16} />
               212-877-2130
             </SecondaryCTA>
-            <PrimaryCTA to="/book">Book Appointment</PrimaryCTA>
+            <PrimaryCTA to="/booking">Book Appointment</PrimaryCTA>
           </div>
 
           {/* Mobile Menu - Sheet */}
@@ -303,7 +303,7 @@ function Header() {
                   1800 960 879
                 </SecondaryCTA>
                 <PrimaryCTA
-                  to="/book"
+                  to="/booking"
                   className="justify-center w-full"
                   onClick={() => setIsSheetOpen(false)}
                 >

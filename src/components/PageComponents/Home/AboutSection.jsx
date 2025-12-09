@@ -173,7 +173,7 @@ function AboutSection() {
           </div>
         </div>
         <div className="mt-12 flex justify-center">
-          <PrimaryCTA to="/book">
+          <PrimaryCTA to="/booking">
             Book Appointment
             <ArrowRight size={24} />
           </PrimaryCTA>

@@ -87,7 +87,7 @@ function WhatToExpect() {
 
             {/* CTA Button */}
             <div className="mt-4">
-              <PrimaryCTA to="/book" className="inline-flex">
+              <PrimaryCTA to="/booking" className="inline-flex">
                 Book Appointment
                 <ArrowRight size={24} />
               </PrimaryCTA>

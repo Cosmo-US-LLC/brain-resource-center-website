@@ -113,7 +113,7 @@ function SideEffectsComparison() {
                 {/* CTA Button */}
                 <div className="mt-3 md:mt-8">
                   <Link
-                    to="/book"
+                    to="/booking"
                     className="inline-flex gap-2 items-center px-6 py-4 font-bold text-[#004f97] bg-white max-md:text-[12px] rounded-full transition-colors hover:bg-gray-100"
                   >
                     Book Appointment

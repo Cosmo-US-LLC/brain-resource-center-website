@@ -416,7 +416,7 @@ function CoreServices() {
 
         {/* CTA Button */}
         <div className="flex justify-center">
-          <PrimaryCTA to="/book">
+          <PrimaryCTA to="/booking">
             Book Appointment
             <ArrowRight size={24} />
           </PrimaryCTA>

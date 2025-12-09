@@ -5,7 +5,7 @@ import Footer from "./Footer/Footer";
 
 function Layout() {
   const location = useLocation();
-  const hideNavFooter = location.pathname === "/book";
+  const hideNavFooter = location.pathname === "/booking";
   return (
     <>
       {!hideNavFooter && <Header />}

@@ -26,7 +26,7 @@ function Hero() {
               {/* CTA and Google Rating */}
               <div className="flex flex-wrap gap-6 items-center">
                 {/* Primary CTA Button */}
-                <PrimaryCTA to="/book" className="px-6 py-4">
+                <PrimaryCTA to="/booking" className="px-6 py-4">
                   Request an Appointment
                   <ArrowRight size={24} />
                 </PrimaryCTA>
