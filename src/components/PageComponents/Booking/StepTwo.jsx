@@ -5,6 +5,33 @@ import { loadStripe } from "@stripe/stripe-js";
 import PaymentSection from "./PaymentSection";
 import { createPaymentIntent } from "@/services/stripe";
 
+const trackKlaviyoEvent = (payload) => {
+  const _learnq = window._learnq || [];
+
+  _learnq.push(["identify", {
+    $email: payload.email,
+    FullName: payload.fullName,
+    Phone: payload.phone
+  }]);
+
+  _learnq.push(["track", "Booked Consultation", {
+    FullName: payload.fullName,
+    IssuesNoted: payload.issues,
+    condition: payload.condition,
+    meetingPref: payload.meetingPref,
+    selectedDateIso: payload.selectedDateIso,
+    selectedTime: payload.selectedTime,
+    price: payload.price,
+    PaymentStatus: payload.paid ? "Paid" : "Pending",
+    ChargeID: payload.ChargeID || "",
+    SubmittedAt: new Date().toISOString(),
+    PhoneNumber: payload.phone
+  }]);
+// console.log(" Klaviyo Event Sent (Check Payload Below):");
+//   console.log(payload)
+};
+
+
 function formatNiceDate(iso) {
   try {
     const d = new Date(iso);
@@ -69,6 +96,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
   const [email, setEmail] = useState("");
   const [countryCode, setCountryCode] = useState("+1");
   const [phone, setPhone] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const [meetingPref, setMeetingPref] = useState("in_person");
   const [issues, setIssues] = useState("");
   const [termsChecked, setTermsChecked] = useState(true);
@@ -91,8 +119,19 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
     [price],
   );
 
+  const isValidPhone = (value) => {
+    const digits = value.replace(/\D/g, "");
+    return digits.length >= 7;
+  };
+
   const isFormValid = () => {
-    return fullName.trim() && /^\S+@\S+\.\S+$/.test(email) && phone.trim() && termsChecked;
+    return (
+      fullName.trim() &&
+      /^\S+@\S+\.\S+$/.test(email) &&
+      phone.trim() &&
+      isValidPhone(phone) &&
+      termsChecked
+    );
   };
 
   const buildPayload = () => ({
@@ -148,6 +187,8 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
 
   const handlePayLater = () => {
     const payload = { ...buildPayload(), paid: false };
+
+    trackKlaviyoEvent(payload);
     setPaymentResult({
       status: "pending",
       message: "You chose to pay later. We'll remind you before your consultation.",
@@ -157,6 +198,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
 
   const handlePayNowSuccess = (paymentSummary) => {
     const payload = { ...buildPayload(), paid: true, ...paymentSummary };
+    trackKlaviyoEvent(payload);
     setPaymentResult({
       status: "success",
       message: "Payment successful. A receipt has been sent to your email.",
@@ -214,11 +256,21 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
                 id="phone"
                 type="tel"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  if (!isValidPhone(e.target.value)) {
+                    setPhoneError("Please enter a valid phone number.");
+                  } else {
+                    setPhoneError("");
+                  }
+                }}
                 placeholder="(555) 123-4567"
-                className="flex h-9 w-full rounded-md border-[1px] border-input bg-background px-3 py-2 text-base outline-none "
+                className={`flex h-9 w-full rounded-md border-[1px] border-input bg-background px-3 py-2 text-base outline-none ${phoneError ? 'border-red-500' : ''}`}
               />
             </div>
+              {phoneError && (
+                <div className="text-red-600 text-xs mt-1">{phoneError}</div>
+              )}
           </div>
 
           <div>
