@@ -8,29 +8,35 @@ import { createPaymentIntent } from "@/services/stripe";
 const trackKlaviyoEvent = (payload) => {
   const _learnq = window._learnq || [];
 
-  _learnq.push(["identify", {
-    $email: payload.email,
-    FullName: payload.fullName,
-    Phone: payload.phone
-  }]);
+  _learnq.push([
+    "identify",
+    {
+      $email: payload.email,
+      FullName: payload.fullName,
+      Phone: payload.phone,
+    },
+  ]);
 
-  _learnq.push(["track", "Booked Consultation", {
-    FullName: payload.fullName,
-    IssuesNoted: payload.issues,
-    condition: payload.condition,
-    meetingPref: payload.meetingPref,
-    selectedDateIso: payload.selectedDateIso,
-    selectedTime: payload.selectedTime,
-    price: payload.price,
-    PaymentStatus: payload.paid ? "Paid" : "Pending",
-    ChargeID: payload.ChargeID || "",
-    SubmittedAt: new Date().toISOString(),
-    PhoneNumber: payload.phone
-  }]);
-// console.log(" Klaviyo Event Sent (Check Payload Below):");
-//   console.log(payload)
+  _learnq.push([
+    "track",
+    "Booked Consultation",
+    {
+      FullName: payload.fullName,
+      IssuesNoted: payload.issues,
+      condition: payload.condition,
+      meetingPref: payload.meetingPref,
+      selectedDateIso: payload.selectedDateIso,
+      selectedTime: payload.selectedTime,
+      price: payload.price,
+      PaymentStatus: payload.paid ? "Paid" : "Pending",
+      ChargeID: payload.ChargeID || "",
+      SubmittedAt: new Date().toISOString(),
+      PhoneNumber: payload.phone,
+    },
+  ]);
+  // console.log(" Klaviyo Event Sent (Check Payload Below):");
+  //   console.log(payload)
 };
-
 
 function formatNiceDate(iso) {
   try {
@@ -71,7 +77,9 @@ function MeetingOption({ type, selected, onClick, icon, label }) {
       type="button"
       onClick={() => onClick(type)}
       className={`flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all ${
-        active ? "border-[#004F97] bg-[#004F97]/5" : "border-gray-300 dark:border-gray-600"
+        active
+          ? "border-[#004F97] bg-[#004F97]/5"
+          : "border-gray-300 dark:border-gray-600"
       }`}
     >
       {icon}
@@ -116,7 +124,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
         currency: "USD",
         minimumFractionDigits: 0,
       }).format(price),
-    [price],
+    [price]
   );
 
   const isValidPhone = (value) => {
@@ -185,15 +193,43 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
     }
   };
 
-  const handlePayLater = () => {
-    const payload = { ...buildPayload(), paid: false };
+  //   const handlePayLater = () => {
+  //     const payload = { ...buildPayload(), paid: false };
 
-    trackKlaviyoEvent(payload);
+  //     trackKlaviyoEvent(payload);
+  //     setPaymentResult({
+  //       status: "pending",
+  //       message: "You chose to pay later. We'll remind you before your consultation.",
+  //     });
+  //     onConfirm?.(payload);
+  //   };
+  const handlePayLater = () => {
+    if (!isFormValid()) {
+      alert(
+        "Please fill in your Full Name, Email, and Phone Number, and agree to the Terms before choosing 'Pay Later'."
+      );
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    const basePayload = buildPayload();
+
+    const finalPayload = {
+      ...basePayload,
+      paid: false,
+      ChargeID: "PAY_LATER",
+      price: 0,
+    };
+
+    trackKlaviyoEvent(finalPayload);
     setPaymentResult({
       status: "pending",
-      message: "You chose to pay later. We'll remind you before your consultation.",
+      message:
+        "You chose to pay later. We'll remind you before your consultation.",
     });
-    onConfirm?.(payload);
+
+    onConfirm?.(finalPayload);
+    // console.log("Pay Later Payload:", finalPayload);
   };
 
   const handlePayNowSuccess = (paymentSummary) => {
@@ -207,7 +243,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-6 lg:px-8 py-8 lg:py-12">
+    <div className="max-w-6xl mx-auto px-0 lg:px-8 py-8 lg:py-12">
       <button
         onClick={onBack}
         className="inline-flex items-center gap-2 mb-6 -ml-3 p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
@@ -223,7 +259,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
         </span>
       </div>
 
-      <div className="max-w-2xl mx-auto bg-white rounded-2xl border border-gray-200 shadow-sm p-8 lg:p-12">
+      <div className="max-w-2xl mx-auto bg-white rounded-2xl border border-gray-200 shadow-sm p-6 lg:p-12">
         <div className="font-serif text-[36px] font-semibold text-gray-900  mb-3">
           Your Information
         </div>
@@ -232,11 +268,27 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
         </p>
 
         <form className="space-y-6 mb-10" onSubmit={(e) => e.preventDefault()}>
-          <TextInput id="fullName" label="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="John Smith" />
-          <TextInput id="email" type="email" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="john@example.com" />
+          <TextInput
+            id="fullName"
+            label="Full Name"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            placeholder="John Smith"
+          />
+          <TextInput
+            id="email"
+            type="email"
+            label="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="john@example.com"
+          />
 
           <div>
-            <label className="text-sm font-medium text-gray-700 " htmlFor="phone">
+            <label
+              className="text-sm font-medium text-gray-700 "
+              htmlFor="phone"
+            >
               Phone Number
             </label>
             <div className="flex gap-2 mt-1.5">
@@ -257,20 +309,26 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
                 type="tel"
                 value={phone}
                 onChange={(e) => {
-                  setPhone(e.target.value);
-                  if (!isValidPhone(e.target.value)) {
+                  // Only allow digits
+                  const digitsOnly = e.target.value.replace(/\D/g, "");
+                  setPhone(digitsOnly);
+                  if (!isValidPhone(digitsOnly)) {
                     setPhoneError("Please enter a valid phone number.");
                   } else {
                     setPhoneError("");
                   }
                 }}
                 placeholder="(555) 123-4567"
-                className={`flex h-9 w-full rounded-md border-[1px] border-input bg-background px-3 py-2 text-base outline-none ${phoneError ? 'border-red-500' : ''}`}
+                className={`flex h-9 w-full rounded-md border-[1px] border-input bg-background px-3 py-2 text-base outline-none ${
+                  phoneError ? "border-red-500" : ""
+                }`}
+                inputMode="numeric"
+                pattern="[0-9]*"
               />
             </div>
-              {phoneError && (
-                <div className="text-red-600 text-xs mt-1">{phoneError}</div>
-              )}
+            {phoneError && (
+              <div className="text-red-600 text-xs mt-1">{phoneError}</div>
+            )}
           </div>
 
           <div>
@@ -283,7 +341,13 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
                 selected={meetingPref}
                 onClick={setMeetingPref}
                 icon={
-                  <svg className="w-6 h-6 mb-2 text-[#004F97]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <svg
+                    className="w-6 h-6 mb-2 text-[#004F97]"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path>
                     <circle cx="12" cy="10" r="3"></circle>
                   </svg>
@@ -295,7 +359,13 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
                 selected={meetingPref}
                 onClick={setMeetingPref}
                 icon={
-                  <svg className="w-6 h-6 mb-2 text-[#004F97]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <svg
+                    className="w-6 h-6 mb-2 text-[#004F97]"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
                     <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path>
                     <rect x="2" y="6" width="14" height="12" rx="2"></rect>
                   </svg>
@@ -306,8 +376,12 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700 " htmlFor="issues">
-              What specific issues or concerns would you like to address? (Optional)
+            <label
+              className="text-sm font-medium text-gray-700 "
+              htmlFor="issues"
+            >
+              What specific issues or concerns would you like to address?
+              (Optional)
             </label>
             <textarea
               id="issues"
@@ -323,17 +397,28 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
               type="button"
               aria-checked={termsChecked}
               onClick={() => setTermsChecked((s) => !s)}
-              className={`peer h-4 w-4 shrink-0 rounded-sm border ${termsChecked ? "bg-[#004F97] text-white" : ""} flex items-center justify-center`}
+              className={`peer h-4 w-4 shrink-0 rounded-sm border ${
+                termsChecked ? "bg-[#004F97] text-white" : ""
+              } flex items-center justify-center`}
             >
               {termsChecked && (
-                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg
+                  className="h-4 w-4"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <path d="M20 6 9 17l-5-5"></path>
                 </svg>
               )}
             </button>
             <label className="text-sm text-gray-600 dark:text-gray-400 cursor-pointer leading-relaxed">
               I agree to the{" "}
-              <button type="button" className="text-[#004F97] underline hover:text-[#004F97]/80">
+              <button
+                type="button"
+                className="text-[#004F97] underline hover:text-[#004F97]/80"
+              >
                 Terms and Conditions
               </button>
             </label>
@@ -349,20 +434,32 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
         </form>
 
         {showPayment && (
-          <div ref={paymentRef} className="border-t border-gray-200 dark:border-gray-700 pt-8">
+          <div
+            ref={paymentRef}
+            className="border-t border-gray-200 dark:border-gray-700 pt-8"
+          >
             <div className="mb-6">
-              <div className="text-3xl font-semibold text-gray-900  mb-2">Payment</div>
+              <div className="text-3xl font-semibold text-gray-900  mb-2">
+                Payment
+              </div>
               <p className="text-gray-600 dark:text-gray-400">
-                Consultation Fee: <span className="font-semibold text-[#004F97] text-lg">{formattedPrice}</span>
+                Consultation Fee:{" "}
+                <span className="font-semibold text-[#004F97] text-lg">
+                  {formattedPrice}
+                </span>
               </p>
             </div>
 
             {initializingPayment && (
-              <div className="p-4 border rounded-xl bg-blue-50 text-blue-900 mb-4">Initializing secure checkout…</div>
+              <div className="p-4 border rounded-xl bg-blue-50 text-blue-900 mb-4">
+                Initializing secure checkout…
+              </div>
             )}
 
             {paymentSetupError && (
-              <div className="p-4 border border-red-200 rounded-xl bg-red-50 text-red-700 mb-4">{paymentSetupError}</div>
+              <div className="p-4 border border-red-200 rounded-xl bg-red-50 text-red-700 mb-4">
+                {paymentSetupError}
+              </div>
             )}
 
             {stripePromise && clientSecret && !paymentSetupError && (
@@ -393,14 +490,17 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
 
             {!stripePromise && (
               <div className="p-4 border border-yellow-200 rounded-xl bg-yellow-50 text-yellow-800">
-                Stripe publishable key is missing. Please add <code>VITE_STRIPE_PUBLISHABLE_KEY</code> to your environment.
+                Stripe publishable key is missing. Please add{" "}
+                <code>VITE_STRIPE_PUBLISHABLE_KEY</code> to your environment.
               </div>
             )}
 
             {paymentResult && (
               <div
                 className={`mt-4 rounded-xl p-4 ${
-                  paymentResult.status === "success" ? "bg-green-50 text-green-800" : "bg-blue-50 text-blue-900"
+                  paymentResult.status === "success"
+                    ? "bg-green-50 text-green-800"
+                    : "bg-blue-50 text-blue-900"
                 }`}
               >
                 {paymentResult.message}

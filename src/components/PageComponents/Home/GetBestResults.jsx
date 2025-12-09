@@ -32,7 +32,7 @@ function GetBestResults() {
               health:
             </p>
             <Link
-              to="/book"
+              to="/booking"
               className="inline-flex items-center bg-gray-50 gap-2 text-[#004f97] font-bold px-6 py-4 rounded-full w-fit hover:!bg-[#004f97] hover:text-white transition-colors group"
             >
               Book Appointment

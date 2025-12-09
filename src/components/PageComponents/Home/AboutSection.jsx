@@ -157,18 +157,23 @@ function AboutSection() {
 
           {/* Right Side - Image */}
           <div className=" w-full lg:w-[550px] xl:w-[550px]">
-            <video
-              src="/images/home/about_section/about_section.mp4"
-              className="md:w-[600px] md:h-[365.75px] object-cover rounded-[12px] mx-auto"
-              controls
-              muted
-              type="video/mp4"
-              playsInline
-            />
+            <div className="md:w-[600px] md:h-[365.75px] w-full h-full rounded-[12px] overflow-hidden mx-auto">
+              <iframe
+                width="100%"
+                height="100%"
+                style={{ minHeight: "280px" }}
+                src="https://www.youtube.com/embed/ydOKjUAVycM"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="w-full h-full object-cover rounded-[12px]"
+              ></iframe>
+            </div>
           </div>
         </div>
         <div className="mt-12 flex justify-center">
-          <PrimaryCTA to="/book">
+          <PrimaryCTA to="/booking">
             Book Appointment
             <ArrowRight size={24} />
           </PrimaryCTA>

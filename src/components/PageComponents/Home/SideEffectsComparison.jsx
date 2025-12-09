@@ -2,6 +2,7 @@ import React from "react";
 import { X, Check, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
+
 const antiDepressantSideEffects = [
   "Suicidality",
   "Worsening Depression",
@@ -35,7 +36,7 @@ function SideEffectsComparison() {
         </div>
 
         {/* Comparison Card */}
-        <div className="relative bg-[#004f97] rounded-xl overflow-hidden min-h-[600px] lg:min-h-[800px]">
+        <div className="relative md:bg-[#004f97] rounded-xl overflow-hidden min-h-[600px] lg:min-h-[800px]">
           <div className="">
            
             <img className="absolute  max-w-[450px] max-md:hidden bottom-[0%] left-[0%]" src="/images/home/side_effects/vector (1).png" alt="vector" />
@@ -56,10 +57,12 @@ function SideEffectsComparison() {
           {/* Center Divider Line */}
           <div className="absolute top-0 bottom-0 left-1/2 z-20 w-px max-md:hidden -translate-x-1/2 bg-white" />
 
-          <div className="relative z-10 flex flex-col lg:flex-row min-h-[600px] lg:min-h-[800px]">
+          <div className="relative z-10 flex flex-col lg:flex-row min-h-[600px] lg:min-h-[800px] relative max-md:space-y-[30px]">
             {/* Left Side - Anti-Depressants */}
-            <div className="flex flex-col flex-1 justify-center p-6 md:p-10 lg:p-14">
-              <div className="max-w-[350px]">
+            <div className="max-md:bg-[#004f97] relative flex flex-col flex-1 justify-center p-6 md:p-10 lg:p-14 max-md:rounded-[20px] max-md:overflow-hidden"> 
+                <img className="absolute  max-w-[450px] md:hidden bottom-[0%] left-[0%] z-[1]" src="/images/home/side_effects/vector (1).png" alt="vector" />
+               <img src="/images/home/side_effects/rmp_img (2).png" alt="rTMS Therapy" className="h-[100%] max-h-[390px] bottom-0 right-0 absolute z-[9] md:hidden" />
+              <div className="max-w-[350px] relative z-[2]">
                 {antiDepressantSideEffects.map((effect, index) => (
                   <div
                     key={index}
@@ -70,11 +73,11 @@ function SideEffectsComparison() {
                     }`}
                   >
                     {/* X Icon */}
-                    <div className="flex justify-center items-center w-6 h-6 rounded-lg border-2 border-gray-50 shrink-0">
-                      <X className="w-3 h-3 text-gray-50" strokeWidth={3} />
+                   <div className="flex shrink-0 justify-center items-center mt-1 md:mt-0.5 w-5 h-5 md:!w-[30px] md:!h-[30px] rounded-[100%] border-2 border-gray-50">
+                      <Check className="w-3 md:w-4 h-3 md:h-4 text-gray-50" strokeWidth={3} />
                     </div>
                     {/* Text */}
-                    <p className="text-base font-medium leading-7 text-gray-50 md:text-lg lg:text-xl">
+                    <p className="text-[12.19px] font-medium leading-7  text-gray-50 md:text-lg max-md:leading-[140%] lg:text-xl">
                       {effect}
                     </p>
                   </div>
@@ -83,8 +86,10 @@ function SideEffectsComparison() {
             </div>
 
             {/* Right Side - rTMS Therapy */}
-            <div className="flex flex-col flex-1 justify-start p-6 pt-20 md:p-10 lg:p-14 lg:pt-32">
-              <div className="max-w-[300px] ml-auto">
+            <div className="max-md:bg-[#004f97] relative max-md:min-h-[500px] max-md:rounded-[20px] flex flex-col flex-1 justify-start p-6 pt-6 md:p-10 lg:p-14 lg:pt-32">
+              <img className="absolute  max-w-[450px] md:hidden bottom-[0%] left-[0%] z-[1]" src="/images/home/side_effects/vector (2).png" alt="vector" />
+              <img src="/images/home/side_effects/rmp_img (1).png" alt="rTMS Therapy" className="h-[100%] max-h-[390px] bottom-0 left-0 absolute z-[5] md:hidden" />
+              <div className="max-w-[350px] max-md:max-w-[200px] ml-auto relative z-[9]">
                 {rtmsSideEffects.map((effect, index) => (
                   <div
                     key={index}
@@ -95,21 +100,21 @@ function SideEffectsComparison() {
                     }`}
                   >
                     {/* Check Icon */}
-                    <div className="flex shrink-0 justify-center items-center mt-0.5 w-6 h-6 rounded-lg border-2 border-gray-50">
-                      <Check className="w-3 h-3 text-gray-50" strokeWidth={3} />
+                    <div className="flex shrink-0 justify-center items-center mt-1 md:mt-0.5 w-5 h-5 md:!w-[30px] md:!h-[30px] rounded-[100%] border-2 border-gray-50">
+                      <Check className="w-3 md:w-4 h-3 md:h-4 text-gray-50" strokeWidth={3} />
                     </div>
                     {/* Text */}
-                    <p className="text-base font-medium leading-7 text-gray-50 md:text-lg lg:text-xl">
+                    <p className="text-[12.19px] font-medium leading-7  text-gray-50 md:text-lg max-md:leading-[140%] lg:text-xl">
                       {effect}
                     </p>
                   </div>
                 ))}
 
                 {/* CTA Button */}
-                <div className="mt-8">
+                <div className="mt-3 md:mt-8">
                   <Link
-                    to="/book"
-                    className="inline-flex gap-2 items-center px-6 py-4 font-bold text-[#004f97] bg-white rounded-full transition-colors hover:bg-gray-100"
+                    to="/booking"
+                    className="inline-flex gap-2 items-center px-6 py-4 font-bold text-[#004f97] bg-white max-md:text-[12px] rounded-full transition-colors hover:bg-gray-100"
                   >
                     Book Appointment
                     <ArrowRight size={24} />
