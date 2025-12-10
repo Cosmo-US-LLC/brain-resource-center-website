@@ -16,10 +16,12 @@ const trackKlaviyoEvent = (payload) => {
       Phone: payload.phone,
     },
   ]);
-  const eventName = payload.paid 
-    ? "Booked Consultation" 
+  const eventName = payload.paid
+    ? "Booked Consultation"
     : "Booked Consultation Pay Later";
-  const trackedPrice = payload.paid ? payload.price : (payload.originalPrice || payload.price);
+  const trackedPrice = payload.paid
+    ? payload.price
+    : payload.originalPrice || payload.price;
 
   _learnq.push([
     "track",
@@ -237,35 +239,35 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
   // };
 
   const handlePayLater = () => {
-    if (!isFormValid()) {
-      alert(
-        "Please fill in your Full Name, Email, and Phone Number, and agree to the Terms before choosing 'Pay Later'."
-      );
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
+    if (!isFormValid()) {
+      alert(
+        "Please fill in your Full Name, Email, and Phone Number, and agree to the Terms before choosing 'Pay Later'."
+      );
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
 
-    const basePayload = buildPayload();
+    const basePayload = buildPayload();
 
-    const finalPayload = {
-      ...basePayload,
-      paid: false,
-      ChargeID: "PAY_LATER",
-      originalPrice: basePayload.price, // Store the price value here for Klaviyo
-      price: 0, // Set price to 0 for internal tracking of unpaid/pending status
-    };
+    const finalPayload = {
+      ...basePayload,
+      paid: false,
+      ChargeID: "PAY_LATER",
+      originalPrice: basePayload.price, // Store the price value here for Klaviyo
+      price: 0, // Set price to 0 for internal tracking of unpaid/pending status
+    };
 
-    trackKlaviyoEvent(finalPayload);
-    setPaymentResult({
-      status: "pending",
-      message:
-        "You chose to pay later. We've reserved your slot and sent a payment link to your email.",
-    });
+    trackKlaviyoEvent(finalPayload);
+    setPaymentResult({
+      status: "pending",
+      message:
+        "You chose to pay later. We've reserved your slot and sent a payment link to your email.",
+    });
 
-    onConfirm?.(finalPayload);
+    onConfirm?.(finalPayload);
 
     console.log("Pay Later Payload:", finalPayload);
-  };
+  };
 
   // const handlePayNowSuccess = (paymentSummary) => {
   //   const payload = { ...buildPayload(), paid: true, ...paymentSummary };
@@ -278,14 +280,14 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
   // };
 
   const handlePayNowSuccess = (paymentSummary) => {
-    const payload = { ...buildPayload(), paid: true, ...paymentSummary };
-    trackKlaviyoEvent(payload);
-    setPaymentResult({
-      status: "success",
-      message: "Payment successful. A receipt has been sent to your email.",
-    });
-    onPayNow?.(payload); 
-  };
+    const payload = { ...buildPayload(), paid: true, ...paymentSummary };
+    trackKlaviyoEvent(payload);
+    setPaymentResult({
+      status: "success",
+      message: "Payment successful. A receipt has been sent to your email.",
+    });
+    onPayNow?.(payload);
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-0 lg:px-8 py-8 lg:py-12">
