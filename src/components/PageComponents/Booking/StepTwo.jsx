@@ -16,10 +16,17 @@ const trackKlaviyoEvent = (payload) => {
       Phone: payload.phone,
     },
   ]);
+  const eventName = payload.paid
+    ? "Booked Consultation"
+    : "Booked Consultation Pay Later";
+  const trackedPrice = payload.paid
+    ? payload.price
+    : payload.originalPrice || payload.price;
 
   _learnq.push([
     "track",
-    "Booked Consultation",
+    // "Booked Consultation",
+    eventName,
     {
       FullName: payload.fullName,
       IssuesNoted: payload.issues,
@@ -27,7 +34,7 @@ const trackKlaviyoEvent = (payload) => {
       meetingPref: payload.meetingPref,
       selectedDateIso: payload.selectedDateIso,
       selectedTime: payload.selectedTime,
-      price: payload.price,
+      price: trackedPrice,
       PaymentStatus: payload.paid ? "Paid" : "Pending",
       ChargeID: payload.ChargeID || "",
       SubmittedAt: new Date().toISOString(),
@@ -203,6 +210,34 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
   //     });
   //     onConfirm?.(payload);
   //   };
+  // const handlePayLater = () => {
+  //   if (!isFormValid()) {
+  //     alert(
+  //       "Please fill in your Full Name, Email, and Phone Number, and agree to the Terms before choosing 'Pay Later'."
+  //     );
+  //     window.scrollTo({ top: 0, behavior: "smooth" });
+  //     return;
+  //   }
+
+  //   const basePayload = buildPayload();
+
+  //   const finalPayload = {
+  //     ...basePayload,
+  //     paid: false,
+  //     ChargeID: "PAY_LATER",
+  //     price: 0,
+  //   };
+
+  //   trackKlaviyoEvent(finalPayload);
+  //   setPaymentResult({
+  //     status: "pending",
+  //     message:
+  //       "You chose to pay later. We'll remind you before your consultation.",
+  //   });
+
+  //   onConfirm?.(finalPayload);
+  // };
+
   const handlePayLater = () => {
     if (!isFormValid()) {
       alert(
@@ -218,19 +253,31 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
       ...basePayload,
       paid: false,
       ChargeID: "PAY_LATER",
-      price: 0,
+      originalPrice: basePayload.price, // Store the price value here for Klaviyo
+      price: 0, // Set price to 0 for internal tracking of unpaid/pending status
     };
 
     trackKlaviyoEvent(finalPayload);
     setPaymentResult({
       status: "pending",
       message:
-        "You chose to pay later. We'll remind you before your consultation.",
+        "You chose to pay later. We've reserved your slot and sent a payment link to your email.",
     });
 
     onConfirm?.(finalPayload);
-    // console.log("Pay Later Payload:", finalPayload);
+
+    console.log("Pay Later Payload:", finalPayload);
   };
+
+  // const handlePayNowSuccess = (paymentSummary) => {
+  //   const payload = { ...buildPayload(), paid: true, ...paymentSummary };
+  //   trackKlaviyoEvent(payload);
+  //   setPaymentResult({
+  //     status: "success",
+  //     message: "Payment successful. A receipt has been sent to your email.",
+  //   });
+  //   onPayNow?.(payload);
+  // };
 
   const handlePayNowSuccess = (paymentSummary) => {
     const payload = { ...buildPayload(), paid: true, ...paymentSummary };
