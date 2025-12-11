@@ -11,7 +11,7 @@ function PrimaryCTA({
   ...props
 }) {
   const baseStyles = cn(
-    "inline-flex items-center justify-center gap-2 font-inter px-6 py-3.5 bg-[#004f97] text-white font-bold text-base leading-6 rounded-full hover:bg-[#fff] hover:text-[#004f97] border border-[#004f97] hover:border-[#004f97] transition-all duration-200",
+    "inline-flex items-center justify-center gap-2 font-inter px-6 py-3.5 bg-[CYAN] text-black font-bold text-base leading-6 rounded-full hover:bg-[#fff] hover:text-[#000] border border-[CYAN] hover:border-[CYAN] transition-all duration-200",
     className
   );
 

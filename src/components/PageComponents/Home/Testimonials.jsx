@@ -138,24 +138,39 @@ function Testimonials() {
             {testimonials.map((testimonial) => (
               <CarouselItem
                 key={testimonial.id}
-                className="pl-4 basis-full sm:basis-1/2 lg:basis-[45%]"
+                className="pl-4 basis-full sm:basis-1/2 lg:basis-[45%] relative"
               >
+              
                 <TestimonialCard testimonial={testimonial} />
               </CarouselItem>
             ))}
           </CarouselContent>
 
-          {/* Custom Navigation */}
-          <div className="flex gap-3 md:absolute md:-top-33 md:right-0 justify-end items-center mt-8">
+          {/* Custom Navigation for md+ (desktop/tablet) */}
+              <div className="block md:hidden">
+                  <CarouselPrevious
+                    variant="ghost"
+                    className="absolute -left-3 top-1/2 -translate-y-1/2 z-10 w-8 cursor-pointer h-8 bg-[#f1f8ff] rounded-full hover:bg-[#e1f0ff] max-md:shadow-sm"
+                  >
+                    <ChevronLeft size={20} className="text-[#004f97]" />
+                  </CarouselPrevious>
+                  <CarouselNext
+                    variant="ghost"
+                    className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 w-8 cursor-pointer h-8 bg-[#f1f8ff] rounded-full hover:bg-[#e1f0ff] max-md:shadow-sm"
+                  >
+                    <ChevronRight size={20} className="text-[#004f97]" />
+                  </CarouselNext>
+                </div>
+          <div className="hidden md:flex gap-3 md:absolute md:-top-33 md:right-0 justify-end items-center mt-8">
             <CarouselPrevious
               variant="ghost"
-              className="static translate-y-0 w-11 h-11 bg-[#f1f8ff] rounded-full hover:bg-[#e1f0ff]"
+              className="static translate-y-0 w-11 h-11 bg-[#f1f8ff] rounded-full hover:bg-[#e1f0ff] cursor-pointer"
             >
               <ChevronLeft size={20} className="text-[#004f97]" />
             </CarouselPrevious>
             <CarouselNext
               variant="ghost"
-              className="static translate-y-0 w-11 h-11 bg-[#f1f8ff] rounded-full hover:bg-[#e1f0ff]"
+              className="static translate-y-0 w-11 h-11 bg-[#f1f8ff] rounded-full hover:bg-[#e1f0ff] cursor-pointer"
             >
               <ChevronRight size={20} className="text-[#004f97]" />
             </CarouselNext>
