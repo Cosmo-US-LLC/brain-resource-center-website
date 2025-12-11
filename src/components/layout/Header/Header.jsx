@@ -276,7 +276,7 @@ function Header() {
                   onClick={() => setIsSheetOpen(false)}
                 >
                   <Phone size={16} />
-                  1800 960 879
+                 212-877-2130
                 </SecondaryCTA>
                 <PrimaryCTA
                   to="/booking"
