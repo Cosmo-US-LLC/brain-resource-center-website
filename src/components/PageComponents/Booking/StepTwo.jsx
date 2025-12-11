@@ -1,9 +1,92 @@
 import React, { useState, useRef, useMemo } from "react";
-import { ArrowLeft, Clock } from "lucide-react";
+import { ArrowLeft, Clock, CheckCircle, X } from "lucide-react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import PaymentSection from "./PaymentSection";
 import { createPaymentIntent } from "@/services/stripe";
+
+
+function PayLaterModal({ bookingDetails, formattedPrice, onClose, onRedirect }) {
+  const {
+    fullName,
+    email,
+    phone,
+    meetingPref,
+    condition,
+    selectedDateIso,
+    selectedTime,
+  } = bookingDetails;
+
+  const niceDate = formatNiceDate(selectedDateIso);
+  const meetingLabel = meetingPref === "in_person" ? "In Person" : "Online";
+
+  // Use the redirect function when closing
+  const handleClose = () => {
+    onRedirect("/");
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000a3] !py-[70px] p-4">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-[700px] border border-gray-500 w-full p-6 lg:p-12">
+        
+        <div className="flex justify-end">
+          <button onClick={handleClose} className="cursor-pointer text-gray-400 hover:text-gray-600">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="text-center ">
+          <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
+            <CheckCircle className="w-10 h-10 text-green-600" />
+          </div>
+          
+          <h2 className="font-serif !text-[32px] font-semibold text-gray-900 mb-4">
+            Appointment Scheduled!
+          </h2>
+          <div className="text-gray-600 text-sm flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-blue-50 border border-blue-200 mx-auto mb-8 w-fit">
+            <Clock className="w-4 h-4 text-blue-600" />
+            You will receive an email shortly confirming your appointment
+          </div>
+        </div>
+
+        <div className="space-y-4 mb-8">
+          <div className="font-semibold text-lg text-gray-900 border-t border-gray-200 pt-6 mb-4">
+            Appointment Details
+          </div>
+          
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-gray-600 font-medium">Date & Time</span>
+            <span className="text-gray-900">{niceDate} at {selectedTime}</span>
+          </div>
+          
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-gray-600 font-medium">Condition</span>
+            <span className="text-gray-900">{condition}</span>
+          </div>
+          
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-gray-600 font-medium">Meeting Type</span>
+            <span className="text-gray-900">{meetingLabel}</span>
+          </div>
+
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-gray-600 font-medium">Email</span>
+            <span className="text-gray-900">{email}</span>
+          </div>
+        </div>
+
+        <div className="text-center">
+          <button
+            onClick={handleClose}
+            className="inline-flex items-center cursor-pointer justify-center w-full bg-[#004F97] hover:bg-[#004F97]/90 text-white h-12 text-base font-medium rounded-md"
+          >
+            Back to Home
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const trackKlaviyoEvent = (payload) => {
   const _learnq = window._learnq || [];
@@ -106,6 +189,10 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
     selectedTime = "9:00am",
     price = 350,
   } = booking;
+  
+  const navigate = (path) => {
+    window.location.href = path; 
+  }
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -121,6 +208,9 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
   const [initializingPayment, setInitializingPayment] = useState(false);
   const [paymentSetupError, setPaymentSetupError] = useState("");
   const [paymentResult, setPaymentResult] = useState(null);
+
+  const [showPayLaterModal, setShowPayLaterModal] = useState(false); 
+  const [payLaterPayload, setPayLaterPayload] = useState({});
 
   const paymentRef = useRef(null);
 
@@ -246,6 +336,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
+    
 
     const basePayload = buildPayload();
 
@@ -263,8 +354,9 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
       message:
         "You chose to pay later. We've reserved your slot and sent a payment link to your email.",
     });
-
     onConfirm?.(finalPayload);
+    setPayLaterPayload(finalPayload);
+    setShowPayLaterModal(true);
 
     console.log("Pay Later Payload:", finalPayload);
   };
@@ -293,13 +385,13 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
     <div className="max-w-6xl mx-auto px-0 lg:px-8 py-8 lg:py-12">
       <button
         onClick={onBack}
-        className="inline-flex items-center gap-2 mb-6 -ml-3 p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
+        className="inline-flex items-center gap-2 -ml-3  text-gray-600  hover:text-gray-900 "
       >
         <ArrowLeft className="w-4 h-4" />
         Back
       </button>
 
-      <div className="flex items-center justify-center gap-2 text-gray-600 dark:text-gray-400 mb-8">
+      <div className="flex items-center justify-center gap-2 text-gray-600  mb-8">
         <Clock className="w-4 h-4" />
         <span>
           {formatNiceDate(selectedDateIso)} at {selectedTime}
@@ -307,7 +399,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
       </div>
 
       <div className="max-w-2xl mx-auto bg-white rounded-2xl border border-gray-200 shadow-sm p-6 lg:p-12">
-        <div className="font-serif text-[36px] font-semibold text-gray-900  mb-3">
+        <div className="font-serif text-[36px] font-semibold text-gray-900 mb-3">
           Your Information
         </div>
         <p className="text-gray-600 text-[14px] mb-8">
@@ -460,7 +552,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
                 </svg>
               )}
             </button>
-            <label className="text-sm text-gray-600 dark:text-gray-400 cursor-pointer leading-relaxed">
+            <label className="text-sm text-gray-600  cursor-pointer leading-relaxed">
               I agree to the{" "}
               <button
                 type="button"
@@ -489,7 +581,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
               <div className="text-3xl font-semibold text-gray-900  mb-2">
                 Payment
               </div>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-gray-600 ">
                 Consultation Fee:{" "}
                 <span className="font-semibold text-[#004F97] text-lg">
                   {formattedPrice}
@@ -556,6 +648,14 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
           </div>
         )}
       </div>
+      {showPayLaterModal && (
+        <PayLaterModal
+         bookingDetails={payLaterPayload}
+          formattedPrice={formattedPrice}
+          onRedirect={navigate} 
+          onClose={() => setShowPayLaterModal(false)}
+        />
+      )}
     </div>
   );
 }

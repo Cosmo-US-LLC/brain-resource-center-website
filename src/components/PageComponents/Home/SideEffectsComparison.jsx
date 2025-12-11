@@ -114,7 +114,7 @@ function SideEffectsComparison() {
                 <div className="mt-3 md:mt-8">
                   <Link
                     to="/booking"
-                    className="inline-flex gap-2 items-center px-6 py-4 font-bold text-[#004f97] bg-white max-md:text-[12px] rounded-full transition-colors hover:bg-gray-100"
+                    className="inline-flex items-center bg-gray-50 gap-2 text-[black] border border-[CYAN] font-bold px-6 max-md:text-[12px] py-3 md:py-4 rounded-full w-fit hover:!bg-[CYAN] hover:text-black transition-colors group"
                   >
                     Book Appointment
                     <ArrowRight size={24} />

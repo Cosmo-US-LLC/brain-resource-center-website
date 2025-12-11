@@ -36,10 +36,10 @@ function CTASection() {
           {/* CTA Button */}
           <Link
             to="/booking"
-            className="inline-flex items-center bg-gray-50 gap-2 text-[#004f97] font-bold px-6 py-4 rounded-full w-fit hover:!bg-[#004f97] hover:text-white transition-colors group"
+            className="inline-flex items-center bg-gray-50 gap-2 text-[black] border border-[CYAN] font-bold px-6 py-4 rounded-full w-fit hover:!bg-[CYAN] hover:text-black transition-colors group"
           >
             Request an Appointment
-            <ArrowRight size={24} className="group-hover:text-white" />
+            <ArrowRight size={24} className="group-hover:text-black" />
           </Link>
         </div>
       </div>
