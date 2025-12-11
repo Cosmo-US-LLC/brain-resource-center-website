@@ -12,8 +12,8 @@ function Footer() {
   ];
 
   const socialLinks = [
-    { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
-    { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
+    { icon: Instagram, href: "https://www.instagram.com/brainresourcecenter/", label: "Instagram" },
+    // { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
   ];
 
   return (
@@ -159,7 +159,7 @@ function Footer() {
             </div>
 
             {/* Column 3 - Legal */}
-            <div className="sm:w-[200px] lg:w-[298px] shrink-0">
+            {/* <div className="sm:w-[200px] lg:w-[298px] shrink-0">
               <h3 className="font-serif font-semibold text-[22px] leading-7 text-white mb-6">
                 Legal
               </h3>
@@ -175,7 +175,7 @@ function Footer() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </div> */}
           </div>
         </div>
 
