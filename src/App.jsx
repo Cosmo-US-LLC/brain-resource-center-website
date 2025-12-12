@@ -5,6 +5,8 @@ import About from "./pages/About";
 import Layout from "./components/layout";
 import { useScrollToTop } from "./hooks/useScrollToTop";
 import Booking from "./pages/Booking";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsAndConditions from "./pages/TermsandConditions";
 
 function App() {
   useScrollToTop();
@@ -15,6 +17,8 @@ function App() {
         <Route index element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/booking" element={<Booking />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-conditions" element={<TermsAndConditions />} />
       </Route>
     </Routes>
   );

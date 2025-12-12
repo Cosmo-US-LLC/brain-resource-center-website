@@ -7,13 +7,12 @@ function Footer() {
 
   const legalLinks = [
     { to: "/privacy-policy", label: "Privacy Policy" },
-    { to: "/testimonials", label: "Client Testimonials" },
-    { to: "/terms", label: "Terms & Conditions" },
+    { to: "/terms-conditions", label: "Terms & Conditions" },
   ];
 
   const socialLinks = [
     { icon: Instagram, href: "https://www.instagram.com/brainresourcecenter/", label: "Instagram" },
-    // { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
+    { icon: Linkedin, href: "https://www.linkedin.com/company/brainresourcecenter/", label: "LinkedIn" },
   ];
 
   return (
@@ -159,7 +158,7 @@ function Footer() {
             </div>
 
             {/* Column 3 - Legal */}
-            {/* <div className="sm:w-[200px] lg:w-[298px] shrink-0">
+            <div className="sm:w-[200px] lg:w-[298px] shrink-0">
               <h3 className="font-serif font-semibold text-[22px] leading-7 text-white mb-6">
                 Legal
               </h3>
@@ -175,7 +174,7 @@ function Footer() {
                   </li>
                 ))}
               </ul>
-            </div> */}
+            </div>
           </div>
         </div>
 
