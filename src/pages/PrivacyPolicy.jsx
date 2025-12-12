@@ -69,7 +69,7 @@ function PrivacyPolicy() {
           <p className={`mb-4 ${textColor}`}>
           This Privacy Policy may be updated periodically. Continued use of the Brain Resource Center services constitutes acceptance of any revisions.
           </p>
-          <p className="text-lg mt-1">
+          <p className={`${textColor}`}>
             For inquiries regarding this Privacy Policy, please contact:
             <a
             style={{paddingLeft:"4px"}}

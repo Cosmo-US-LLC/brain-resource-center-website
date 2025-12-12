@@ -40,7 +40,7 @@ function TermsAndConditions() {
           <TermsSectionTitle>2. Appointments, Cancellations, and Communications</TermsSectionTitle>
           <p className={`mb-4 ${textColor} space-y-4`}>
             <p>
-               Appointments are confirmed only upon acknowledgment by the Brain Resource Center. Cancellations and rescheduling must adhere to the stated policies; fees may apply for non-compliance
+               Appointments are confirmed only upon acknowledgment by the Brain Resource Center. Cancellations and rescheduling must adhere to the stated policies; fees may apply for non-compliance.
             </p>
           </p>
         </section>
@@ -62,10 +62,10 @@ function TermsAndConditions() {
         <section className="mb-10">
           <TermsSectionTitle>5. Governing Law, Modifications, and Contact</TermsSectionTitle>
           
-          <p className={`mt-6 font-semibold ${textColor}`}>
+          <p className={`mt-6  ${textColor}`}>
            These Terms of this document are governed by the laws of the State of New York, United States of America. Brain Resource Center reserves the right to modify these Terms at any time, with continued use constituting acceptance of any changes.
-          </p>
-          <p className="text-lg mt-1">
+          </p> 
+          <p className={`mt-1 ${textColor}`}>
             Questions regarding these Terms may be directed to:
             <a 
             style={{paddingLeft:"4px"}}
