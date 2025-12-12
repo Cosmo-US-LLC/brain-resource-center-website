@@ -25,11 +25,6 @@ function PrivacyPolicy() {
             This Privacy Policy explains how we collect, use, and protect your personal information when you use our online platform and services, ensuring that your data is handled with the utmost care and in compliance with applicable laws.
           </p>
         </header>
-        <section className={`mb-10 text-lg ${textColor} space-y-4`}>
-          <p>
-          We collect personal information, including your name, email, phone number, payment details (processed via third parties), and technical information (e.g., IP address
-          </p>
-        </section>
 
         <section className="mb-10">
           <PolicySectionTitle>1. Information We Collect</PolicySectionTitle>
@@ -74,7 +69,7 @@ function PrivacyPolicy() {
           <p className={`mb-4 ${textColor}`}>
           This Privacy Policy may be updated periodically. Continued use of the Brain Resource Center services constitutes acceptance of any revisions.
           </p>
-          <p className="text-lg mt-1">
+          <p className={`${textColor}`}>
             For inquiries regarding this Privacy Policy, please contact:
             <a
             style={{paddingLeft:"4px"}}
