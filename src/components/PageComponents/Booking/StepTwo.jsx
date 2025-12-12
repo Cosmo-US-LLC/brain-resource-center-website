@@ -5,8 +5,12 @@ import { loadStripe } from "@stripe/stripe-js";
 import PaymentSection from "./PaymentSection";
 import { createPaymentIntent } from "@/services/stripe";
 
-
-function PayLaterModal({ bookingDetails, formattedPrice, onClose, onRedirect }) {
+function PayLaterModal({
+  bookingDetails,
+  formattedPrice,
+  onClose,
+  onRedirect,
+}) {
   const {
     fullName,
     email,
@@ -26,11 +30,16 @@ function PayLaterModal({ bookingDetails, formattedPrice, onClose, onRedirect }) 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000a3] !py-[70px] p-4">
+    <div
+      id="payLaterModal"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000a3] !py-[70px] p-4"
+    >
       <div className="bg-white rounded-2xl shadow-2xl max-w-[700px] border border-gray-500 w-full p-6 lg:p-12">
-        
         <div className="flex justify-end">
-          <button onClick={handleClose} className="cursor-pointer text-gray-400 hover:text-gray-600">
+          <button
+            onClick={handleClose}
+            className="cursor-pointer text-gray-400 hover:text-gray-600"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -39,8 +48,11 @@ function PayLaterModal({ bookingDetails, formattedPrice, onClose, onRedirect }) 
           <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
             <CheckCircle className="w-10 h-10 text-green-600" />
           </div>
-          
-          <h2 className="font-serif !text-[32px] font-semibold text-gray-900 mb-4">
+
+          <h2
+            id="payLaterModalHeading"
+            className="font-serif !text-[32px] font-semibold text-gray-900 mb-4"
+          >
             Appointment Scheduled!
           </h2>
           <div className="text-gray-600 text-sm flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-blue-50 border border-blue-200 mx-auto mb-8 w-fit">
@@ -53,17 +65,19 @@ function PayLaterModal({ bookingDetails, formattedPrice, onClose, onRedirect }) 
           <div className="font-semibold text-lg text-gray-900 border-t border-gray-200 pt-6 mb-4">
             Appointment Details
           </div>
-          
+
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600 font-medium">Date & Time</span>
-            <span className="text-gray-900">{niceDate} at {selectedTime}</span>
+            <span className="text-gray-900">
+              {niceDate} at {selectedTime}
+            </span>
           </div>
-          
+
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600 font-medium">Condition</span>
             <span className="text-gray-900">{condition}</span>
           </div>
-          
+
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600 font-medium">Meeting Type</span>
             <span className="text-gray-900">{meetingLabel}</span>
@@ -189,10 +203,10 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
     selectedTime = "9:00am",
     price = 350,
   } = booking;
-  
+
   const navigate = (path) => {
-    window.location.href = path; 
-  }
+    window.location.href = path;
+  };
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -209,7 +223,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
   const [paymentSetupError, setPaymentSetupError] = useState("");
   const [paymentResult, setPaymentResult] = useState(null);
 
-  const [showPayLaterModal, setShowPayLaterModal] = useState(false); 
+  const [showPayLaterModal, setShowPayLaterModal] = useState(false);
   const [payLaterPayload, setPayLaterPayload] = useState({});
 
   const paymentRef = useRef(null);
@@ -336,7 +350,6 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    
 
     const basePayload = buildPayload();
 
@@ -650,9 +663,9 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
       </div>
       {showPayLaterModal && (
         <PayLaterModal
-         bookingDetails={payLaterPayload}
+          bookingDetails={payLaterPayload}
           formattedPrice={formattedPrice}
-          onRedirect={navigate} 
+          onRedirect={navigate}
           onClose={() => setShowPayLaterModal(false)}
         />
       )}
