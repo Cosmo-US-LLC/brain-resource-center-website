@@ -99,7 +99,7 @@ function TherapyRightForMe() {
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 gap-4 mb-10 sm:grid-cols-2 lg:grid-cols-4 md:mb-12">
-          {reasons.map((reason) => (
+          {reasons.map((reason, index) => (
             <div
               key={reason.id}
               className={`${reason.bgColor} rounded-xl pt-8  flex flex-col items-center`}
@@ -117,7 +117,11 @@ function TherapyRightForMe() {
                 <h3 className="font-serif px-6 md:px-8  font-semibold text-lg md:text-[22px] leading-7 text-[#004f97] mb-2">
                   {reason.title}
                 </h3>
-                <p className="text-[#002f5b] text-sm md:text-[16px] leading-5 !w-[100%] !max-w-[185px] mx-auto">
+                <p 
+                className={`text-[#002f5b] text-sm md:text-[16px] leading-5 !w-[100%] mx-auto ${
+                        index === 2 ? "!max-w-[185px]" : "!max-w-[190px]"
+                    }`}
+                >
                   {reason.description}
                 </p>
               </div>
