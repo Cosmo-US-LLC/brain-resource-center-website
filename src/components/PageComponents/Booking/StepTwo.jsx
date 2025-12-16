@@ -125,7 +125,7 @@ function PayLaterModal({ bookingDetails, formattedPrice, onClose, onRedirect }) 
   const handleClose = () => {
     onClose(); 
     updateUrlParams("booking_status", ""); 
-    onRedirect("/booking/reserved"); 
+    onRedirect("/"); 
   };
 
   return (
@@ -322,7 +322,6 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
   const [showPayLaterModal, setShowPayLaterModal] = useState(false); 
   const [payLaterPayload, setPayLaterPayload] = useState({});
     
-  // State for Pay Now Success Modal
   const [showSuccessModal, setShowSuccessModal] = useState(false); 
   const [successModalPayload, setSuccessModalPayload] = useState({});
 
