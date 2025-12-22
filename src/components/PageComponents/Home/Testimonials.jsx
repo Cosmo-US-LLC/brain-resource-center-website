@@ -1,5 +1,6 @@
 import React from "react";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import Autoplay from "embla-carousel-autoplay";
 import {
   Carousel,
   CarouselContent,
@@ -121,7 +122,8 @@ function Testimonials() {
       <div className="max-w-[1280px] mx-auto px-4 md:px-8 relative">
         {/* Header */}
         <div className="flex justify-between items-center mb-10 md:mb-12">
-          <h2 className="font-serif font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-[#004f97]">
+          <h2 className="font-serif font-semibold text-[32px] 
+          md:text-[42px] lg:text-[54px] leading-[1.1] text-[#00203C]">
             Testimonials
           </h2>
         </div>
@@ -132,6 +134,12 @@ function Testimonials() {
             align: "start",
             loop: true,
           }}
+          plugins={[
+            Autoplay({
+              delay: 3000,
+              stopOnInteraction: false,
+            }),
+          ]}
           className="w-full"
         >
           <CarouselContent className="-ml-4">

@@ -11,7 +11,7 @@ function SecondaryCTA({
   ...props
 }) {
   const baseStyles = cn(
-    "inline-flex items-center justify-center gap-2 font-inter px-6 py-3.5 border border-[CYAN] text-[#000] font-bold text-base leading-6 rounded-full hover:bg-[CYAN] hover:text-black transition-all duration-200",
+    "inline-flex items-center justify-center gap-2 font-inter px-6 py-3.5 border border-[#004F97] text-[#004F97] font-bold text-base leading-6 rounded-full hover:bg-[#004F97] hover:text-white transition-all duration-200",
     className
   );
 

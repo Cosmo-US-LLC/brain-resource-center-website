@@ -45,10 +45,11 @@ function OurResults() {
               {/* CTA Button - Light style */}
               <Link
                 to="/booking"
-                className="inline-flex items-center bg-gray-50 gap-2 text-[black] border border-[CYAN] font-bold px-6 py-4 rounded-full w-fit hover:!bg-[CYAN] hover:text-black transition-colors group"
+                className="inline-flex items-center bg-gray-50 gap-2 text-[#004F97] 
+                border border-[#004F97] font-bold px-6 py-4 rounded-full w-fit hover:!bg-[#004F97] hover:text-white transition-colors group"
               >
                 Book Appointment
-                <ArrowRight size={24} className="group-hover:text-black" />
+                <ArrowRight size={24} className="group-hover:text-[#fff]" />
               </Link>
             </div>
           </div>
@@ -61,7 +62,7 @@ function OurResults() {
                 className="bg-[#f1f8ff] min-h-[171px] rounded-xl p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-5"
               >
                 {/* Percentage */}
-                <p className="font-[LTSuperiorSerif] font-[600] text-[36px] md:text-[54px] lg:text-[54px] leading-[1.1] text-[#004f97] shrink-0">
+                <p className="font-[LTSuperiorSerif] font-[600] text-[36px] md:text-[54px] lg:text-[54px] leading-[1.1] text-[#00203C] shrink-0">
                   {stat.percentage}
                 </p>
                 {/* Description */}

@@ -12,13 +12,13 @@ const faqs = [
     id: "faq-1",
     question: "What treatments do you offer for anxiety and depression?",
     answer:
-      "We offer a combination of neurofeedback therapy, CBT, and rTMS to effectively treat anxiety and depression by regulating brain activity and addressing negative thought patterns.",
+      "We offer rTMS therapy, an FDA-approved treatment that uses targeted magnetic pulses to help alleviate anxiety and depression by restoring healthy brain activity.",
   },
   {
     id: "faq-2",
-    question: "How does neurofeedback help with brain health?",
+    question: "Is rTMS therapy safe?",
     answer:
-      "Neurofeedback helps your brain learn healthier patterns by giving real-time feedback on brain activity. Over time, this can improve mood, focus, and emotional control, helping you feel more like yourself again.",
+      "Yes, rTMS therapy is FDA-approved and non-invasive, with minimal side effects, making it a safe option for treating anxiety, depression as well as other conditions",
   },
   {
     id: "faq-3",

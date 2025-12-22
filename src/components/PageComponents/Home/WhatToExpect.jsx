@@ -10,21 +10,21 @@ const steps = [
     icon: "/images/home/what_to_expect/users-message-support.svg",
     title: "Personalized Consultation with Dr. Kamran Fallahpour",
     description:
-      "Discuss your depression symptoms with Dr. Fallahpour, who will listen carefully to understand your unique experience.",
+      "You’ll have a one-on-one discussion with Dr. Fallahpour to understand your symptoms, history, and goals. This helps us determine if rTMS is right for you.",
   },
   {
     id: 2,
     icon: "/images/home/what_to_expect/medical-notes.svg",
-    title: "Comprehensive <br/> Assessment",
+    title: "Comprehensive Brain <br/> Assessment",
     description:
-      "Through neurofeedback and neuropsychological screening, we identify the specific brain patterns linked to your depression, creating an objective, data-driven foundation for treatment.",
+      "Using advanced assessments, we analyze how your brain regulates mood, focus, and emotions. This data helps identify areas that may benefit from rTMS treatment.",
   },
   {
     id: 3,
     icon: "/images/home/what_to_expect/notes-edit.svg",
-    title: "Tailored <br/> Treatment Plan",
+    title: "Customized rTMS  <br/> Treatment Plan",
     description:
-      "Integrate Cognitive Behavioral Therapy (CBT), Interpersonal Therapy (IPT), and advanced neuromodulation therapies to deliver targeted, drug-free symptom relief and long-term emotional resilience.",
+      "Based on your assessment, we create a personalized rTMS treatment plan tailored to your specific needs. Using FDA-approved rTMS technology, we  target brain activity and improve symptoms.",
   },
 ];
 
@@ -42,8 +42,8 @@ function WhatToExpect() {
             />
             {/* Heading Overlay */}
             <div className="absolute inset-0 p-8 md:p-10">
-              <h2 className="text-[#004f97] max-w-[450px]">
-                What to Expect in Your First Consultation
+              <h2 className="text-[#00203C] max-w-[300px]">
+              How Do We Help?
               </h2>
             </div>
           </div>

@@ -210,6 +210,20 @@ h3,
   animation: fadein 0.5s forwards;
 }
 
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out;
+}
+
 /* ========== Mobile (max-width: 767px) ========== */
 @media (max-width: 767px) {
   h1,
