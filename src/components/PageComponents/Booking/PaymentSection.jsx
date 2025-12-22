@@ -201,13 +201,13 @@ export default function PaymentSection({
         >
           {processing ? "Processing..." : "Pay Now"}
         </button>
-        <button
+        {/* <button
           type="button"
           onClick={() => onPayLater?.()}
           className="bg-[#1A4F97] hover:bg-[#1A4F97] text-white h-12 rounded-[5px] font-medium"
         >
           Pay Later
-        </button>
+        </button> */}
       </div>
     </div>
   );

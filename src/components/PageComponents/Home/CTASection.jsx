@@ -24,23 +24,22 @@ function CTASection() {
               Ready to Improve Your Mental Health and Brain Function?
             </h2>
             <p className="text-white text-base md:text-xl leading-7 max-w-[1060px]">
-              It's time to take the first step toward a more balanced,
-              fulfilling life. At Brain Resource Center, our non-invasive
-              therapies and personalized care help you regain control of your
-              mind, emotions, and behavior. Whether you're struggling with
-              anxiety, depression, or just looking to optimize your brain
-              health, we're here to help.
+            It’s time to take the first step toward a more balanced, 
+            fulfilling life. At Brain Resource Center, our non-invasive 
+            therapies and personalized care help you regain control of your mind, 
+            emotions, and behavior. Whether you're struggling with anxiety, depression, or just 
+            looking to optimize your brain health, we're here to help.
             </p>
           </div>
 
           {/* CTA Button */}
           <Link
-            to="/booking"
-            className="inline-flex items-center bg-gray-50 gap-2 text-[black] border border-[CYAN] font-bold px-6 py-4 rounded-full w-fit hover:!bg-[CYAN] hover:text-black transition-colors group"
-          >
+              to="/booking"
+              className="inline-flex items-center  bg-gray-50 gap-2 text-[#004F97] border border-[#004F97] font-bold px-6 py-4 rounded-full w-fit hover:!bg-[#004F97] hover:text-white transition-colors group"
+            >
             Request an Appointment
-            <ArrowRight size={24} className="group-hover:text-black" />
-          </Link>
+              <ArrowRight size={24} className="group-hover:text-[#fff]" />
+            </Link>
         </div>
       </div>
     </section>

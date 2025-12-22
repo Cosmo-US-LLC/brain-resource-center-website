@@ -88,10 +88,10 @@ function TherapyRightForMe() {
       <div className="max-w-[1280px] mx-auto px-4 md:px-8">
         {/* Heading */}
         <div className="mb-10 text-center md:mb-12">
-          <h2 className="font-serif font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-[#004f97] mb-5">
-            rTMS Therapy Right for Me?
+          <h2 className="font-serif font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-[#00203C] mb-5">
+          Common Symptoms Treated with rTMS
           </h2>
-          <p className="text-[#002f5b] text-base md:text-xl leading-7 max-w-[670px] mx-auto">
+          <p className="text-[#002F5B] text-base md:text-xl leading-7 max-w-[670px] mx-auto">
             rTMS therapy may be right for you if you're struggling with
             depression and experiencing symptoms such as the following
           </p>

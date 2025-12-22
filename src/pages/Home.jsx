@@ -1,5 +1,7 @@
 import React from "react";
 import Hero from "../components/PageComponents/Home/Hero";
+import HowRTMSWorks from "../components/PageComponents/Home/HowRTMSWorks";
+import WhoCanBenefit from "../components/PageComponents/Home/WhoCanBenefit";
 import Runner from "../components/PageComponents/Home/Runner";
 import USPs from "../components/PageComponents/Home/USPs";
 import WhatToExpect from "../components/PageComponents/Home/WhatToExpect";
@@ -18,13 +20,15 @@ function Home() {
     <div>
       <Hero />
       <Runner />
-      <USPs />
+      <HowRTMSWorks />
+      <WhoCanBenefit />
+      {/* <USPs /> */}
       <WhatToExpect />
       <TherapyRightForMe />
-      <CoreServices />
       <OurResults />
       <GetBestResults />
       <AboutSection />
+      {/* <CoreServices /> */}
       <SideEffectsComparison />
       <CTASection />
       <Testimonials />

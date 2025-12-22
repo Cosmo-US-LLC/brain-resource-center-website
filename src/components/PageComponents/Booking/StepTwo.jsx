@@ -29,6 +29,7 @@ function SuccessModal({ bookingDetails, formattedPrice, onClose, onRedirect }) {
 
   const niceDate = formatNiceDate(selectedDateIso);
   const meetingLabel = meetingPref === "in_person" ? "In Person" : "Online";
+  const isOnline = meetingPref === "online";
 
   const handleClose = () => {
     onClose(); 
@@ -37,7 +38,7 @@ function SuccessModal({ bookingDetails, formattedPrice, onClose, onRedirect }) {
   };
 
   return (
-      <div
+     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000a3] !py-[70px] p-4"
     >
       <div className="bg-white rounded-2xl shadow-2xl max-w-[700px] border border-gray-500 w-full p-6 lg:p-12">
@@ -61,9 +62,12 @@ function SuccessModal({ bookingDetails, formattedPrice, onClose, onRedirect }) {
           >
             Payment Complete!
           </h2>
-          <div className="text-gray-600 text-sm flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-blue-50 border border-blue-200 mx-auto mb-8 w-fit">
+          <div className="text-gray-600 text-sm flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-blue-50 border border-blue-200 mx-auto mb-8 w-fit max-w-md">
             <Clock className="w-4 h-4 text-blue-600" />
-             Your booking is confirmed.
+            {isOnline 
+              ? "Your online appointment is confirmed. You will receive a meeting link via email shortly."
+              : "Your in-person appointment is confirmed. We look forward to seeing you at our location."
+            }
           </div>
         </div>
 
@@ -109,27 +113,28 @@ function SuccessModal({ bookingDetails, formattedPrice, onClose, onRedirect }) {
 }
 
 function PayLaterModal({ bookingDetails, formattedPrice, onClose, onRedirect }) {
-  const {
-    fullName,
-    email,
-    phone,
-    meetingPref,
-    condition,
-    selectedDateIso,
-    selectedTime,
-  } = bookingDetails;
+  const {
+    fullName,
+    email,
+    phone,
+    meetingPref,
+    condition,
+    selectedDateIso,
+    selectedTime,
+  } = bookingDetails;
 
-  const niceDate = formatNiceDate(selectedDateIso);
-  const meetingLabel = meetingPref === "in_person" ? "In Person" : "Online";
+  const niceDate = formatNiceDate(selectedDateIso);
+  const meetingLabel = meetingPref === "in_person" ? "In Person" : "Online";
+  const isOnline = meetingPref === "online";
 
-  const handleClose = () => {
+  const handleClose = () => {
     onClose(); 
     updateUrlParams("booking_status", ""); 
-    onRedirect("/"); 
-  };
+    onRedirect("/"); 
+  };
 
-  return (
-  <div
+  return (
+  <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000a3] !py-[70px] p-4"
     >
       <div className="bg-white rounded-2xl shadow-2xl max-w-[700px] border border-gray-500 w-full p-6 lg:p-12">
@@ -151,11 +156,14 @@ function PayLaterModal({ bookingDetails, formattedPrice, onClose, onRedirect }) 
             id="payLaterModalHeading"
             className="font-serif !text-[32px] font-semibold text-gray-900 mb-4"
           >
-            Appointment Scheduled!
+            Thank You!
           </h2>
           <div className="text-gray-600 text-sm flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-blue-50 border border-blue-200 mx-auto mb-8 w-fit">
             <Clock className="w-4 h-4 text-blue-600" />
-            You will receive an email shortly confirming your appointment
+            {isOnline 
+              ? "Your online appointment has been reserved. You will receive a payment link via email to complete your booking."
+              : "Your appointment has been reserved. You will receive a payment link via email to complete your booking and confirm your in-person visit."
+            }
           </div>
         </div>
 
@@ -252,22 +260,32 @@ function formatNiceDate(iso) {
     return iso;
   }
 }
-function TextInput({ label, value, onChange, placeholder, type = "text", id }) {
-  return (
-      <div>
+function TextInput({ label, value, onChange, placeholder, type = "text", id, required = false, error = "", onBlur }) {
+  const hasError = error && error.length > 0;
+  return (
+    <div>
       <label className="text-sm font-medium text-gray-700 " htmlFor={id}>
         {label}
+        {required && <span className="text-red-500 ml-1">*</span>}
       </label>
       <input
         id={id}
         type={type}
         value={value}
         onChange={onChange}
+        onBlur={onBlur}
         placeholder={placeholder}
-        className="flex h-9 w-full rounded-md border-[1px] border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground outline-none  mt-1.5"
+        className={`flex h-9 w-full rounded-md border-[1px] bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground outline-none mt-1.5 ${
+          hasError 
+            ? "border-red-500 focus:border-red-500 focus:ring-red-500" 
+            : "border-input"
+        }`}
       />
+      {hasError && (
+        <p className="text-red-600 text-xs mt-1">{error}</p>
+      )}
     </div>
-  );
+  );
 }
 function MeetingOption({ type, selected, onClick, icon, label }) {
   const active = selected === type;
@@ -304,15 +322,29 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
     window.location.href = path; 
   }
 
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [countryCode, setCountryCode] = useState("+1");
-  const [phone, setPhone] = useState("");
-  const [phoneError, setPhoneError] = useState("");
-  const [meetingPref, setMeetingPref] = useState("in_person");
-  const [issues, setIssues] = useState("");
-  const [termsChecked, setTermsChecked] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [countryCode, setCountryCode] = useState("+1");
+  const [phone, setPhone] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [meetingPref, setMeetingPref] = useState("in_person");
+  const [issues, setIssues] = useState("");
+  const [termsChecked, setTermsChecked] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  
+  // Validation errors state
+  const [errors, setErrors] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    terms: "",
+  });
+  const [touched, setTouched] = useState({
+    fullName: false,
+    email: false,
+    phone: false,
+    terms: false,
+  });
   const [showPayment, setShowPayment] = useState(false);
   const [clientSecret, setClientSecret] = useState("");
   const [initializingPayment, setInitializingPayment] = useState(false);
@@ -352,20 +384,74 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
   );
 
 
-  const isValidPhone = (value) => {
-    const digits = value.replace(/\D/g, "");
-    return digits.length >= 7;
-  };
+  const isValidPhone = (value) => {
+    const digits = value.replace(/\D/g, "");
+    return digits.length >= 7;
+  };
 
-  const isFormValid = () => {
-    return (
-      fullName.trim() &&
-      /^\S+@\S+\.\S+$/.test(email) &&
-      phone.trim() &&
-      isValidPhone(phone) &&
-      termsChecked
-    );
-  };
+  const validateField = (fieldName, value) => {
+    let error = "";
+    
+    switch (fieldName) {
+      case "fullName":
+        if (!value.trim()) {
+          error = "Full Name is required";
+        }
+        break;
+      case "email":
+        if (!value.trim()) {
+          error = "Email is required";
+        } else if (!/^\S+@\S+\.\S+$/.test(value)) {
+          error = "Please enter a valid email address";
+        }
+        break;
+      case "phone":
+        if (!value.trim()) {
+          error = "Phone Number is required";
+        } else if (!isValidPhone(value)) {
+          error = "Please enter a valid phone number (at least 7 digits)";
+        }
+        break;
+      case "terms":
+        if (!value) {
+          error = "You must agree to the Terms and Conditions";
+        }
+        break;
+      default:
+        break;
+    }
+    
+    return error;
+  };
+
+  const validateAllFields = () => {
+    const newErrors = {
+      fullName: validateField("fullName", fullName),
+      email: validateField("email", email),
+      phone: validateField("phone", phone),
+      terms: validateField("terms", termsChecked ? true : false),
+    };
+    
+    setErrors(newErrors);
+    setTouched({
+      fullName: true,
+      email: true,
+      phone: true,
+      terms: true,
+    });
+    
+    return !Object.values(newErrors).some(error => error !== "");
+  };
+
+  const isFormValid = () => {
+    return (
+      fullName.trim() &&
+      /^\S+@\S+\.\S+$/.test(email) &&
+      phone.trim() &&
+      isValidPhone(phone) &&
+      termsChecked
+    );
+  };
 
   const buildPayload = () => ({
     condition,
@@ -403,30 +489,44 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
     }
   };
 
-  const handleFormSubmit = async () => {
-    if (!isFormValid()) return;
-    setSubmitting(true);
-    try {
-      const payload = buildPayload();
-      if (onConfirm) await onConfirm(payload);
-      setPaymentResult(null);
-      await initializePayment(payload);
-      setShowPayment(true);
-      paymentRef.current?.scrollIntoView({ behavior: "smooth" });
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  const handlePayNow = async () => {
+    if (!validateAllFields()) {
+      // Scroll to first error
+      const firstErrorField = document.querySelector('[id="fullName"], [id="email"], [id="phone"]');
+      if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: "smooth", block: "center" });
+        firstErrorField.focus();
+      }
+      return;
+    }
+    
+    setSubmitting(true);
+    try {
+      const payload = buildPayload();
+      if (onConfirm) await onConfirm(payload);
+      setPaymentResult(null);
+      await initializePayment(payload);
+      setShowPayment(true);
+      // Smooth scroll to payment section with animation
+      setTimeout(() => {
+        paymentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
 
-  const handlePayLater = () => {
-    if (!isFormValid()) {
-      alert(
-        "Please fill in your Full Name, Email, and Phone Number, and agree to the Terms before choosing 'Pay Later'."
-      );
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
+  const handlePayLater = () => {
+    if (!validateAllFields()) {
+      // Scroll to first error
+      const firstErrorField = document.querySelector('[id="fullName"], [id="email"], [id="phone"]');
+      if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: "smooth", block: "center" });
+        firstErrorField.focus();
+      }
+      return;
+    }
     
 
     const basePayload = buildPayload();
@@ -495,68 +595,105 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
           Please provide your details to complete the booking
         </p>
 
-        <form className="space-y-6 mb-10" onSubmit={(e) => e.preventDefault()}>
-          <TextInput
-            id="fullName"
-            label="Full Name"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            placeholder="John Smith"
-          />
-          <TextInput
-            id="email"
-            type="email"
-            label="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="john@example.com"
-          />
+        <form className="space-y-6 mb-10" onSubmit={(e) => e.preventDefault()}>
+          <TextInput
+            id="fullName"
+            label="Full Name"
+            value={fullName}
+            onChange={(e) => {
+              setFullName(e.target.value);
+              if (touched.fullName) {
+                setErrors({ ...errors, fullName: validateField("fullName", e.target.value) });
+              }
+            }}
+            onBlur={() => {
+              setTouched({ ...touched, fullName: true });
+              setErrors({ ...errors, fullName: validateField("fullName", fullName) });
+            }}
+            placeholder="John Smith"
+            required
+            error={errors.fullName}
+          />
+          <TextInput
+            id="email"
+            type="email"
+            label="Email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (touched.email) {
+                setErrors({ ...errors, email: validateField("email", e.target.value) });
+              }
+            }}
+            onBlur={() => {
+              setTouched({ ...touched, email: true });
+              setErrors({ ...errors, email: validateField("email", email) });
+            }}
+            placeholder="john@example.com"
+            required
+            error={errors.email}
+          />
 
-          <div>
-            <label
-              className="text-sm font-medium text-gray-700 "
-              htmlFor="phone"
-            >
-              Phone Number
-            </label>
-            <div className="flex gap-2 mt-1.5">
-              <select
-                value={countryCode}
-                onChange={(e) => setCountryCode(e.target.value)}
-                className="flex h-9 items-center justify-between rounded-md border-[1px] border-input bg-background px-3 py-2 text-sm outline-none"
-                style={{ width: 96 }}
-              >
-                <option value="+1">+1</option>
-                <option value="+44">+44</option>
-                <option value="+61">+61</option>
-                <option value="+92">+92</option>
-                <option value="+91">+91</option>
-              </select>
-              <input
-                id="phone"
-                type="tel"
-                value={phone}
-                onChange={(e) => {
-                  const digitsOnly = e.target.value.replace(/\D/g, "");
-                  setPhone(digitsOnly);
-                  if (!isValidPhone(digitsOnly)) {
-                    setPhoneError("Please enter a valid phone number.");
-                  } else {
-                    setPhoneError("");
-                  }
-                }}
-                placeholder="(555) 123-4567"
-                className={`flex h-9 w-full rounded-md border-[1px] border-input bg-background px-3 py-2 text-base outline-none ${
-                  phoneError ? "border-red-500" : ""
-                }`}
-                inputMode="numeric"
-                pattern="[0-9]*"
-              />
-            </div>
-            {phoneError && (
-              <div className="text-red-600 text-xs mt-1">{phoneError}</div>
-            )}
-          </div>
+          <div>
+            <label
+              className="text-sm font-medium text-gray-700 "
+              htmlFor="phone"
+            >
+              Phone Number
+              <span className="text-red-500 ml-1">*</span>
+            </label>
+            <div className="flex gap-2 mt-1.5">
+              <select
+                value={countryCode}
+                onChange={(e) => setCountryCode(e.target.value)}
+                className="flex h-9 items-center justify-between rounded-md border-[1px] border-input bg-background px-3 py-2 text-sm outline-none"
+                style={{ width: 96 }}
+              >
+                <option value="+1">+1</option>
+                <option value="+44">+44</option>
+                <option value="+61">+61</option>
+                <option value="+92">+92</option>
+                <option value="+91">+91</option>
+              </select>
+              <input
+                id="phone"
+                type="tel"
+                value={phone}
+                onChange={(e) => {
+                  const digitsOnly = e.target.value.replace(/\D/g, "");
+                  setPhone(digitsOnly);
+                  const phoneErrorMsg = validateField("phone", digitsOnly);
+                  setErrors({ ...errors, phone: phoneErrorMsg });
+                  if (touched.phone) {
+                    if (!isValidPhone(digitsOnly)) {
+                      setPhoneError("Please enter a valid phone number.");
+                    } else {
+                      setPhoneError("");
+                    }
+                  }
+                }}
+                onBlur={() => {
+                  setTouched({ ...touched, phone: true });
+                  const phoneErrorMsg = validateField("phone", phone);
+                  setErrors({ ...errors, phone: phoneErrorMsg });
+                  if (!isValidPhone(phone)) {
+                    setPhoneError("Please enter a valid phone number.");
+                  } else {
+                    setPhoneError("");
+                  }
+                }}
+                placeholder="(555) 123-4567"
+                className={`flex h-9 w-full rounded-md border-[1px] bg-background px-3 py-2 text-base outline-none ${
+                  (errors.phone || phoneError) ? "border-red-500 focus:border-red-500 focus:ring-red-500" : "border-input"
+                }`}
+                inputMode="numeric"
+                pattern="[0-9]*"
+              />
+            </div>
+            {(errors.phone || phoneError) && (
+              <div className="text-red-600 text-xs mt-1">{errors.phone || phoneError}</div>
+            )}
+          </div>
 
           <div>
             <label className="text-sm font-medium text-gray-700  block">
@@ -621,52 +758,79 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
 </div>
           </div>
 
-          <div className="flex items-start gap-3">
-            <button
-              type="button"
-              aria-checked={termsChecked}
-              onClick={() => setTermsChecked((s) => !s)}
-              className={`peer h-4 w-4 shrink-0 rounded-sm border ${
-                termsChecked ? "bg-[#004F97] text-white" : ""
-              } flex items-center justify-center`}
-            >
-              {termsChecked && (
-                <svg
-                  className="h-4 w-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M20 6 9 17l-5-5"></path>
-                </svg>
-              )}
-            </button>
-            <label className="text-sm text-gray-600  cursor-pointer leading-relaxed">
-              I agree to the{" "}
-              <button
-                type="button"
-                className="text-[#004F97] underline hover:text-[#004F97]/80"
-              >
-                Terms and Conditions
-              </button>
-            </label>
-          </div>
+          <div>
+            <div className="flex items-start gap-3">
+              <button
+                type="button"
+                aria-checked={termsChecked}
+                onClick={() => {
+                  const newValue = !termsChecked;
+                  setTermsChecked(newValue);
+                  if (touched.terms) {
+                    setErrors({ ...errors, terms: validateField("terms", newValue) });
+                  }
+                }}
+                onBlur={() => {
+                  setTouched({ ...touched, terms: true });
+                  setErrors({ ...errors, terms: validateField("terms", termsChecked) });
+                }}
+                className={`peer h-4 w-4 shrink-0 rounded-sm border ${
+                  termsChecked ? "bg-[#004F97] text-white" : ""
+                } ${
+                  errors.terms ? "border-red-500" : ""
+                } flex items-center justify-center`}
+              >
+                {termsChecked && (
+                  <svg
+                    className="h-4 w-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M20 6 9 17l-5-5"></path>
+                  </svg>
+                )}
+              </button>
+              <label className="text-sm text-gray-600 cursor-pointer leading-relaxed">
+                I agree to the{" "}
+                <button
+                  type="button"
+                  className="text-[#004F97] underline hover:text-[#004F97]/80"
+                >
+                  Terms and Conditions
+                </button>
+                <span className="text-red-500 ml-1">*</span>
+              </label>
+            </div>
+            {errors.terms && (
+              <p className="text-red-600 text-xs mt-1 ml-7">{errors.terms}</p>
+            )}
+          </div>
 
-          <button
-            onClick={handleFormSubmit}
-            disabled={!isFormValid() || submitting}
-            className="inline-flex items-center justify-center gap-2 w-full bg-[#004F97] hover:bg-[#004F97]/90 text-white h-12 text-base font-medium rounded-md disabled:opacity-60"
-          >
-            {submitting ? "Submitting..." : "Continue to Payment"}
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={handlePayNow}
+              disabled={!isFormValid() || submitting || initializingPayment}
+              className="inline-flex items-center cursor-pointer justify-center gap-2 flex-1 bg-[#004F97] hover:bg-[#004F97]/90 text-white h-12 text-base font-medium rounded-md disabled:opacity-60 transition-all"
+            >
+              {submitting || initializingPayment ? "Processing..." : "Pay Now"}
+            </button>
+            <button
+              onClick={handlePayLater}
+              disabled={!isFormValid() || submitting}
+              className="inline-flex items-center cursor-pointer justify-center gap-2 flex-1 bg-white border-2 border-[#004F97] text-[#004F97] hover:bg-[#004F97]/5 h-12 text-base font-medium rounded-md disabled:opacity-60 transition-all"
+            >
+              Pay Later
+            </button>
+          </div>
         </form>
 
-        {showPayment && (
-          <div
-            ref={paymentRef}
-            className="border-t border-gray-200 dark:border-gray-700 pt-8"
-          >
+        {showPayment && (
+          <div
+            ref={paymentRef}
+            className="border-t border-gray-200 dark:border-gray-700 pt-8 animate-slide-up"
+          >
             <div className="mb-6">
               <div className="text-3xl font-semibold text-gray-900  mb-2">
                 Payment

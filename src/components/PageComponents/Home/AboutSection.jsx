@@ -101,7 +101,7 @@ function AboutSection() {
   return (
     <section className="py-16 bg-white md:py-20">
       <div className="max-w-[1280px] mx-auto px-4 md:px-8">
-        <h2 className="font-serif font-semibold md:text-center text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-[#004f97] mb-6 md:mb-12">
+        <h2 className="font-serif font-semibold md:text-center text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-[#00203C] mb-6 md:mb-12">
           About Brain Resource Center
         </h2>
         <div className="flex flex-col gap-10 items-center lg:flex-row ">
