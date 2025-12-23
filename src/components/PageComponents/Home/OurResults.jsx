@@ -62,9 +62,9 @@ function OurResults() {
                 className="bg-[#f1f8ff] min-h-[171px] rounded-xl p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-5"
               >
                 {/* Percentage */}
-                <p className="font-[LTSuperiorSerif] font-[600] text-[36px] md:text-[54px] lg:text-[54px] leading-[1.1] text-[#00203C] shrink-0">
+                <h3 className="font-[LTSuperiorSerif] font-[600] !text-[36px] md:!text-[54px] lg:!text-[54px] leading-[1.1] text-[#00203C] shrink-0">
                   {stat.percentage}
-                </p>
+                </h3>
                 {/* Description */}
                 <p className="text-[#002f5b] text-sm md:text-[16px] leading-5">
                   {stat.description}
