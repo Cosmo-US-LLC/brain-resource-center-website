@@ -75,7 +75,7 @@ function HowRTMSWorks() {
         <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-2">
           <div className="lg:w-[260px] xl:w-[270px] max-md:w-[100%] flex-shrink-0">
             <h2
-              className="text-[#00203C] md:text-[54px] text-[33px] max-md:text-center max-md:justify-center max-md:max-w-[250px] max-md:flex-wrap flex flex-row gap-2 md:gap-0 md:flex-col"
+              className="text-[#00203C] md:text-[54px] text-[33px] max-md:!text-center max-md:!justify-center max-md:max-w-[250px] max-md:mx-auto max-md:flex-wrap flex flex-row gap-2 md:gap-0 md:flex-col"
               style={{
                 fontFamily: '"LTSuperiorSerif", "LT Superior Serif", serif',
                 fontStyle: "normal",
@@ -83,10 +83,10 @@ function HowRTMSWorks() {
                 lineHeight: "110%",
               }}
             >
-              <span>How</span>
-              <span>rTMS</span>
-              <span>Therapy</span>
-              <span>Works</span>
+              How <br className="max-md:hidden"/>
+              rTMS <br className="max-md:hidden"/>
+              Therapy <br className="max-md:hidden"/>
+              Works <br className="max-md:hidden"/>
             </h2>
           </div>
 

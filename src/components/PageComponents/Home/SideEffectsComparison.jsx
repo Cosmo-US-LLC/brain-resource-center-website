@@ -29,8 +29,8 @@ function SideEffectsComparison() {
         {/* Heading */}
         <div className="mb-10 text-center md:mb-12">
           <h2 className="font-[LT Superior Serif] font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-[#00203C]">
-            <span className="block">Side-effects of</span>
-            <span>Anti-Depressants vs rTMS Therapy</span>
+            Side-effects of <br className="max-md:hidden" />
+            Anti-Depressants vs rTMS Therapy
           </h2>
         </div>
 
@@ -39,7 +39,7 @@ function SideEffectsComparison() {
           {/* Center Image */}
           <div
             className="absolute left-1/2 bottom-[50px] max-md:hidden -translate-x-1/2  w-[200px] md:w-[350px]
-           lg:w-[600px] h-[300px] md:h-[700px] lg:h-[700px] z-20"
+           lg:w-[600px] h-[300px] md:h-[700px] lg:h-[700px] z-1"
           >
             <img
               src="/images/home/side_effects/comparison_person.webp"
@@ -142,11 +142,11 @@ function SideEffectsComparison() {
                 ))}
 
                 {/* CTA Button */}
-                <div className="mt-12 md:mt-8">
+                <div className="mt-12 md:mt-8 relative z-[1000] isolate">
                   <Link
                     to="/booking"
-                    className="inline-flex items-center text-[14px] md:text-[16px] hover:!bg-gray-50 gap-2 text-[#fff] border border-[#004F97] hover:!border-[#004F97]
-                     font-bold md:px-6 px-3 py-2 rounded-full w-fit !bg-[#004F97] hover:text-[#004F97] transition-colors group"
+                    className="relative z-[1001] pointer-events-auto inline-flex items-center text-[14px] md:text-[16px] hover:!bg-gray-50 gap-2 text-[#fff] border border-[#004F97] hover:!border-[#004F97]
+                     font-bold md:px-6 px-3 md:py-4 py-2 rounded-full w-fit !bg-[#004F97] hover:text-[#004F97] transition-colors group"
                   >
                     Book Appointment
                     <ArrowRight size={24} />

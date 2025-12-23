@@ -93,20 +93,20 @@ function StarRating({ rating }) {
 function TestimonialCard({ testimonial }) {
   return (
     <div className="bg-[#f1f8ff] rounded-xl px-6 py-4 h-full">
-      <div className="flex flex-col gap-5 py-4">
+      <div className="flex flex-col justify-between h-[100%] min-h-[100%] gap-5 py-4">
         {/* Review with Rating */}
         <div className="flex flex-col gap-4">
           <StarRating rating={testimonial.rating} />
           <p className="text-[#002f5b] text-base md:text-lg lg:text-xl leading-7">
-            "{testimonial.review}"
+            {testimonial.review}
           </p>
         </div>
 
         {/* Client Info */}
         <div className="flex flex-col gap-2">
-          <p className="font-semibold text-lg md:text-[22px] leading-7 text-[#004f97]">
+          <h4 className="font-semibold text-lg md:text-[22px] leading-7 text-[#004f97]">
             {testimonial.name}
-          </p>
+          </h4>
           <p className="text-[#002f5b] text-sm md:text-base leading-5">
             {testimonial.therapy}
           </p>
