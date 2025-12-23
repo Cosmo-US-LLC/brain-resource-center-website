@@ -104,7 +104,7 @@ export default function StepOne({ onContinue }) {
     <div className="max-w-6xl mx-auto px-0 lg:px-8 py-0 lg:py-0">
       <div className="md:max-w-3xl mx-auto px-0 !py-0">
         <div className="bg-white rounded-2xl border border-gray-200  shadow-sm p-8 lg:p-12">
-          <h2 className="font-serif text-[36px] lg:!text-[36px] font-semibold text-gray-900 mb-3 text-center">
+          <h2 className="font-[LT Superior Serif] text-[36px] lg:!text-[36px] font-semibold text-gray-900 mb-3 text-center">
             Book Your Consultation
           </h2>
           <p className="text-gray-600 !text-[14px] mb-10 text-center">

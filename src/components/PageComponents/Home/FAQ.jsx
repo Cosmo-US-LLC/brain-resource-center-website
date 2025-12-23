@@ -18,7 +18,7 @@ const faqs = [
     id: "faq-2",
     question: "Is rTMS therapy safe?",
     answer:
-      "Yes, rTMS therapy is FDA-approved and non-invasive, with minimal side effects, making it a safe option for treating anxiety, depression as well as other conditions",
+      "Yes, rTMS therapy is FDA-approved and non-invasive, with minimal side effects, making it a safe option for treating anxiety, depression as well as other conditions.",
   },
   {
     id: "faq-3",
@@ -47,7 +47,7 @@ function FAQ() {
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-20 xl:gap-28">
           {/* Left Side - Heading */}
           <div className="lg:w-[380px] shrink-0">
-            <h2 className="font-serif font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-[#004f97]">
+            <h2 className="font-[LT Superior Serif] font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-[#004f97]">
               Frequently Asked Questions
             </h2>
           </div>
@@ -70,9 +70,9 @@ function FAQ() {
                     hideIcon
                     className="px-6 py-6 md:px-8 md:py-7 hover:no-underline group"
                   >
-                    <span className="font-serif font-semibold text-lg md:text-[22px] leading-7 text-[#004f97] text-left pr-4">
+                    <h4 className="font-[LT Superior Serif] font-semibold text-lg md:text-[22px] leading-7 text-[#004f97] text-left pr-4">
                       {faq.question}
-                    </span>
+                    </h4>
                     <div className="shrink-0 w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center bg-[#f1f8ff] group-data-[state=open]:bg-[#004f97] transition-colors">
                       {/* <ChevronDown  /> */}
 

@@ -14,49 +14,49 @@ const testimonials = [
     id: 1,
     rating: 5,
     review:
-      "Before Brain Resource Center, I couldn't go a day without feeling anxious and overwhelmed. Now, I'm able to take on social events without fear and manage my day-to-day tasks with ease.",
-    name: "Sarah W.",
-    therapy: "Neurofeedback therapy",
+      '"Before starting rTMS therapy at Brain Resource Centre, I struggled daily with anxiety and couldn’t focus on my work. After just a few sessions, I noticed a significant improvement in my mood and energy. I finally feel like myself again."',
+    name: "Megan D.",
+    therapy: "FDA-approved rTMS Therapy",
   },
   {
     id: 2,
     rating: 5,
     review:
-      "I've tried everything for my anxiety. After neurofeedback therapy, my symptoms decreased dramatically. I'm now more present with my family and can finally sleep at night.",
-    name: "Jason M.",
-    therapy: "Cognitive Behavioral Therapy",
+     '"I was hesitant at first, but after trying rTMS therapy, I can’t believe the difference. My depression has lessened significantly, and I feel more hopeful and motivated than I have in years."',
+     name: "Daniel P.",
+    therapy: "FDA-approved rTMS Therapy",
   },
   {
     id: 3,
     rating: 5,
     review:
-      "I used to struggle with constant racing thoughts and avoid social situations. Now, I feel more calm and capable. I can finally enjoy my life again without anxiety taking over.",
-    name: "Emily R.",
-    therapy: "Cognitive Behavioral Therapy",
+     '"I used to struggle with constant racing thoughts and social anxiety. After rTMS therapy, I feel much calmer and more in control. I can finally enjoy life again without anxiety taking over."',
+     name: "Emily R.",
+    therapy: "FDA-approved rTMS Therapy",
   },
   {
     id: 4,
     rating: 5,
     review:
-      "The combination of anxiety treatment therapy and neurofeedback has been a game-changer. My anxiety no longer controls my decisions. I'm more productive, and my relationships are improving.",
+      '"The combination of rTMS therapy and personalized treatment has been a game-changer for my depression. I no longer feel overwhelmed by negative thoughts. I’m more productive, and my overall mood has improved dramatically."',
     name: "John R.",
-    therapy: "Cognitive Behavioral Therapy",
+    therapy: "FDA-approved rTMS Therapy",
   },
   {
     id: 5,
     rating: 5,
     review:
-      "Anxiety used to stop me from doing simple tasks like going to the grocery store. Now, I'm able to manage my day without feeling paralyzed by fear.",
+      '"rTMS therapy helped me overcome the constant fatigue and brain fog caused by my chronic stress. I’m now able to focus, stay on task, and enjoy my daily life again without the weight of exhaustion holding me back."',
     name: "Samantha K.",
-    therapy: "Cognitive Behavioral Therapy",
+    therapy: "FDA-approved rTMS Therapy",
   },
   {
     id: 6,
     rating: 5,
     review:
-      "After years of struggling with anxiety, I finally feel like myself again. I'm more confident, socializing more, and even tackling challenges at work that I avoided before.",
+      '"After years of struggling with ADHD and focus issues, rTMS therapy has helped me gain control over my impulses and stay focused throughout the day. I’m more confident, more productive, and able to tackle tasks without feeling overwhelmed."',
     name: "David B.",
-    therapy: "Cognitive Behavioral Therapy",
+    therapy: "FDA-approved rTMS Therapy",
   },
 ];
 
@@ -104,7 +104,7 @@ function TestimonialCard({ testimonial }) {
 
         {/* Client Info */}
         <div className="flex flex-col gap-2">
-          <p className="font-serif font-semibold text-lg md:text-[22px] leading-7 text-[#004f97]">
+          <p className="font-semibold text-lg md:text-[22px] leading-7 text-[#004f97]">
             {testimonial.name}
           </p>
           <p className="text-[#002f5b] text-sm md:text-base leading-5">
@@ -122,7 +122,7 @@ function Testimonials() {
       <div className="max-w-[1280px] mx-auto px-4 md:px-8 relative">
         {/* Header */}
         <div className="flex justify-between items-center mb-10 md:mb-12">
-          <h2 className="font-serif font-semibold text-[32px] 
+          <h2 className="font-[LT Superior Serif] font-semibold text-[32px] 
           md:text-[42px] lg:text-[54px] leading-[1.1] text-[#00203C]">
             Testimonials
           </h2>

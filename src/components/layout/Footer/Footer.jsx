@@ -121,7 +121,7 @@ function Footer() {
           <div className="flex flex-col flex-1 gap-10 sm:flex-row lg:gap-16">
             {/* Column 2 - Get in Touch */}
             <div className="flex-1">
-              <h3 className="font-serif font-semibold text-[22px] leading-7 text-white mb-6">
+              <h3 className="font-[LT Superior Serif] font-semibold text-[22px] leading-7 text-white mb-6">
                 Get in Touch
               </h3>
               <ul className="flex flex-col gap-4">
@@ -159,7 +159,7 @@ function Footer() {
 
             {/* Column 3 - Legal */}
             <div className="sm:w-[200px] lg:w-[298px] shrink-0">
-              <h3 className="font-serif font-semibold text-[22px] leading-7 text-white mb-6">
+              <h3 className="font-[LT Superior Serif] font-semibold text-[22px] leading-7 text-white mb-6">
                 Legal
               </h3>
               <ul className="flex flex-col gap-4">

@@ -20,7 +20,7 @@ function CTASection() {
         <div className="flex flex-col items-center gap-6 md:gap-8">
           {/* Heading & Description */}
           <div className="flex flex-col items-center gap-5">
-            <h2 className="font-serif font-semibold text-[28px] md:text-[42px] lg:text-[54px] leading-[1.1] text-white capitalize max-w-[930px]">
+            <h2 className="font-[LT Superior Serif] font-semibold text-[28px] md:text-[42px] lg:text-[54px] leading-[1.1] text-white capitalize max-w-[930px]">
               Ready to Improve Your Mental Health and Brain Function?
             </h2>
             <p className="text-white text-base md:text-xl leading-7 max-w-[1060px]">

@@ -59,10 +59,10 @@ function WhatToExpect() {
                 return (
                   <div
                     key={step.id}
-                    className="bg-white min-h-[173px] border border-[#004f97] rounded-xl p-6 md:p-8 flex gap-5 md:gap-6 items-start"
+                    className="bg-white min-h-[173px] border border-[#004f97] rounded-xl p-6 md:py-8 md:px-6 flex gap-5 md:gap-6 items-center "
                   >
                     {/* Icon */}
-                    <div className="shrink-0 w-14 h-14 md:w-16 md:h-16 bg-[#004f97] rounded-full flex items-center justify-center">
+                    <div className="shrink-0 w-14 h-14 md:w-16 md:h-16 bg-[#004f97] rounded-full flex items-center justify-center ">
                       <img
                         src={step.icon}
                         alt={step.title}

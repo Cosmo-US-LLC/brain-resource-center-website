@@ -38,7 +38,7 @@ function OurResults() {
             {/* Content Overlay */}
             <div className="absolute inset-0 p-8 md:p-12 lg:p-[61px] flex flex-col justify-between">
               {/* Heading */}
-              <h2 className="font-serif font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-white capitalize max-w-[319px]">
+              <h2 className="font-[LT Superior Serif] font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-white capitalize max-w-[319px]">
                 Our Results Speak
               </h2>
 
