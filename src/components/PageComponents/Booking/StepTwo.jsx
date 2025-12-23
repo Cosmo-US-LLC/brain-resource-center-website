@@ -814,7 +814,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
               disabled={!isFormValid() || submitting || initializingPayment}
               className="inline-flex items-center cursor-pointer justify-center gap-2 flex-1 bg-[#004F97] hover:bg-[#004F97]/90 text-white h-12 text-base font-medium rounded-md disabled:opacity-60 transition-all"
             >
-              {submitting || initializingPayment ? "Processing..." : "Pay Now"}
+              {submitting || initializingPayment ? "Processing..." : "Proceed to Payment"}
             </button>
             <button
               onClick={handlePayLater}
