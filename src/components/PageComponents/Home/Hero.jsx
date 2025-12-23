@@ -16,7 +16,7 @@ function Hero() {
           <div className="flex-1 flex flex-col gap-5 max-w-[597px]">
             {/* Main Heading */}
             <h1 className="text-[#00203C]">
-              FDA-Approved rTMS Depression Treatment in New York
+              FDA-Approved rTMS Therapy in New York
             </h1>
 
             {/* Description */}
@@ -29,7 +29,7 @@ function Hero() {
               <div className="flex flex-wrap gap-6 items-center">
                 {/* Primary CTA Button */}
                 <PrimaryCTA to="/booking" className="px-6 py-4">
-                  Request an Appointment
+                Book Appointment
                   <ArrowRight size={24} />
                 </PrimaryCTA>
                 <div>

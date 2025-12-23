@@ -364,7 +364,7 @@ function CoreServices() {
     <section className="bg-[#f1f8ff] py-16 md:py-20">
       <div className="max-w-[1280px] mx-auto px-4 md:px-8">
         {/* Heading */}
-        <h2 className="font-serif font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-[#004f97] text-center mb-10 md:mb-12">
+        <h2 className="font-[LT Superior Serif] font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-[#004f97] text-center mb-10 md:mb-12">
           Core Services
         </h2>
 
@@ -378,7 +378,7 @@ function CoreServices() {
               {/* Title & Description */}
               <div className="mb-6">
                 <h3
-                  className="font-serif font-semibold text-lg md:text-[22px] leading-7 text-[#004f97] mb-3"
+                  className="font-[LT Superior Serif] font-semibold text-lg md:text-[22px] leading-7 text-[#004f97] mb-3"
                   dangerouslySetInnerHTML={{ __html: service.title }}
                 ></h3>
                 <p className="text-[#002f5b] text-sm md:text-base leading-5">

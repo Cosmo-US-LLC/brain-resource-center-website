@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 // Placeholder images - replace with actual image paths
@@ -21,7 +21,7 @@ const steps = [
     title: "Targeted Stimulation",
     description:
       "Using FDA-approved rTMS, we apply focused magnetic pulses to these brain regions, stimulating them to restore healthy brain activity.",
-    image: step2Image,
+    image: step3Image,
   },
   {
     id: 3,
@@ -29,22 +29,51 @@ const steps = [
     title: "Ongoing Adjustments",
     description:
       "Based on your assessment, we create a personalized rTMS treatment plan tailored to your specific needs. Using FDA-approved rTMS technology, we target brain activity and improve symptoms.",
-    image: step3Image,
+    image: step2Image,
   },
 ];
 
 function HowRTMSWorks() {
   const [expandedCard, setExpandedCard] = useState(null);
+  const cardRefs = useRef({});
 
   const toggleCard = (stepId) => {
     setExpandedCard(expandedCard === stepId ? null : stepId);
   };
 
+  const closeCard = () => {
+    setExpandedCard(null);
+  };
+
+  // Close popup when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (expandedCard !== null) {
+        const cardElement = cardRefs.current[expandedCard];
+        if (cardElement && !cardElement.contains(event.target)) {
+          closeCard();
+        }
+      }
+    };
+
+    if (expandedCard !== null) {
+      // Add event listener on mount
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
+    }
+
+    return () => {
+      // Cleanup event listeners on unmount
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [expandedCard]);
+
   return (
-    <section className="py-16 md:py-20 ">
-      <div className="max-w-[1280px] mx-auto px-4 md:px-12 py-8 bg-[#F1F8FF] rounded-[12px]">
+    <section className="py-16 md:py-20 max-md:px-4">
+      <div className="max-w-[1280px] mx-auto px-6 md:px-12 py-8 bg-[#F1F8FF] rounded-[12px]">
         <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-2">
-          <div className="lg:w-[260px] xl:w-[270px] flex-shrink-0">
+          <div className="lg:w-[260px] xl:w-[270px] max-md:w-[100%] flex-shrink-0">
             <h2
               className="text-[#00203C] md:text-[54px] text-[33px] max-md:text-center max-md:justify-center max-md:max-w-[250px] max-md:flex-wrap flex flex-row gap-2 md:gap-0 md:flex-col"
               style={{
@@ -61,13 +90,16 @@ function HowRTMSWorks() {
             </h2>
           </div>
 
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 max-md:!min-w-[100%] lg:grid-cols-3 gap-6">
             {steps.map((step) => {
               const isExpanded = expandedCard === step.id;
               return (
                 <div
                   key={step.id}
-                  className="relative rounded-xl overflow-hidden min-h-[350px] max-md:h-[350px] md:min-h-[520px] max-w-[300px] shadow-sm aspect-[3/4]"
+                  ref={(el) => (cardRefs.current[step.id] = el)}
+                  className="relative rounded-xl overflow-hidden min-h-[350px] max-md:h-[350px]
+                   md:min-h-[520px] md:max-w-[100%] max-md:!min-w-[100%]
+                   shadow-sm aspect-[3/4]"
                 >
                   <img
                     src={step.image}
@@ -96,8 +128,19 @@ function HowRTMSWorks() {
                   <div className="absolute inset-0 bg-gradient-to-t from-[#00203C] via-[#00203C]/5 via-[#00203C]/5 to-transparent pointer-events-none" />
 
                   {isExpanded && (
-                    <div className="absolute inset-0 flex items-start justify-start z-20 p-4">
-                      <div className="bg-white rounded-xl p-6 max-w-[93%] md:min-h-[300px] min-h-[150px] mt-12 md:mt-18 ml-2 flex flex-col justify-between gap-4 shadow-lg transition-all duration-300 ease-in-out">
+                    <>
+                      {/* Backdrop overlay - clickable area to close */}
+                      <div 
+                        className="absolute inset-0 z-15 cursor-pointer"
+                        onClick={closeCard}
+                        aria-label="Close popup"
+                      />
+                      {/* Popup content */}
+                      <div 
+                        className="absolute inset-0 flex items-start justify-start z-20 p-4"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div className="bg-white rounded-xl p-6 max-w-[93%] md:min-h-[300px] min-h-[150px] mt-12 md:mt-18 ml-2 flex flex-col justify-between gap-4 shadow-lg transition-all duration-300 ease-in-out">
                         <p
                           className="text-[#002F5B] md:text-[16px] text-[12px] md:leading-[20px] leading-[14px]"
                           style={{
@@ -137,6 +180,7 @@ function HowRTMSWorks() {
                         </Link>
                       </div>
                     </div>
+                    </>
                   )}
 
                   <div className="absolute md:bottom-0 -bottom-3 left-0 right-0 p-6 z-10">
@@ -155,7 +199,7 @@ function HowRTMSWorks() {
                     </h3>
                   </div>
 
-                  <div className="absolute md:bottom-20 bottom-10 right-6 z-40">
+                  <div className="absolute md:bottom-14 bottom-10 right-6 z-40">
                     <button
                       onClick={() => toggleCard(step.id)}
                       className={`w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ${

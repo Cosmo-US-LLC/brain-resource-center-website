@@ -88,12 +88,11 @@ function TherapyRightForMe() {
       <div className="max-w-[1280px] mx-auto px-4 md:px-8">
         {/* Heading */}
         <div className="mb-10 text-center md:mb-12">
-          <h2 className="font-serif font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-[#00203C] mb-5">
+          <h2 className="font-[LT Superior Serif] font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-[#00203C] mb-5">
           Common Symptoms Treated with rTMS
           </h2>
           <p className="text-[#002F5B] text-base md:text-xl leading-7 max-w-[670px] mx-auto">
-            rTMS therapy may be right for you if you're struggling with
-            depression and experiencing symptoms such as the following
+            rTMS therapy can help if you're experiencing symptoms such as
           </p>
         </div>
 
@@ -114,12 +113,12 @@ function TherapyRightForMe() {
 
               {/* Title & Description */}
               <div className="mb-6 text-center md:mb-8">
-                <h3 className="font-serif px-6 md:px-8  font-semibold text-lg md:text-[22px] leading-7 text-[#004f97] mb-2">
+                <h3 className="font-[LT Superior Serif] px-6 md:px-8  font-semibold text-lg md:text-[22px] leading-7 text-[#004f97] mb-2">
                   {reason.title}
                 </h3>
                 <p 
                 className={`text-[#002f5b] text-sm md:text-[16px] leading-5 !w-[100%] mx-auto ${
-                        index === 2 ? "!max-w-[185px]" : "!max-w-[190px]"
+                        index === 2 ? "!max-w-[200px]" : "!max-w-[200px]"
                     }`}
                 >
                   {reason.description}

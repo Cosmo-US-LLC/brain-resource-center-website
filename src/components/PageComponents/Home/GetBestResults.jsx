@@ -20,7 +20,7 @@ function GetBestResults() {
         <div className="flex flex-col gap-2 items-center justify-center ">
           {/* Left - Heading */}
           <div className="flex-1 text-center">
-            <h2 className="font-serif font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-white capitalize">
+            <h2 className="font-[LT Superior Serif] font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-white capitalize">
             Get best results with our experts
             </h2>
           </div>

@@ -1,4 +1,6 @@
 import React, { useState, useRef, useMemo, useEffect } from "react"; 
+import { flushSync } from "react-dom";
+import { Link } from "react-router-dom";
 import { ArrowLeft, Clock, CheckCircle, X } from "lucide-react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -58,7 +60,7 @@ function SuccessModal({ bookingDetails, formattedPrice, onClose, onRedirect }) {
 
           <h2
             id="payLaterModalHeading"
-            className="font-serif !text-[32px] font-semibold text-gray-900 mb-4"
+            className="font-[LT Superior Serif] !text-[32px] font-semibold text-gray-900 mb-4"
           >
             Payment Complete!
           </h2>
@@ -154,7 +156,7 @@ function PayLaterModal({ bookingDetails, formattedPrice, onClose, onRedirect }) 
 
           <h2
             id="payLaterModalHeading"
-            className="font-serif !text-[32px] font-semibold text-gray-900 mb-4"
+            className="font-[LT Superior Serif] !text-[32px] font-semibold text-gray-900 mb-4"
           >
             Thank You!
           </h2>
@@ -261,7 +263,7 @@ function formatNiceDate(iso) {
   }
 }
 function TextInput({ label, value, onChange, placeholder, type = "text", id, required = false, error = "", onBlur }) {
-  const hasError = error && error.length > 0;
+  const hasError = error && error.trim().length > 0;
   return (
     <div>
       <label className="text-sm font-medium text-gray-700 " htmlFor={id}>
@@ -432,12 +434,27 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
       terms: validateField("terms", termsChecked ? true : false),
     };
     
-    setErrors(newErrors);
-    setTouched({
-      fullName: true,
-      email: true,
-      phone: true,
-      terms: true,
+    // Force synchronous updates to ensure errors display immediately
+    flushSync(() => {
+      // Set all fields as touched first to ensure errors show
+      setTouched({
+        fullName: true,
+        email: true,
+        phone: true,
+        terms: true,
+      });
+      
+      // Set all errors
+      setErrors(newErrors);
+      
+      // Also update phoneError for consistency with phone field display
+      if (newErrors.phone) {
+        setPhoneError(newErrors.phone);
+      } else if (phone && !isValidPhone(phone)) {
+        setPhoneError("Please enter a valid phone number.");
+      } else {
+        setPhoneError("");
+      }
     });
     
     return !Object.values(newErrors).some(error => error !== "");
@@ -490,13 +507,19 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
   };
 
   const handlePayNow = async () => {
-    if (!validateAllFields()) {
-      // Scroll to first error
-      const firstErrorField = document.querySelector('[id="fullName"], [id="email"], [id="phone"]');
-      if (firstErrorField) {
-        firstErrorField.scrollIntoView({ behavior: "smooth", block: "center" });
-        firstErrorField.focus();
-      }
+    // Validate all fields first
+    const isValid = validateAllFields();
+    
+    if (!isValid) {
+      // Force re-render to show errors
+      setTimeout(() => {
+        // Scroll to first error
+        const firstErrorField = document.querySelector('[id="fullName"], [id="email"], [id="phone"]');
+        if (firstErrorField) {
+          firstErrorField.scrollIntoView({ behavior: "smooth", block: "center" });
+          firstErrorField.focus();
+        }
+      }, 0);
       return;
     }
     
@@ -518,13 +541,19 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
 
 
   const handlePayLater = () => {
-    if (!validateAllFields()) {
-      // Scroll to first error
-      const firstErrorField = document.querySelector('[id="fullName"], [id="email"], [id="phone"]');
-      if (firstErrorField) {
-        firstErrorField.scrollIntoView({ behavior: "smooth", block: "center" });
-        firstErrorField.focus();
-      }
+    // Validate all fields first
+    const isValid = validateAllFields();
+    
+    if (!isValid) {
+      // Force re-render to show errors
+      setTimeout(() => {
+        // Scroll to first error
+        const firstErrorField = document.querySelector('[id="fullName"], [id="email"], [id="phone"]');
+        if (firstErrorField) {
+          firstErrorField.scrollIntoView({ behavior: "smooth", block: "center" });
+          firstErrorField.focus();
+        }
+      }, 0);
       return;
     }
     
@@ -588,7 +617,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
       </div>
 
       <div className="max-w-2xl mx-auto bg-white rounded-2xl !mt-8 border border-gray-200 shadow-sm p-6 lg:p-12">
-        <div className="font-serif text-[36px] font-semibold text-gray-900 mb-3">
+        <div className="font-[LT Superior Serif] text-[36px] font-semibold text-gray-900 mb-3">
           Your Information
         </div>
         <p className="text-gray-600 text-[14px] mb-8">
@@ -794,12 +823,12 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
               </button>
               <label className="text-sm text-gray-600 cursor-pointer leading-relaxed">
                 I agree to the{" "}
-                <button
+                <Link to="/terms-conditions"
                   type="button"
                   className="text-[#004F97] underline hover:text-[#004F97]/80"
                 >
                   Terms and Conditions
-                </button>
+                </Link>
                 <span className="text-red-500 ml-1">*</span>
               </label>
             </div>
@@ -811,15 +840,23 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={handlePayNow}
-              disabled={!isFormValid() || submitting || initializingPayment}
-              className="inline-flex items-center cursor-pointer justify-center gap-2 flex-1 bg-[#004F97] hover:bg-[#004F97]/90 text-white h-12 text-base font-medium rounded-md disabled:opacity-60 transition-all"
+              disabled={submitting || initializingPayment}
+              className={`inline-flex items-center cursor-pointer justify-center gap-2 flex-1 bg-[#004F97] 
+              hover:bg-[#004F97]/90 text-white py-[10px] border-2 border-[#004F97]
+              text-base font-medium rounded-md disabled:opacity-60 disabled:cursor-not-allowed transition-all ${
+                !isFormValid() ? "opacity-50" : ""
+              }`}
             >
               {submitting || initializingPayment ? "Processing..." : "Proceed to Payment"}
             </button>
             <button
               onClick={handlePayLater}
-              disabled={!isFormValid() || submitting}
-              className="inline-flex items-center cursor-pointer justify-center gap-2 flex-1 bg-white border-2 border-[#004F97] text-[#004F97] hover:bg-[#004F97]/5 h-12 text-base font-medium rounded-md disabled:opacity-60 transition-all"
+              disabled={submitting}
+              className={`inline-flex items-center cursor-pointer justify-center
+              gap-2 flex-1 bg-white border-2 border-[#004F97] text-[#004F97]
+              hover:bg-[#004F97]/5 py-[10px] text-base font-medium rounded-md disabled:opacity-60 disabled:cursor-not-allowed transition-all ${
+                !isFormValid() ? "opacity-50" : ""
+              }`}
             >
               Pay Later
             </button>

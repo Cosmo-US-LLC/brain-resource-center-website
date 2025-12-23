@@ -85,6 +85,39 @@
   font-display: swap;
 }
 
+/* Open Sauce Sans - Sans-serif Font */
+@font-face {
+  font-family: "Open Sauce Sans";
+  src: url("/font/OpenSauceSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Open Sauce Sans";
+  src: url("/font/OpenSauceSans-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Open Sauce Sans";
+  src: url("/font/OpenSauceSans-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Open Sauce Sans";
+  src: url("/font/OpenSauceSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ========== End Local Font Faces ========== */
 
 /* @plugin "tailwindcss-animate";
@@ -153,7 +186,7 @@ html {
 /* H1 - Primary Heading */
 h1,
 .h1 {
-  font-family: "Domine", Georgia, serif;
+  font-family: LTSuperiorSerif !important;
   font-size: 54px;
   font-style: normal;
   font-weight: 600;
@@ -163,7 +196,7 @@ h1,
 /* H2 - Secondary Heading */
 h2,
 .h2 {
-  font-family: "Domine", Georgia, serif;
+  font-family: LTSuperiorSerif !important;
   font-size: 54px;
   font-style: normal;
   font-weight: 600;
@@ -173,16 +206,30 @@ h2,
 /* H3 */
 h3,
 .h3 {
-  font-family: "Domine", Georgia, serif;
+  font-family: LTSuperiorSerif !important;
   font-size: 22px;
   font-style: normal;
   font-weight: 600;
   line-height: 127%;
 }
 
+h4,
+.h4 {
+  font-family: LTSuperiorSerif !important;
+}
+
+h5,
+.h5 {
+  font-family: LTSuperiorSerif !important;
+}
+ p,span,button,a,
+  .p{
+    font-family: Open Sauce Sans !important;
+  }
+
 /* Description Large - 20px */
 .desc-lg {
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: Open Sauce Sans !important;
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
@@ -191,7 +238,7 @@ h3,
 
 /* Description - 16px */
 .desc {
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: Open Sauce Sans !important;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -234,12 +281,15 @@ h3,
   h2,
   .h2 {
     font-size: 32px;
+
   }
 
   h3,
   .h3 {
     font-size: 18px;
+
   }
+  
 
   .desc-lg {
     font-size: 16px;
