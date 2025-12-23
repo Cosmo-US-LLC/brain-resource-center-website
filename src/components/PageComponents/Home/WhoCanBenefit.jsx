@@ -33,7 +33,7 @@ const conditions = [
     id: 5,
     title: "Bipolar Disorder (Depressive Phase)",
     description:
-      "Managing depressive episodes in bipolar disorder with non-invasive treatment.",
+      "To stabilize mood and alleviate the intense symptoms of depression during mood swings.",
   },
   {
     id: 6,
@@ -308,11 +308,9 @@ function WhoCanBenefit() {
                         <p
                           className="text-white"
                           style={{
-                            fontFamily:
-                              '"LTSuperiorSerif", "LT Superior Serif", serif',
-                            fontSize: "18px",
+                            fontSize: "16px",
                             fontStyle: "normal",
-                            fontWeight: 600,
+                            fontWeight: 400,
                             lineHeight: "20px",
                           }}
                         >
