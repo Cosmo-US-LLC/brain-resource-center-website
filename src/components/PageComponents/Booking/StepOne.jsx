@@ -23,13 +23,17 @@ export default function StepOne({ onContinue }) {
       return date < today;
     };
   const conditions = [
-    "ADHD",
-    "Bipolar Disorder",
-    "Obsessive Compulsive Disorder",
-    "Anxiety",
-    "Epilepsy",
     "Depression",
-    "My condition isn't listed",
+    "Anxiety Disorders",
+    "Post-Traumatic Stress Disorder (PTSD)",
+    "Obsessive-Compulsive Disorder (OCD)",
+    "ADHD",
+    "Bipolar Disorder (Depressive Phase)",
+    "Autism Spectrum Disorder (ASD)",
+    "Insomnia & Sleep Disorders",
+    "Cognitive Decline & Brain Fog",
+    "Traumatic Brain Injury (TBI)",
+    "My condition isn't listed (remain as is)",
   ];
 
   const dateOptionsIso = Array.from({ length: 11 }, (_, i) => {
