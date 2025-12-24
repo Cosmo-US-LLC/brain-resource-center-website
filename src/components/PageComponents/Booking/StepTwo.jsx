@@ -229,24 +229,25 @@ const trackKlaviyoEvent = (payload) => {
     ? payload.price
     : payload.originalPrice || payload.price;
 
-  _learnq.push([
-    "track",
-    // "Booked Consultation",
-    eventName,
-    {
-      FullName: payload.fullName,
-      IssuesNoted: payload.issues,
-      condition: payload.condition,
-      meetingPref: payload.meetingPref,
-      selectedDateIso: payload.selectedDateIso,
-      selectedTime: payload.selectedTime,
-      price: trackedPrice,
-      PaymentStatus: payload.paid ? "Paid" : "Pending",
-      ChargeID: payload.ChargeID || "",
-      SubmittedAt: new Date().toISOString(),
-      PhoneNumber: payload.phone,
-    },
-  ]);
+  _learnq.push([
+    "track",
+    // "Booked Consultation",
+    eventName,
+    {
+      FullName: payload.fullName,
+      IssuesNoted: payload.issues,
+      condition: payload.condition,
+      meetingPref: payload.meetingPref,
+      bookingtype: payload.bookingtype || "",
+      selectedDateIso: payload.selectedDateIso,
+      selectedTime: payload.selectedTime,
+      price: trackedPrice,
+      PaymentStatus: payload.paid ? "Paid" : "Pending",
+      ChargeID: payload.ChargeID || "",
+      SubmittedAt: new Date().toISOString(),
+      PhoneNumber: payload.phone,
+    },
+  ]);
 };
 
 function formatNiceDate(iso) {
@@ -332,6 +333,7 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
   const [meetingPref, setMeetingPref] = useState("in_person");
   const [issues, setIssues] = useState("");
   const [termsChecked, setTermsChecked] = useState(true);
+  const [hiddenFieldValue, setHiddenFieldValue] = useState("");
   const [submitting, setSubmitting] = useState(false);
   
   // Validation errors state
@@ -470,18 +472,19 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
     );
   };
 
-  const buildPayload = () => ({
-    condition,
-    customCondition,
-    selectedDateIso,
-    selectedTime,
-    fullName: fullName.trim(),
-    email: email.trim(),
-    phone: `${countryCode} ${phone.trim()}`,
-    meetingPref,
-    issues: issues.trim(),
-    price,
-  });
+  const buildPayload = () => ({
+    condition,
+    customCondition,
+    selectedDateIso,
+    selectedTime,
+    fullName: fullName.trim(),
+    email: email.trim(),
+    phone: `${countryCode} ${phone.trim()}`,
+    meetingPref,
+    issues: issues.trim(),
+    price,
+    bookingtype: hiddenFieldValue,
+  });
 
   const initializePayment = async (payload) => {
     setPaymentSetupError("");
@@ -523,9 +526,16 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
       return;
     }
     
+    // Set hidden field value
+    const meetingType = meetingPref === "in_person" ? "In Person" : "Online";
+    const hiddenValue = `${meetingType} - Pay Now`;
+    setHiddenFieldValue(hiddenValue);
+    console.log("Hidden Field Value (Pay Now):", hiddenValue);
+    
     setSubmitting(true);
     try {
-      const payload = buildPayload();
+      const payload = { ...buildPayload(), bookingtype: hiddenValue };
+      console.log("Pay Now Payload:", payload);
       if (onConfirm) await onConfirm(payload);
       setPaymentResult(null);
       await initializePayment(payload);
@@ -556,40 +566,46 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
       }, 0);
       return;
     }
-    
+    
+    // Set hidden field value
+    const meetingType = meetingPref === "in_person" ? "In Person" : "Online";
+    const hiddenValue = `${meetingType} - Pay Later`;
+    setHiddenFieldValue(hiddenValue);
+    console.log("Hidden Field Value (Pay Later):", hiddenValue);
 
-    const basePayload = buildPayload();
+    const basePayload = buildPayload();
 
-    const finalPayload = {
-      ...basePayload,
-      paid: false,
-      ChargeID: "PAY_LATER",
-      originalPrice: basePayload.price, 
-      price: 0, 
-    };
+    const finalPayload = {
+      ...basePayload,
+      bookingtype: hiddenValue,
+      paid: false,
+      ChargeID: "PAY_LATER",
+      originalPrice: basePayload.price, 
+      price: 0, 
+    };
 
-    trackKlaviyoEvent(finalPayload);
-    setPaymentResult({
-      status: "pending",
-      message:
-        "You chose to pay later. We've reserved your slot and sent a payment link to your email.",
-    });
-    onConfirm?.(finalPayload);
-    setPayLaterPayload(finalPayload);
+    trackKlaviyoEvent(finalPayload);
+    setPaymentResult({
+      status: "pending",
+      message:
+        "You chose to pay later. We've reserved your slot and sent a payment link to your email.",
+    });
+    onConfirm?.(finalPayload);
+    setPayLaterPayload(finalPayload);
 
     updateUrlParams("booking_status", "reserved");
-    setShowPayLaterModal(true);
+    setShowPayLaterModal(true);
 
-    console.log("Pay Later Payload:", finalPayload);
   };
 
-  const handlePayNowSuccess = (paymentSummary) => {
-    const payload = { ...buildPayload(), paid: true, ...paymentSummary };
-    trackKlaviyoEvent(payload);
-    setPaymentResult({
-      status: "success",
-      message: "Payment successful. A receipt has been sent to your email.",
-    });
+  const handlePayNowSuccess = (paymentSummary) => {
+    const payload = { ...buildPayload(), paid: true, ...paymentSummary };
+    console.log("Pay Now Success Payload:", payload);
+    trackKlaviyoEvent(payload);
+    setPaymentResult({
+      status: "success",
+      message: "Payment successful. A receipt has been sent to your email.",
+    });
     
   
     setSuccessModalPayload(payload);
@@ -836,6 +852,13 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
               <p className="text-red-600 text-xs mt-1 ml-7">{errors.terms}</p>
             )}
           </div>
+
+          {/* Hidden field to track meeting preference and payment option */}
+          <input
+            type="hidden"
+            name="bookingtype"
+            value={hiddenFieldValue}
+          />
 
           <div className="flex flex-col sm:flex-row gap-3">
             <button
