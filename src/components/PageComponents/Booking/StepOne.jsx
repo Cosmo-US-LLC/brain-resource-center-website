@@ -33,7 +33,7 @@ export default function StepOne({ onContinue }) {
     "Insomnia & Sleep Disorders",
     "Cognitive Decline & Brain Fog",
     "Traumatic Brain Injury (TBI)",
-    "My condition isn't listed (remain as is)",
+    "My condition isn't listed",
   ];
 
   const dateOptionsIso = Array.from({ length: 11 }, (_, i) => {
