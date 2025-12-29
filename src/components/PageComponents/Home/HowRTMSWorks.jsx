@@ -94,7 +94,7 @@ function HowRTMSWorks() {
             {steps.map((step) => (
               <div
                 key={step.id}
-                className="relative flex-1 rounded-[12px] overflow-hidden min-h-[350px] lg:min-h-0 lg:h-full flex flex-col justify-between"
+                className="relative flex-1 rounded-[12px] overflow-hidden min-h-[400px] lg:min-h-0 lg:h-full flex flex-col justify-between"
               >
                 {/* Background Image */}
                 <img
@@ -119,7 +119,7 @@ function HowRTMSWorks() {
                 {/* Card Title - Top */}
                 <div className="relative z-10 p-5">
                   <h3
-                    className="text-white capitalize text-[28px] md:text-[32px] w-[185px] md:w-[199px] whitespace-pre-line"
+                    className="text-white capitalize !text-[28px] !md:text-[32px] w-[185px] md:w-[199px] whitespace-pre-line"
                     style={{
                       fontFamily:
                         '"LTSuperiorSerif", "LT Superior Serif", serif',
