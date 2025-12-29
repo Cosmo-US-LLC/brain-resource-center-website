@@ -118,8 +118,8 @@ function HowRTMSWorks() {
 
                 {/* Card Title - Top */}
                 <div className="relative z-10 p-5">
-                  <h3
-                    className="text-white capitalize !text-[28px] !md:text-[32px] w-[185px] md:w-[199px] whitespace-pre-line"
+                  <p
+                    className="text-white !font-[LTSuperiorSerif] capitalize text-[28px] md:text-[32px] w-[185px] md:w-[199px] whitespace-pre-line"
                     style={{
                       fontFamily:
                         '"LTSuperiorSerif", "LT Superior Serif", serif',
@@ -128,7 +128,7 @@ function HowRTMSWorks() {
                     }}
                   >
                     {step.title}
-                  </h3>
+                  </p>
                 </div>
 
                 {/* Bottom Content - Step Badge + Description Box */}
