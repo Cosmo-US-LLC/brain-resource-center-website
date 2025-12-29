@@ -17,9 +17,8 @@ const stats = [
   },
   {
     id: 3,
-    percentage: "65-70%",
-    description:
-      "of patients experience symptom improvement with psychotherapy",
+    percentage: "60-75%",
+    description: "of patients experience symptom improvement with rTMS Therapy",
   },
 ];
 
