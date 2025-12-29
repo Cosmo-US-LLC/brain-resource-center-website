@@ -1,16 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
 // Placeholder images - replace with actual image paths
 import step1Image from "/images/home/how-rtms-works/step-01-brain-mapping (1).webp";
 import step2Image from "/images/home/how-rtms-works/step-01-brain-mapping (2).webp";
 import step3Image from "/images/home/how-rtms-works/step-01-brain-mapping (3).webp";
+import PrimaryCTA from "@/components/ui/PrimaryCTA";
 
 const steps = [
   {
     id: 1,
     stepNumber: "Step 01",
-    title: "Brain Mapping",
+    title: `Brain\n Mapping`,
     description:
       "We begin by performing a qEEG brain scan to identify areas of your brain that are underactive or imbalanced, contributing to your symptoms.",
     image: step1Image,
@@ -34,215 +36,157 @@ const steps = [
 ];
 
 function HowRTMSWorks() {
-  const [expandedCard, setExpandedCard] = useState(null);
-  const cardRefs = useRef({});
-
-  const toggleCard = (stepId) => {
-    setExpandedCard(expandedCard === stepId ? null : stepId);
-  };
-
-  const closeCard = () => {
-    setExpandedCard(null);
-  };
-
-  // Close popup when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (expandedCard !== null) {
-        const cardElement = cardRefs.current[expandedCard];
-        if (cardElement && !cardElement.contains(event.target)) {
-          closeCard();
-        }
-      }
-    };
-
-    if (expandedCard !== null) {
-      // Add event listener on mount
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("touchstart", handleClickOutside);
-    }
-
-    return () => {
-      // Cleanup event listeners on unmount
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside);
-    };
-  }, [expandedCard]);
-
   return (
-    <section className="py-16 md:py-20 max-md:px-4">
-      <div className="max-w-[1280px] mx-auto px-6 md:px-12 py-8 bg-[#F1F8FF] rounded-[12px]">
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-2">
-          <div className="lg:w-[260px] xl:w-[270px] max-md:w-[100%] flex-shrink-0">
-            <h2
-              className="text-[#00203C] md:text-[54px] text-[33px] max-md:!text-center max-md:!justify-center max-md:max-w-[250px] max-md:mx-auto max-md:flex-wrap flex flex-row gap-2 md:gap-0 md:flex-col"
+    <section className="py-16 md:py-[60px] px-4 md:px-[60px]">
+      <div className="max-w-[1440px] mx-auto bg-[#F1F8FF] rounded-[12px] px-[30px] py-[30px] lg:pl-[60px] lg:pr-[30px]">
+        <div className="flex flex-col lg:flex-row items-center lg:items-center gap-5 h-auto lg:h-[700px]">
+          {/* Left Column - Title and CTA */}
+          <div className="flex flex-col gap-[34px] items-center lg:items-start shrink-0 lg:justify-center">
+            {/* <h2
+              className="text-[#00203C] text-[33px] lg:text-[54px] text-center lg:text-left w-full lg:w-[269px]"
               style={{
                 fontFamily: '"LTSuperiorSerif", "LT Superior Serif", serif',
-                fontStyle: "normal",
                 fontWeight: 600,
                 lineHeight: "110%",
               }}
             >
-              How <br className="max-md:hidden"/>
-              rTMS <br className="max-md:hidden"/>
-              Therapy <br className="max-md:hidden"/>
-              Works <br className="max-md:hidden"/>
+              How rTMS Therapy Works
+            </h2> */}
+            <h2 className="text-[#00203C] max-w-[300px] lg:text-[54px] text-center lg:text-left w-full lg:w-[269px]">
+              How rTMS Therapy Works
             </h2>
+            {/* Desktop CTA Button */}
+            {/* <Link
+              to="/booking"
+              className="hidden lg:inline-flex items-center gap-2 bg-[#004F97] text-white px-6 py-4 rounded-full hover:bg-[#003d75] transition-colors"
+              style={{
+                fontFamily: '"Open Sauce Sans", "Inter", sans-serif',
+                fontWeight: 700,
+                fontSize: "16px",
+                lineHeight: "24px",
+              }}
+            >
+              Book Appointment
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M14 5C14 5.795 14.6414 6.98214 15.2906 7.97857C16.1253 9.26429 17.1228 10.3861 18.2666 11.2421C19.124 11.8839 20.1635 12.5 21 12.5M21 12.5C20.1635 12.5 19.1231 13.1161 18.2666 13.7579C17.1228 14.615 16.1253 15.7379 15.2906 17.0204C14.6414 18.0179 14 19.2071 14 20M21 12.5H3"
+                  stroke="white"
+                  strokeWidth="1.5"
+                />
+              </svg>
+            </Link> */}
+            <div className="mt-1 max-md:hidden">
+              <PrimaryCTA to="/booking" className="inline-flex">
+                Book Appointment
+                <ArrowRight size={22} />
+              </PrimaryCTA>
+            </div>
           </div>
 
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 max-md:!min-w-[100%] lg:grid-cols-3 gap-6">
-            {steps.map((step) => {
-              const isExpanded = expandedCard === step.id;
-              return (
-                <div
-                  key={step.id}
-                  ref={(el) => (cardRefs.current[step.id] = el)}
-                  className="relative rounded-xl overflow-hidden min-h-[350px] max-md:h-[350px]
-                   md:min-h-[520px] md:max-w-[100%] max-md:!min-w-[100%]
-                   shadow-sm aspect-[3/4]"
-                >
-                  <img
-                    src={step.image}
-                    alt={step.title}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.style.display = "none";
-                      e.target.parentElement.style.backgroundColor = "#f0f7ff";
-                    }}
-                  />
+          {/* Cards Container */}
+          <div className="flex-1 flex flex-col lg:flex-row gap-5 w-full h-full lg:h-[585px]">
+            {steps.map((step) => (
+              <div
+                key={step.id}
+                className="relative flex-1 rounded-[12px] overflow-hidden min-h-[350px] lg:min-h-0 lg:h-full flex flex-col justify-between"
+              >
+                {/* Background Image */}
+                <img
+                  src={step.image}
+                  alt={step.title}
+                  className="object-cover absolute inset-0 w-full h-full"
+                  onError={(e) => {
+                    e.target.style.display = "none";
+                    e.target.parentElement.style.backgroundColor = "#f0f7ff";
+                  }}
+                />
 
-                  <div className="absolute top-4 left-4 z-10">
+                {/* Top Gradient Overlay (Blue to Transparent) */}
+                <div
+                  className="absolute inset-0 pointer-events-none rounded-[12px]"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to bottom, rgba(0, 79, 151, 1) 0%, rgba(0, 79, 151, 0) 25%)",
+                  }}
+                />
+
+                {/* Card Title - Top */}
+                <div className="relative z-10 p-5">
+                  <h3
+                    className="text-white capitalize text-[28px] md:text-[32px] w-[185px] md:w-[199px] whitespace-pre-line"
+                    style={{
+                      fontFamily:
+                        '"LTSuperiorSerif", "LT Superior Serif", serif',
+                      fontWeight: 600,
+                      lineHeight: "110%",
+                    }}
+                  >
+                    {step.title}
+                  </h3>
+                </div>
+
+                {/* Bottom Content - Step Badge + Description Box */}
+                <div className="relative z-10 p-5 flex flex-col gap-[8px] md:gap-[11px]">
+                  {/* Step Badge */}
+                  <div className="inline-flex items-center justify-center px-5 py-[10px] rounded-full bg-white backdrop-blur-[7.639px] h-[28px] md:h-[32px] w-fit">
                     <span
-                      className="inline-block px-4 py-1.5 rounded-full  bg-white text-[14px] md:text-[16px] text-[#004F97]"
+                      className="text-[#004F97] text-[14px] md:text-[16px]"
                       style={{
-                        fontFamily: '"Inter", "Open Sauce Sans", sans-serif',
-                        fontStyle: "normal",
+                        fontFamily: '"Open Sauce Sans", "Inter", sans-serif',
                         fontWeight: 400,
-                        borderRadius: "9999px",
+                        lineHeight: "17px",
                       }}
                     >
                       {step.stepNumber}
                     </span>
                   </div>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#00203C] via-[#00203C]/5 via-[#00203C]/5 to-transparent pointer-events-none" />
-
-                  {isExpanded && (
-                    <>
-                      {/* Backdrop overlay - clickable area to close */}
-                      <div 
-                        className="absolute inset-0 z-15 cursor-pointer"
-                        onClick={closeCard}
-                        aria-label="Close popup"
-                      />
-                      {/* Popup content */}
-                      <div 
-                        className="absolute inset-0 flex items-start justify-start z-20 p-4"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <div className="bg-white rounded-xl p-6 max-w-[93%] md:min-h-[300px] min-h-[150px] mt-12 md:mt-18 ml-2 flex flex-col justify-between gap-4 shadow-lg transition-all duration-300 ease-in-out">
-                        <p
-                          className="text-[#002F5B] md:text-[16px] text-[12px] md:leading-[20px] leading-[14px]"
-                          style={{
-                            fontFamily: '"Inter", "Open Sauce Sans", sans-serif',
-                            fontStyle: "normal",
-                            fontWeight: 400,
-                          }}
-                        >
-                          {step.description}
-                        </p>
-
-                        <Link
-                          to="/booking"
-                          className="inline-flex items-center gap-2 text-[#004F97] text-[12px] md:text-[14px] underline self-start"
-                          style={{
-                            fontFamily: '"Inter", "Open Sauce Sans", sans-serif',
-                            fontStyle: "normal",
-                            fontWeight: 700,
-                            lineHeight: "20px",
-                            textDecorationLine: "underline",
-                            textDecorationStyle: "solid",
-                          }}
-                        >
-                          Book Appointment
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="14"
-                            height="10"
-                            viewBox="0 0 14 10"
-                            fill="none"
-                          >
-                            <path
-                              d="M9.33333 0C9.33333 0.53 9.76092 1.32143 10.1937 1.98571C10.7502 2.84286 11.4152 3.59071 12.1777 4.16143C12.7493 4.58929 13.4423 5 14 5M14 5C13.4423 5 12.7487 5.41071 12.1777 5.83857C11.4152 6.41 10.7502 7.15786 10.1937 8.01357C9.76092 8.67857 9.33333 9.47143 9.33333 10M14 5H0"
-                              stroke="#004F97"
-                            />
-                          </svg>
-                        </Link>
-                      </div>
-                    </div>
-                    </>
-                  )}
-
-                  <div className="absolute md:bottom-0 -bottom-3 left-0 right-0 p-6 z-10">
-                    <h3
-                      className="text-white capitalize flex flex-col mb-4 text-[28px] md:text-[32px]"
+                  {/* Description Box */}
+                  <div className="bg-white rounded-[8px] p-3 w-[209px] min-h-[141px] md:min-h-[207px] flex flex-col justify-between">
+                    <p
+                      className="text-[#002F5B] text-[12px] md:text-[16px] leading-[17px] md:leading-[20px]"
                       style={{
-                        fontFamily: '"LTSuperiorSerif", "LT Superior Serif", serif',
-                        fontStyle: "normal",
-                        fontWeight: 600,
-                        lineHeight: "110%",
+                        fontFamily: '"Open Sauce Sans", "Inter", sans-serif',
+                        fontWeight: 400,
                       }}
                     >
-                      {step.title.split(" ").map((word, idx) => (
-                        <span key={idx}>{word}</span>
-                      ))}
-                    </h3>
-                  </div>
+                      {step.description}
+                    </p>
 
-                  <div className="absolute md:bottom-14 bottom-10 right-6 z-40">
-                    <button
-                      onClick={() => toggleCard(step.id)}
-                      className={`w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ${
-                        isExpanded
-                          ? "bg-[#fff] "
-                          : "bg-white "
-                      }`}
-                      aria-label={isExpanded ? "Close" : "Expand"}
+                    {/* Mobile Book Appointment Link */}
+                    <Link
+                      to="/booking"
+                      className="lg:hidden inline-flex items-center gap-[6px] text-[#004F97] text-[12px] underline mt-3"
+                      style={{
+                        fontFamily: '"Open Sauce Sans", "Inter", sans-serif',
+                        fontWeight: 700,
+                        lineHeight: "17px",
+                      }}
                     >
-                      {isExpanded ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 16 16"
-                          fill="none"
-                        >
-                          <path
-                            d="M12 4L4 12M4 4L12 12"
-                            stroke="#004F97"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                          />
-                        </svg>
-                      ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 16 16"
-                          fill="none"
-                        >
-                          <path
-                            d="M14.8584 9.1436H9.1436V14.8584C9.1436 15.487 8.62927 16.0013 8.00065 16.0013C7.37203 16.0013 6.8577 15.487 6.8577 14.8584V9.1436H1.14295C0.514328 9.1436 0 8.62927 0 8.00065C0 7.37203 0.514328 6.8577 1.14295 6.8577H6.8577V1.14295C6.8577 0.514328 7.37203 0 8.00065 0C8.62927 0 9.1436 0.514328 9.1436 1.14295V6.8577H14.8584C15.487 6.8577 16.0013 7.37203 16.0013 8.00065C16.0013 8.62927 15.487 9.1436 14.8584 9.1436Z"
-                            fill="#004F97"
-                          />
-                        </svg>
-                      )}
-                    </button>
+                      Book Appointment
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="10"
+                        viewBox="0 0 14 10"
+                        fill="none"
+                      >
+                        <path
+                          d="M9.33333 0C9.33333 0.53 9.76092 1.32143 10.1937 1.98571C10.7502 2.84286 11.4152 3.59071 12.1777 4.16143C12.7493 4.58929 13.4423 5 14 5M14 5C13.4423 5 12.7487 5.41071 12.1777 5.83857C11.4152 6.41 10.7502 7.15786 10.1937 8.01357C9.76092 8.67857 9.33333 9.47143 9.33333 10M14 5H0"
+                          stroke="#004F97"
+                        />
+                      </svg>
+                    </Link>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -251,4 +195,3 @@ function HowRTMSWorks() {
 }
 
 export default HowRTMSWorks;
-
