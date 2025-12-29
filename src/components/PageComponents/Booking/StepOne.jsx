@@ -14,14 +14,105 @@ function formatNiceDate(iso) {
   }
 }
 
+// Helper function to check if date is Sunday
+function isSunday(iso) {
+  const d = new Date(iso);
+  return d.getDay() === 0; // 0 = Sunday
+}
+
+// Generate time slots based on day of week
+function generateTimeSlots(iso) {
+  const d = new Date(iso);
+  const dayOfWeek = d.getDay(); // 0=Sunday, 6=Saturday
+
+  // Sunday is closed - shouldn't reach here as we filter Sundays
+  if (dayOfWeek === 0) {
+    return [];
+  }
+
+  // Saturday: 9am - 2pm
+  if (dayOfWeek === 6) {
+    return [
+      "9:00am",
+      "9:30am",
+      "10:00am",
+      "10:30am",
+      "11:00am",
+      "11:30am",
+      "12:00pm",
+      "12:30pm",
+      "1:00pm",
+      "1:30pm",
+    ];
+  }
+
+  // Weekdays (Mon-Fri): 9am - 6pm
+  return [
+    "9:00am",
+    "9:30am",
+    "10:00am",
+    "10:30am",
+    "11:00am",
+    "11:30am",
+    "12:00pm",
+    "12:30pm",
+    "1:00pm",
+    "1:30pm",
+    "2:00pm",
+    "2:30pm",
+    "3:00pm",
+    "3:30pm",
+    "4:00pm",
+    "4:30pm",
+    "5:00pm",
+    "5:30pm",
+  ];
+}
+
+// Generate booked slots (20% of available slots) with consistent randomization per date
+function generateBookedSlots(iso, timeSlots) {
+  if (timeSlots.length === 0) return [];
+
+  // Use date as seed for consistent random booking per day
+  const seed = iso.split("-").join("");
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash << 5) - hash + seed.charCodeAt(i);
+    hash = hash & hash; // Convert to 32bit integer
+  }
+
+  // Seeded random function
+  const seededRandom = (index) => {
+    const x = Math.sin(hash + index) * 10000;
+    return x - Math.floor(x);
+  };
+
+  // Calculate 25% of slots (at least 1 if there are slots)
+  const numToBook = Math.max(1, Math.floor(timeSlots.length * 0.25));
+
+  // Create array of indices and shuffle using seeded random
+  const indices = timeSlots.map((_, i) => i);
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(seededRandom(i) * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+
+  // Take first numToBook indices as booked
+  const bookedIndices = new Set(indices.slice(0, numToBook));
+
+  return timeSlots.map((time, index) => ({
+    time,
+    booked: bookedIndices.has(index),
+  }));
+}
+
 export default function StepOne({ onContinue }) {
-    
-    const isPastDate = (iso) => {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const date = new Date(iso);
-      return date < today;
-    };
+  const isPastDate = (iso) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const date = new Date(iso);
+    return date < today;
+  };
   const conditions = [
     "Depression",
     "Anxiety Disorders",
@@ -36,27 +127,6 @@ export default function StepOne({ onContinue }) {
     "My condition isn't listed",
   ];
 
-  const dateOptionsIso = Array.from({ length: 11 }, (_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() + i);
-    return d.toISOString().slice(0, 10);
-  });
-
-  const times = [
-    { time: "9:00am", booked: false },
-    { time: "9:30am", booked: false },
-    { time: "10:00am", booked: false },
-    { time: "10:30am", booked: false },
-    { time: "11:00am", booked: true },
-    { time: "11:30am", booked: false },
-    { time: "12:00pm", booked: true },
-    { time: "12:30pm", booked: false },
-    { time: "1:00pm", booked: true },
-    { time: "1:30pm", booked: false },
-    { time: "2:00pm", booked: true },
-    { time: "2:30pm", booked: false },
-  ];
-
   const [condition, setCondition] = useState("");
   const [customCondition, setCustomCondition] = useState("");
   const [showConditionDropdown, setShowConditionDropdown] = useState(false);
@@ -64,6 +134,17 @@ export default function StepOne({ onContinue }) {
   // Set default date to today in ISO format (yyyy-mm-dd)
   const todayIso = new Date().toISOString().slice(0, 10);
   const [selectedDateIso, setSelectedDateIso] = useState(todayIso);
+
+  // Generate dates excluding Sundays (next 10 days)
+  const dateOptionsIso = Array.from({ length: 10 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() + i);
+    return d.toISOString().slice(0, 10);
+  }).filter((iso) => !isSunday(iso)); // Filter out Sundays
+
+  // Generate time slots dynamically based on selected date
+  const timeSlots = generateTimeSlots(selectedDateIso);
+  const times = generateBookedSlots(selectedDateIso, timeSlots);
   const [showDateDropdown, setShowDateDropdown] = useState(false);
   const [showNativeDateInput, setShowNativeDateInput] = useState(false);
 
@@ -87,38 +168,41 @@ export default function StepOne({ onContinue }) {
 
   const handleContinue = () => {
     onContinue({
-      condition: condition === "My condition isn't listed" ? customCondition : condition,
+      condition:
+        condition === "My condition isn't listed" ? customCondition : condition,
       selectedDateIso,
       selectedTime,
     });
   };
 
-  
-  const isConditionFilled = condition && (condition !== "My condition isn't listed" || customCondition);
-  
+  const isConditionFilled =
+    condition && (condition !== "My condition isn't listed" || customCondition);
+
   const [dateWasEverSelected, setDateWasEverSelected] = useState(false);
-  
+
   const [timeWasEverSelected, setTimeWasEverSelected] = useState(false);
 
-  
   const isDateSelected = isConditionFilled && dateWasEverSelected;
   const isTimeFilled = isDateSelected && (selectedTime || timeWasEverSelected);
 
   return (
-    <div className="max-w-6xl mx-auto px-0 lg:px-8 py-0 lg:py-0">
+    <div className="px-0 py-0 mx-auto max-w-6xl lg:px-8 lg:py-0">
       <div className="md:max-w-3xl mx-auto px-0 !py-0">
-        <div className="bg-white rounded-2xl border border-gray-200  shadow-sm p-8 lg:p-12">
+        <div className="p-8 bg-white rounded-2xl border border-gray-200 shadow-sm lg:p-12">
           <h2 className="font-[LT Superior Serif] text-[36px] lg:!text-[36px] font-semibold text-gray-900 mb-3 text-center">
             Book Your Consultation
           </h2>
           <p className="text-gray-600 !text-[14px] mb-10 text-center">
-            Select the condition you need treatment for and choose your appointment time
+            Select the condition you need treatment for and choose your
+            appointment time
           </p>
 
           <div className="">
-            
             <div className="!mb-0" ref={conditionRef}>
-              <label className="text-base font-medium text-gray-900" htmlFor="condition">
+              <label
+                className="text-base font-medium text-gray-900"
+                htmlFor="condition"
+              >
                 What do you need treatment for?
               </label>
               <button
@@ -127,7 +211,7 @@ export default function StepOne({ onContinue }) {
                 className="flex w-full items-center justify-between rounded-md border-[1px] border-input bg-background px-3 py-2 mt-4 h-12 text-base "
               >
                 <span>{condition || "Select condition"}</span>
-                <ChevronDown className="h-4 w-4 opacity-50" />
+                <ChevronDown className="w-4 h-4 opacity-50" />
               </button>
 
               {showConditionDropdown && (
@@ -139,7 +223,7 @@ export default function StepOne({ onContinue }) {
                         setCondition(c);
                         setShowConditionDropdown(false);
                       }}
-                      className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
+                      className="px-3 py-2 w-full text-left rounded hover:bg-gray-100 dark:hover:bg-gray-800"
                     >
                       {c}
                     </button>
@@ -153,19 +237,21 @@ export default function StepOne({ onContinue }) {
                   placeholder="Enter your condition"
                   value={customCondition}
                   onChange={(e) => setCustomCondition(e.target.value)}
-                  className="w-full mt-3 border rounded-md px-3 h-12"
+                  className="px-3 mt-3 w-full h-12 rounded-md border"
                 />
               )}
             </div>
 
-            
             {isConditionFilled && (
               <div
                 ref={dateRef}
-                className="transition-all mb-4  duration-500 ease-in-out opacity-0 translate-y-4 animate-fadein"
-                style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}
+                className="mb-4 opacity-0 transition-all duration-500 ease-in-out translate-y-4 animate-fadein"
+                style={{
+                  animationDelay: "0.1s",
+                  animationFillMode: "forwards",
+                }}
               >
-                <label className="text-base font-medium text-gray-900 mb-4 block">
+                <label className="block mb-4 text-base font-medium text-gray-900">
                   Select a Date
                 </label>
                 <button
@@ -176,30 +262,32 @@ export default function StepOne({ onContinue }) {
                   }}
                 >
                   <span>{formatNiceDate(selectedDateIso)}</span>
-                  <ChevronDown className="h-4 w-4 opacity-50" />
+                  <ChevronDown className="w-4 h-4 opacity-50" />
                 </button>
 
                 {showDateDropdown && (
                   <div className="mt-2 border-[1px] border-input rounded-md bg-white  shadow p-2 max-h-60 overflow-y-auto">
-                    {dateOptionsIso.filter((iso) => !isPastDate(iso)).map((iso) => (
-                      <button
-                        key={iso}
-                        onClick={() => {
-                          setSelectedDateIso(iso);
-                          setShowDateDropdown(false);
-                          setDateWasEverSelected(true);
-                        }}
-                        className="w-full text-left px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
-                      >
-                        {formatNiceDate(iso)}
-                      </button>
-                    ))}
+                    {dateOptionsIso
+                      .filter((iso) => !isPastDate(iso))
+                      .map((iso) => (
+                        <button
+                          key={iso}
+                          onClick={() => {
+                            setSelectedDateIso(iso);
+                            setShowDateDropdown(false);
+                            setDateWasEverSelected(true);
+                          }}
+                          className="px-3 py-2 w-full text-left rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+                        >
+                          {formatNiceDate(iso)}
+                        </button>
+                      ))}
                     <button
                       onClick={() => {
                         setShowNativeDateInput(true);
                         setShowDateDropdown(false);
                       }}
-                      className="mt-2 w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded border-t"
+                      className="px-3 py-2 mt-2 w-full text-left rounded border-t hover:bg-gray-100 dark:hover:bg-gray-800"
                     >
                       Select a different date...
                     </button>
@@ -220,66 +308,78 @@ export default function StepOne({ onContinue }) {
               </div>
             )}
 
-            
             {isDateSelected && (
               <div
-                className="transition-all duration-500 ease-in-out opacity-0 translate-y-4 animate-fadein"
-                style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}
+                className="opacity-0 transition-all duration-500 ease-in-out translate-y-4 animate-fadein"
+                style={{
+                  animationDelay: "0.2s",
+                  animationFillMode: "forwards",
+                }}
               >
-                <label className="text-base font-medium text-gray-900 mb-4 block">
+                <label className="block mb-4 text-base font-medium text-gray-900">
                   Select a Time
                 </label>
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
-                  {times.map((slot) => (
-                    <button
-                      key={slot.time}
-                      disabled={slot.booked}
-                      onClick={() => {
-                        setSelectedTime(slot.time);
-                        setTimeWasEverSelected(true);
-                      }}
-                      className={`h-10 rounded-md text-sm font-medium transition-all ${
-                        slot.booked
-                          ? "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed"
-                          : selectedTime === slot.time
-                          ? "bg-[#004F97] text-white shadow-md"
-                          : "bg-white  border border-gray-300 dark:border-gray-600 text-gray-900 hover:border-[#004F97] hover:bg-[#004F97]/5"
-                      }`}
-                    >
-                      {slot.booked ? "Booked" : slot.time}
-                    </button>
-                  ))}
-                </div>
+
+                {times.length === 0 ? (
+                  <div className="p-4 text-center text-gray-600 bg-gray-50 rounded-lg border border-gray-200">
+                    No available time slots for this date.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
+                    {times.map((slot) => (
+                      <button
+                        key={slot.time}
+                        disabled={slot.booked}
+                        onClick={() => {
+                          setSelectedTime(slot.time);
+                          setTimeWasEverSelected(true);
+                        }}
+                        className={`h-10 rounded-md text-sm font-medium transition-all ${
+                          slot.booked
+                            ? "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                            : selectedTime === slot.time
+                            ? "bg-[#004F97] text-white shadow-md"
+                            : "bg-white  border border-gray-300 dark:border-gray-600 text-gray-900 hover:border-[#004F97] hover:bg-[#004F97]/5"
+                        }`}
+                      >
+                        {slot.booked ? "Booked" : slot.time}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
 
-          
           {isTimeFilled && (
             <>
               <div
-                className="transition-all duration-500 ease-in-out opacity-0 translate-y-4 animate-fadein"
-                style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}
+                className="opacity-0 transition-all duration-500 ease-in-out translate-y-4 animate-fadein"
+                style={{
+                  animationDelay: "0.3s",
+                  animationFillMode: "forwards",
+                }}
               >
-                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mt-6 flex items-center gap-2 text-blue-900 dark:text-blue-100 ">
-                 <div>
-                   <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className=""
-                  >
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                  </svg>
-                 </div>
+                <div className="flex gap-2 items-center p-4 mt-6 text-blue-900 bg-blue-50 rounded-lg border border-blue-200 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-100">
+                  <div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className=""
+                    >
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                  </div>
                   <span className="font-medium">
-                    Selected: {formatNiceDate(selectedDateIso)} at {selectedTime}
+                    Selected: {formatNiceDate(selectedDateIso)} at{" "}
+                    {selectedTime}
                   </span>
                 </div>
                 <button
