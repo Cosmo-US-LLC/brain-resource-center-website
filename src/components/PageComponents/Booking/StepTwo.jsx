@@ -20,7 +20,13 @@ const getUrlParam = (key) => {
   return new URLSearchParams(window.location.search).get(key);
 };
 
-function SuccessModal({ bookingDetails, formattedPrice, onClose, onRedirect, onClearData }) {
+function SuccessModal({
+  bookingDetails,
+  formattedPrice,
+  onClose,
+  onRedirect,
+  onClearData,
+}) {
   const { email, meetingPref, condition, selectedDateIso, selectedTime } =
     bookingDetails;
 
@@ -1014,14 +1020,18 @@ export default function StepTwo({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    
+
                     // Ensure step=2 is in URL before navigating (for browser back button)
                     const currentUrl = new URL(window.location);
                     if (!currentUrl.searchParams.has("step")) {
                       currentUrl.searchParams.set("step", "2");
-                      window.history.replaceState({}, "", currentUrl.toString());
+                      window.history.replaceState(
+                        {},
+                        "",
+                        currentUrl.toString()
+                      );
                     }
-                    
+
                     // Navigate to terms page
                     window.location.href = "/terms-conditions";
                   }}
