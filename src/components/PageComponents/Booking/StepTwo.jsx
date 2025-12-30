@@ -20,7 +20,7 @@ const getUrlParam = (key) => {
   return new URLSearchParams(window.location.search).get(key);
 };
 
-function SuccessModal({ bookingDetails, formattedPrice, onClose, onRedirect }) {
+function SuccessModal({ bookingDetails, formattedPrice, onClose, onRedirect, onClearData }) {
   const { email, meetingPref, condition, selectedDateIso, selectedTime } =
     bookingDetails;
 
@@ -31,6 +31,8 @@ function SuccessModal({ bookingDetails, formattedPrice, onClose, onRedirect }) {
   const handleClose = () => {
     onClose();
     updateUrlParams("booking_status", "");
+    // Clear all cookies when modal is closed
+    onClearData?.();
     onRedirect("/");
   };
 
@@ -111,6 +113,7 @@ function PayLaterModal({
   formattedPrice,
   onClose,
   onRedirect,
+  onClearData,
 }) {
   const {
     fullName,
@@ -129,6 +132,8 @@ function PayLaterModal({
   const handleClose = () => {
     onClose();
     updateUrlParams("booking_status", "");
+    // Clear all cookies when modal is closed
+    onClearData?.();
     onRedirect("/");
   };
 
@@ -364,6 +369,7 @@ export default function StepTwo({
   onPayNow,
   initialData,
   onDataChange,
+  onClearData,
 }) {
   const {
     condition = "My condition isn't listed",
@@ -1008,6 +1014,14 @@ export default function StepTwo({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
+                    
+                    // Ensure step=2 is in URL before navigating (for browser back button)
+                    const currentUrl = new URL(window.location);
+                    if (!currentUrl.searchParams.has("step")) {
+                      currentUrl.searchParams.set("step", "2");
+                      window.history.replaceState({}, "", currentUrl.toString());
+                    }
+                    
                     // Navigate to terms page
                     window.location.href = "/terms-conditions";
                   }}
@@ -1145,6 +1159,7 @@ export default function StepTwo({
           formattedPrice={formattedPrice}
           onRedirect={navigateToPage}
           onClose={() => setShowPayLaterModal(false)}
+          onClearData={onClearData}
         />
       )}
       {showSuccessModal && (
@@ -1153,6 +1168,7 @@ export default function StepTwo({
           formattedPrice={formattedPrice}
           onRedirect={navigateToPage}
           onClose={() => setShowSuccessModal(false)}
+          onClearData={onClearData}
         />
       )}
          {" "}
