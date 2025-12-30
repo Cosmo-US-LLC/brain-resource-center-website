@@ -38,8 +38,18 @@ function SuccessModal({
     onClose();
     updateUrlParams("booking_status", "");
     // Clear all cookies when modal is closed
-    onClearData?.();
-    onRedirect("/");
+    if (onClearData) {
+      onClearData();
+      // Use setTimeout to ensure cookies are fully cleared before redirect
+      setTimeout(() => {
+        onRedirect("/");
+      }, 200);
+    } else {
+      // Fallback if onClearData is not provided
+      setTimeout(() => {
+        onRedirect("/");
+      }, 100);
+    }
   };
 
   return (
@@ -139,8 +149,18 @@ function PayLaterModal({
     onClose();
     updateUrlParams("booking_status", "");
     // Clear all cookies when modal is closed
-    onClearData?.();
-    onRedirect("/");
+    if (onClearData) {
+      onClearData();
+      // Use setTimeout to ensure cookies are fully cleared before redirect
+      setTimeout(() => {
+        onRedirect("/");
+      }, 200);
+    } else {
+      // Fallback if onClearData is not provided
+      setTimeout(() => {
+        onRedirect("/");
+      }, 100);
+    }
   };
 
   return (
@@ -768,9 +788,9 @@ export default function StepTwo({
       </button>
            {" "}
       <div className="flex gap-2 justify-center items-center text-gray-600">
-                <Clock className="w-4 h-4" />       {" "}
+        <Clock className="w-4 h-4" />{" "}
         <span>
-                    {formatNiceDate(selectedDateIso)} at {selectedTime}       {" "}
+          {formatNiceDate(selectedDateIso)} at {selectedTime}       {" "}
         </span>
              {" "}
       </div>
@@ -958,7 +978,7 @@ export default function StepTwo({
               htmlFor="issues"
             >
                             What specific issues or concerns would you like to
-              address?               (Optional)            {" "}
+              address?  (Optional){" "}
             </label>
                      {" "}
             <div className="!mt-1.5">
