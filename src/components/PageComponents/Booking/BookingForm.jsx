@@ -40,6 +40,8 @@ const deleteCookie = (name) => {
 export default function BookingForm() {
   // Track if component has initialized (prevents re-clearing on re-renders)
   const hasInitialized = useRef(false);
+  // Track if we're currently clearing cookies (prevents useEffect from interfering)
+  const isClearingCookies = useRef(false);
 
   // Initialize state from cookies
   const getInitialStep = () => {
@@ -123,6 +125,9 @@ export default function BookingForm() {
   }, [step]);
 
   useEffect(() => {
+    // Skip if we're clearing cookies
+    if (isClearingCookies.current) return;
+
     if (bookingData) {
       setCookie(COOKIE_KEYS.BOOKING_DATA, bookingData);
     } else {
@@ -131,6 +136,9 @@ export default function BookingForm() {
   }, [bookingData]);
 
   useEffect(() => {
+    // Skip if we're clearing cookies
+    if (isClearingCookies.current) return;
+
     if (stepOneData) {
       setCookie(COOKIE_KEYS.STEP_ONE_DATA, stepOneData);
     } else {
@@ -139,6 +147,9 @@ export default function BookingForm() {
   }, [stepOneData]);
 
   useEffect(() => {
+    // Skip if we're clearing cookies
+    if (isClearingCookies.current) return;
+
     if (stepTwoData) {
       setCookie(COOKIE_KEYS.STEP_TWO_DATA, stepTwoData);
     } else {
@@ -148,19 +159,34 @@ export default function BookingForm() {
 
   // Clear all cookies and URL params
   const clearAllCookies = useCallback(() => {
+    // Set flag to prevent useEffect hooks from interfering
+    isClearingCookies.current = true;
+
+    // Delete all cookies immediately and synchronously
     Object.values(COOKIE_KEYS).forEach((key) => {
       deleteCookie(key);
+      // Also try to delete with different path variations to ensure complete removal
+      document.cookie = `${key}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+      document.cookie = `${key}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/booking;`;
+      document.cookie = `${key}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;domain=${window.location.hostname};`;
     });
 
     // Clear URL params
     const url = new URL(window.location);
     url.searchParams.delete("step");
+    url.searchParams.delete("booking_status");
     window.history.replaceState({}, "", url.pathname + (url.search || ""));
 
+    // Reset state
     setStep(1);
     setBookingData(null);
     setStepOneData(null);
     setStepTwoData(null);
+
+    // Reset flag after a short delay to allow state updates to complete
+    setTimeout(() => {
+      isClearingCookies.current = false;
+    }, 100);
   }, []);
 
   // Sync step from URL (for browser back/forward and Terms page return)
