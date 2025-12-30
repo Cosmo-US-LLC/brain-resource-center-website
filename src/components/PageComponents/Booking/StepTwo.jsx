@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import { flushSync } from "react-dom";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Clock, CheckCircle, X } from "lucide-react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -20,7 +20,7 @@ const getUrlParam = (key) => {
   return new URLSearchParams(window.location.search).get(key);
 };
 
-function SuccessModal({ bookingDetails, formattedPrice, onClose, onRedirect }) {
+function SuccessModal({ bookingDetails, formattedPrice, onClose, onRedirect, onClearData }) {
   const { email, meetingPref, condition, selectedDateIso, selectedTime } =
     bookingDetails;
 
@@ -31,6 +31,8 @@ function SuccessModal({ bookingDetails, formattedPrice, onClose, onRedirect }) {
   const handleClose = () => {
     onClose();
     updateUrlParams("booking_status", "");
+    // Clear all cookies when modal is closed
+    onClearData?.();
     onRedirect("/");
   };
 
@@ -111,6 +113,7 @@ function PayLaterModal({
   formattedPrice,
   onClose,
   onRedirect,
+  onClearData,
 }) {
   const {
     fullName,
@@ -129,6 +132,8 @@ function PayLaterModal({
   const handleClose = () => {
     onClose();
     updateUrlParams("booking_status", "");
+    // Clear all cookies when modal is closed
+    onClearData?.();
     onRedirect("/");
   };
 
@@ -357,7 +362,15 @@ function MeetingOption({ type, selected, onClick, icon, label }) {
 const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 const stripePromise = publishableKey ? loadStripe(publishableKey) : null;
 
-export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
+export default function StepTwo({
+  booking = {},
+  onBack,
+  onConfirm,
+  onPayNow,
+  initialData,
+  onDataChange,
+  onClearData,
+}) {
   const {
     condition = "My condition isn't listed",
     customCondition = "",
@@ -365,18 +378,54 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
     selectedTime = "9:00am",
     price = 350,
   } = booking;
-  const navigate = (path) => {
+
+  // Use React Router's navigate hook for proper navigation
+  const navigate = useNavigate();
+
+  // Helper function for modal redirects (uses window.location for full page reload)
+  const navigateToPage = (path) => {
     window.location.href = path;
   };
 
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [countryCode, setCountryCode] = useState("+1");
-  const [phone, setPhone] = useState("");
+  // Initialize form fields from initialData if available
+  const [fullName, setFullName] = useState(initialData?.fullName || "");
+  const [email, setEmail] = useState(initialData?.email || "");
+
+  // Handle phone initialization - check if phone includes country code
+  const getInitialPhone = () => {
+    if (!initialData?.phone) return "";
+    // If phone is already separated, use it directly
+    if (initialData.phone && !initialData.phone.startsWith("+")) {
+      return initialData.phone;
+    }
+    // If phone includes country code, extract just the number part
+    if (initialData.phone && initialData.phone.includes(" ")) {
+      const parts = initialData.phone.split(" ");
+      return parts.slice(1).join(" "); // Everything after country code
+    }
+    return initialData.phone.replace(/\D/g, ""); // Extract digits only
+  };
+
+  const getInitialCountryCode = () => {
+    if (initialData?.countryCode) return initialData.countryCode;
+    // Try to extract from phone if it's combined
+    if (initialData?.phone && initialData.phone.startsWith("+")) {
+      const match = initialData.phone.match(/^(\+\d+)/);
+      return match ? match[1] : "+1";
+    }
+    return "+1";
+  };
+
+  const [countryCode, setCountryCode] = useState(getInitialCountryCode());
+  const [phone, setPhone] = useState(getInitialPhone());
   const [phoneError, setPhoneError] = useState("");
-  const [meetingPref, setMeetingPref] = useState("in_person");
-  const [issues, setIssues] = useState("");
-  const [termsChecked, setTermsChecked] = useState(true);
+  const [meetingPref, setMeetingPref] = useState(
+    initialData?.meetingPref || "in_person"
+  );
+  const [issues, setIssues] = useState(initialData?.issues || "");
+  const [termsChecked, setTermsChecked] = useState(
+    initialData?.termsChecked !== undefined ? initialData.termsChecked : true
+  );
   const [hiddenFieldValue, setHiddenFieldValue] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -422,6 +471,31 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
       }
     }
   }, [payLaterPayload, successModalPayload]);
+
+  // Persist StepTwo data whenever form fields change
+  useEffect(() => {
+    if (onDataChange) {
+      const stepTwoFormData = {
+        fullName,
+        email,
+        countryCode,
+        phone,
+        meetingPref,
+        issues,
+        termsChecked,
+      };
+      onDataChange(stepTwoFormData);
+    }
+  }, [
+    fullName,
+    email,
+    countryCode,
+    phone,
+    meetingPref,
+    issues,
+    termsChecked,
+    onDataChange,
+  ]);
 
   const formattedPrice = useMemo(
     () =>
@@ -672,12 +746,19 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
 
   return (
     <div className="px-0 py-8 mx-auto max-w-6xl lg:px-8 lg:py-12">
-           {" "}
       <button
-        onClick={onBack}
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (onBack) {
+            onBack();
+          }
+        }}
         className="inline-flex gap-2 items-center -ml-3 text-gray-600 cursor-pointer hover:text-gray-900"
       >
-                <ArrowLeft className="w-4 h-4" />        Back      {" "}
+        <ArrowLeft className="w-4 h-4" />
+        Back
       </button>
            {" "}
       <div className="flex gap-2 justify-center items-center text-gray-600">
@@ -928,13 +1009,26 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
               </button>
               <label className="text-sm leading-relaxed text-gray-600 cursor-pointer">
                 I agree to the{" "}
-                <Link
-                  to="/terms-conditions"
-                  type="button"
-                  className="text-[#004F97] underline hover:text-[#004F97]/80"
+                <a
+                  href="/terms-conditions"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Ensure step=2 is in URL before navigating (for browser back button)
+                    const currentUrl = new URL(window.location);
+                    if (!currentUrl.searchParams.has("step")) {
+                      currentUrl.searchParams.set("step", "2");
+                      window.history.replaceState({}, "", currentUrl.toString());
+                    }
+                    
+                    // Navigate to terms page
+                    window.location.href = "/terms-conditions";
+                  }}
+                  className="text-[#004F97] underline hover:text-[#004F97]/80 cursor-pointer"
                 >
                   Terms and Conditions
-                </Link>
+                </a>
                 <span className="ml-1 text-red-500">*</span>
               </label>
             </div>
@@ -1063,16 +1157,18 @@ export default function StepTwo({ booking = {}, onBack, onConfirm, onPayNow }) {
         <PayLaterModal
           bookingDetails={payLaterPayload}
           formattedPrice={formattedPrice}
-          onRedirect={navigate}
+          onRedirect={navigateToPage}
           onClose={() => setShowPayLaterModal(false)}
+          onClearData={onClearData}
         />
       )}
       {showSuccessModal && (
         <SuccessModal
           bookingDetails={successModalPayload}
           formattedPrice={formattedPrice}
-          onRedirect={navigate}
+          onRedirect={navigateToPage}
           onClose={() => setShowSuccessModal(false)}
+          onClearData={onClearData}
         />
       )}
          {" "}

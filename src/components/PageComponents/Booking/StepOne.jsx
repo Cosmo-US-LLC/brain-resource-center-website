@@ -106,7 +106,7 @@ function generateBookedSlots(iso, timeSlots) {
   }));
 }
 
-export default function StepOne({ onContinue }) {
+export default function StepOne({ onContinue, initialData }) {
   const isPastDate = (iso) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -127,13 +127,37 @@ export default function StepOne({ onContinue }) {
     "My condition isn't listed",
   ];
 
-  const [condition, setCondition] = useState("");
-  const [customCondition, setCustomCondition] = useState("");
+  // Initialize condition state from initialData or empty
+  const getInitialCondition = () => {
+    if (!initialData?.condition) return "";
+    // Check if condition is in the list
+    if (conditions.includes(initialData.condition)) {
+      return initialData.condition;
+    }
+    // It's a custom condition
+    return "My condition isn't listed";
+  };
+
+  const getInitialCustomCondition = () => {
+    if (!initialData?.condition) return "";
+    // If condition is not in the list, it's custom
+    if (initialData.condition && !conditions.includes(initialData.condition)) {
+      return initialData.condition;
+    }
+    return "";
+  };
+
+  const [condition, setCondition] = useState(getInitialCondition());
+  const [customCondition, setCustomCondition] = useState(
+    getInitialCustomCondition()
+  );
   const [showConditionDropdown, setShowConditionDropdown] = useState(false);
 
-  // Set default date to today in ISO format (yyyy-mm-dd)
+  // Set default date to today or use initialData
   const todayIso = new Date().toISOString().slice(0, 10);
-  const [selectedDateIso, setSelectedDateIso] = useState(todayIso);
+  const [selectedDateIso, setSelectedDateIso] = useState(
+    initialData?.selectedDateIso || todayIso
+  );
 
   // Generate dates excluding Sundays (next 10 days)
   const dateOptionsIso = Array.from({ length: 10 }, (_, i) => {
@@ -148,7 +172,9 @@ export default function StepOne({ onContinue }) {
   const [showDateDropdown, setShowDateDropdown] = useState(false);
   const [showNativeDateInput, setShowNativeDateInput] = useState(false);
 
-  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedTime, setSelectedTime] = useState(
+    initialData?.selectedTime || ""
+  );
 
   const conditionRef = useRef(null);
   const dateRef = useRef(null);
@@ -178,9 +204,14 @@ export default function StepOne({ onContinue }) {
   const isConditionFilled =
     condition && (condition !== "My condition isn't listed" || customCondition);
 
-  const [dateWasEverSelected, setDateWasEverSelected] = useState(false);
+  // Initialize flags based on initialData - if data exists, user has already selected
+  const [dateWasEverSelected, setDateWasEverSelected] = useState(
+    !!initialData?.selectedDateIso
+  );
 
-  const [timeWasEverSelected, setTimeWasEverSelected] = useState(false);
+  const [timeWasEverSelected, setTimeWasEverSelected] = useState(
+    !!initialData?.selectedTime
+  );
 
   const isDateSelected = isConditionFilled && dateWasEverSelected;
   const isTimeFilled = isDateSelected && (selectedTime || timeWasEverSelected);
