@@ -105,6 +105,12 @@ export default function BookingForm() {
   const [bookingData, setBookingData] = useState(initialState.bookingData);
   const [stepOneData, setStepOneData] = useState(initialState.stepOneData);
   const [stepTwoData, setStepTwoData] = useState(initialState.stepTwoData);
+  const handleStepTwoDataChange = useCallback(
+    (data) => {
+      setStepTwoData(data);
+    },
+    [setStepTwoData]
+  );
 
   // Update cookies and URL when state changes
   useEffect(() => {
@@ -253,9 +259,7 @@ export default function BookingForm() {
           booking={bookingData}
           initialData={stepTwoData}
           onBack={() => setStep(1)}
-          onDataChange={(data) => {
-            setStepTwoData(data);
-          }}
+          onDataChange={handleStepTwoDataChange}
           onClearData={clearAllCookies}
         />
       )}
