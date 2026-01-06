@@ -6,15 +6,7 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { CreditCard, Lock, Shield } from "lucide-react";
-import { countries } from "@/lib/utils";
 
 const cardElementStyle = {
   style: {
@@ -45,7 +37,6 @@ export default function PaymentSection({
   const [cardholderName, setCardholderName] = useState(
     bookingDetails?.fullName || ""
   );
-  const [country, setCountry] = useState("US");
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
 
@@ -76,9 +67,6 @@ export default function PaymentSection({
               name: cardholderName || bookingDetails?.fullName,
               email: bookingDetails?.email,
               phone: bookingDetails?.phone,
-              address: {
-                country,
-              },
             },
           },
           receipt_email: bookingDetails?.email,
@@ -152,27 +140,6 @@ export default function PaymentSection({
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="mb-4">
-        <label
-          className="block text-sm font-medium text-gray-700 mb-1"
-          htmlFor="country"
-        >
-          Country
-        </label>
-        <Select id="country" value={country} onChange={setCountry}>
-          <SelectTrigger className="w-full h-11 px-3 rounded-[5px] border border-[#E6E6E6] bg-white focus:outline-none shadow shadow-neutral-500/5">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent className="max-h-[40svh] min-h-50 overflow-y-auto border-neutral-200">
-            {countries.map((countryOption) => (
-              <SelectItem key={countryOption.code} value={countryOption.code}>
-                {countryOption.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
       </div>
 
       <div className="bg-[#F9FAFB] rounded-xl p-4 mb-4">
