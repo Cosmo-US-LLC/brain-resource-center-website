@@ -755,14 +755,17 @@ export default function StepTwo({
 
     // Set hidden field value
     const meetingType = meetingPref === "in_person" ? "In Person" : "Online";
-    const hiddenValue = `${meetingType} - Pay Now`;
+    const hiddenValue = `${meetingType} - Proceed to Payment`;
     setHiddenFieldValue(hiddenValue);
-    console.log("Hidden Field Value (Pay Now):", hiddenValue);
+    console.log("📋 Meeting Type Selected:", meetingType);
+    console.log("📋 Booking Type (Proceed to Payment):", hiddenValue);
 
     setSubmitting(true);
     try {
       const payload = { ...buildPayload(), bookingtype: hiddenValue };
-      console.log("Pay Now Payload:", payload);
+      console.log("💳 Pay Now Payload:", payload);
+      console.log("💳 Meeting Preference:", meetingPref);
+      console.log("💳 Booking Type:", hiddenValue);
 
       // Track to Klaviyo immediately when user clicks "Proceed to Payment"
       // This ensures data is sent even if payment is not completed
@@ -772,6 +775,10 @@ export default function StepTwo({
         ChargeID: "PENDING",
         originalPrice: payload.price,
       };
+      console.log(
+        "📤 Sending to Klaviyo - Booking Type:",
+        klaviyoPayload.bookingtype
+      );
       trackKlaviyoEvent(klaviyoPayload);
 
       if (onConfirm) await onConfirm(payload);
