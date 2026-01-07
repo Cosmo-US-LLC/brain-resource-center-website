@@ -259,23 +259,19 @@ const trackKlaviyoEvent = (payload) => {
     Phone: payload.phone,
     PhoneNumber: payload.phone,
     // Custom properties for segmentation - MUST match Klaviyo segment conditions exactly
-    bookingtype: payload.bookingtype || "",
-    BookingType: payload.bookingtype || "", // Alternative name for compatibility
+    bookingStatus: payload.bookingStatus || "",
     condition: payload.condition || "",
-    Condition: payload.condition || "", // Alternative name for compatibility
     meetingPref: payload.meetingPref || "",
-    meetingPreference: payload.meetingPref || "", // Alternative name for compatibility
     selectedDateIso: payload.selectedDateIso || "",
     selectedTime: payload.selectedTime || "",
     issues: payload.issues || "",
-    IssuesNoted: payload.issues || "", // Alternative name for compatibility
     LastBookingDate: payload.selectedDateIso || "",
     LastBookingTime: payload.selectedTime || "",
   };
 
   // Debug logging to verify what's being sent
   console.log("🔵 Klaviyo Identify - Profile Properties:", profileProperties);
-  console.log("🔵 Klaviyo Identify - bookingtype:", payload.bookingtype);
+  console.log("🔵 Klaviyo Identify - bookingStatus:", payload.bookingStatus);
   console.log("🔵 Klaviyo _learnq available:", !!window._learnq);
 
   try {
@@ -298,7 +294,7 @@ const trackKlaviyoEvent = (payload) => {
     IssuesNoted: payload.issues || "",
     condition: payload.condition || "",
     meetingPref: payload.meetingPref || "",
-    bookingtype: payload.bookingtype || "",
+    bookingStatus: payload.bookingStatus || "",
     selectedDateIso: payload.selectedDateIso || "",
     selectedTime: payload.selectedTime || "",
     price: trackedPrice,
@@ -612,6 +608,12 @@ export default function StepTwo({
     return digits.length >= 7;
   };
 
+  // Helper function to create bookingStatus in simple format: "meetingPreference - paymentStatus"
+  const getBookingType = (meetingPref, paymentStatus) => {
+    const meeting = meetingPref === "in_person" ? "in-person" : "online";
+    return `${meeting} - ${paymentStatus}`;
+  };
+
   const validateField = (fieldName, value) => {
     let error = "";
 
@@ -705,7 +707,7 @@ export default function StepTwo({
     meetingPref,
     issues: issues.trim(),
     price,
-    bookingtype: hiddenFieldValue,
+    bookingStatus: hiddenFieldValue,
   });
 
   const initializePayment = async (payload) => {
@@ -753,19 +755,17 @@ export default function StepTwo({
       return;
     }
 
-    // Set hidden field value
-    const meetingType = meetingPref === "in_person" ? "In Person" : "Online";
-    const hiddenValue = `${meetingType} - Proceed to Payment`;
-    setHiddenFieldValue(hiddenValue);
-    console.log("📋 Meeting Type Selected:", meetingType);
-    console.log("📋 Booking Type (Proceed to Payment):", hiddenValue);
+    // Set bookingStatus in simple format: "meetingPreference - paymentStatus"
+    const bookingType = getBookingType(meetingPref, "pending");
+    setHiddenFieldValue(bookingType);
+    console.log("📋 Meeting Preference:", meetingPref);
+    console.log("📋 Payment Status: pending");
+    console.log("📋 Booking Status:", bookingType);
 
     setSubmitting(true);
     try {
-      const payload = { ...buildPayload(), bookingtype: hiddenValue };
+      const payload = { ...buildPayload(), bookingStatus: bookingType };
       console.log("💳 Pay Now Payload:", payload);
-      console.log("💳 Meeting Preference:", meetingPref);
-      console.log("💳 Booking Type:", hiddenValue);
 
       // Track to Klaviyo immediately when user clicks "Proceed to Payment"
       // This ensures data is sent even if payment is not completed
@@ -776,8 +776,8 @@ export default function StepTwo({
         originalPrice: payload.price,
       };
       console.log(
-        "📤 Sending to Klaviyo - Booking Type:",
-        klaviyoPayload.bookingtype
+        "📤 Sending to Klaviyo - Booking Status:",
+        klaviyoPayload.bookingStatus
       );
       trackKlaviyoEvent(klaviyoPayload);
 
@@ -819,17 +819,18 @@ export default function StepTwo({
       return;
     }
 
-    // Set hidden field value
-    const meetingType = meetingPref === "in_person" ? "In Person" : "Online";
-    const hiddenValue = `${meetingType} - Pay Later`;
-    setHiddenFieldValue(hiddenValue);
-    console.log("Hidden Field Value (Pay Later):", hiddenValue);
+    // Set bookingStatus in simple format: "meetingPreference - paymentStatus"
+    const bookingType = getBookingType(meetingPref, "pay later");
+    setHiddenFieldValue(bookingType);
+    console.log("📋 Meeting Preference:", meetingPref);
+    console.log("📋 Payment Status: pay later");
+    console.log("📋 Booking Status:", bookingType);
 
     const basePayload = buildPayload();
 
     const finalPayload = {
       ...basePayload,
-      bookingtype: hiddenValue,
+      bookingStatus: bookingType,
       paid: false,
       ChargeID: "PAY_LATER",
       originalPrice: basePayload.price,
@@ -850,8 +851,21 @@ export default function StepTwo({
   };
 
   const handlePayNowSuccess = (paymentSummary) => {
-    const payload = { ...buildPayload(), paid: true, ...paymentSummary };
-    console.log("Pay Now Success Payload:", payload);
+    // Set bookingStatus in simple format: "meetingPreference - paymentStatus"
+    const bookingType = getBookingType(meetingPref, "paid");
+    const payload = {
+      ...buildPayload(),
+      bookingStatus: bookingType,
+      paid: true,
+      ChargeID:
+        paymentSummary?.paymentIntentId || paymentSummary?.ChargeID || "",
+      ...paymentSummary,
+    };
+    console.log("📋 Meeting Preference:", meetingPref);
+    console.log("📋 Payment Status: paid");
+    console.log("📋 Booking Status:", bookingType);
+    console.log("📋 ChargeID (Stripe Payment Intent):", payload.ChargeID);
+    console.log("✅ Pay Now Success Payload:", payload);
     trackKlaviyoEvent(payload);
     setPaymentResult({
       status: "success",
@@ -1147,7 +1161,7 @@ export default function StepTwo({
             )}
           </div>
           {/* Hidden field to track meeting preference and payment option */}
-          <input type="hidden" name="bookingtype" value={hiddenFieldValue} />
+          <input type="hidden" name="bookingStatus" value={hiddenFieldValue} />
           <div className="flex flex-col gap-3 sm:flex-row">
             <button
               onClick={handlePayNow}
