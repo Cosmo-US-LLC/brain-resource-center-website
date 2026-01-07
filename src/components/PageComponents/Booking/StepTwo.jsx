@@ -763,6 +763,17 @@ export default function StepTwo({
     try {
       const payload = { ...buildPayload(), bookingtype: hiddenValue };
       console.log("Pay Now Payload:", payload);
+
+      // Track to Klaviyo immediately when user clicks "Proceed to Payment"
+      // This ensures data is sent even if payment is not completed
+      const klaviyoPayload = {
+        ...payload,
+        paid: false,
+        ChargeID: "PENDING",
+        originalPrice: payload.price,
+      };
+      trackKlaviyoEvent(klaviyoPayload);
+
       if (onConfirm) await onConfirm(payload);
       setPaymentResult(null);
       await initializePayment(payload);
