@@ -338,10 +338,8 @@ const emailPattern = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
 
 // 2. Famous public email domains (Google, Yahoo, Microsoft, Apple, etc.)
 const allowedDomains = [
-  // Google
   "gmail.com",
 
-  // Yahoo
   "yahoo.com",
 
   // Microsoft
