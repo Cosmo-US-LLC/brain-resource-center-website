@@ -333,14 +333,9 @@ function formatNiceDate(iso) {
   }
 }
 // Email validation helpers
-// 1. Basic email format regex
-const emailPattern = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
-
-// 2. Famous public email domains (Google, Yahoo, Microsoft, Apple, etc.)
-const allowedDomains = [
+const popularProviders = [
+  // Google
   "gmail.com",
-
-  "yahoo.com",
 
   // Microsoft
   "outlook.com",
@@ -349,38 +344,68 @@ const allowedDomains = [
   "msn.com",
   "microsoft.com",
 
+  // Yahoo
+  "yahoo.com",
+
   // Apple
   "icloud.com",
+  "me.com",
+  "mac.com",
+
+  // AOL
+  "aol.com",
+
+  // Zoho
+  "zoho.com",
+
+  // Proton
+  "protonmail.com",
+
+  // GMX
+  "gmx.com",
+
+  // Yandex
+  "yandex.com",
 ];
+
+const blockedTlds = ["con", "comm", "cim", "cmo", "vom", "xom", "c"];
+
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,24}$/;
 
 function isValidEmail(value) {
   const email = value.trim().toLowerCase();
 
-  // Step 1: basic format validation
-  if (!emailPattern.test(email)) {
+  // Basic structure
+  if (!emailRegex.test(email)) {
     return { valid: false, reason: "Invalid email format" };
   }
 
   const domain = email.split("@")[1];
-
-  // Step 2: public (famous) email domains — strict
-  if (allowedDomains.includes(domain)) {
-    return { valid: true, type: "public" };
-  }
-
-  // Step 3: private email rule
-  // dot ke baad kam az kam 2 letters hone chahiye
   const tld = domain.split(".").pop();
 
-  if (!tld || tld.length < 2) {
+  // ❌ Block typo TLDs everywhere
+  if (tld && blockedTlds.includes(tld)) {
+    return { valid: false, reason: "Invalid email domain" };
+  }
+
+  // ✅ Popular providers → only allow exact domains in the list
+  if (popularProviders.includes(domain)) {
+    return { valid: true };
+  }
+
+  const providerRoot = domain.split(".")[0]; // e.g. "gmail" from "gmail.co"
+  const popularRoots = popularProviders.map((p) => p.split(".")[0]);
+
+  // If domain looks like a typo of a popular provider (gmail.co, yahoo.org, etc.)
+  if (popularRoots.includes(providerRoot)) {
     return {
       valid: false,
-      reason: "Private email must have at least 2 letters after dot",
+      reason: "Please check your email provider (did you mean .com?)",
     };
   }
 
-  // private/company email allowed
-  return { valid: true, type: "private" };
+  // Other (company / private) domains allowed
+  return { valid: true };
 }
 function TextInput({
   label,
