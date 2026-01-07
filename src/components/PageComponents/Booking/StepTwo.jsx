@@ -332,6 +332,58 @@ function formatNiceDate(iso) {
     return iso;
   }
 }
+// Email validation helpers
+// 1. Basic email format regex
+const emailPattern = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+
+// 2. Famous public email domains (Google, Yahoo, Microsoft, Apple, etc.)
+const allowedDomains = [
+  // Google
+  "gmail.com",
+
+  // Yahoo
+  "yahoo.com",
+
+  // Microsoft
+  "outlook.com",
+  "hotmail.com",
+  "live.com",
+  "msn.com",
+  "microsoft.com",
+
+  // Apple
+  "icloud.com",
+];
+
+function isValidEmail(value) {
+  const email = value.trim().toLowerCase();
+
+  // Step 1: basic format validation
+  if (!emailPattern.test(email)) {
+    return { valid: false, reason: "Invalid email format" };
+  }
+
+  const domain = email.split("@")[1];
+
+  // Step 2: public (famous) email domains — strict
+  if (allowedDomains.includes(domain)) {
+    return { valid: true, type: "public" };
+  }
+
+  // Step 3: private email rule
+  // dot ke baad kam az kam 2 letters hone chahiye
+  const tld = domain.split(".").pop();
+
+  if (!tld || tld.length < 2) {
+    return {
+      valid: false,
+      reason: "Private email must have at least 2 letters after dot",
+    };
+  }
+
+  // private/company email allowed
+  return { valid: true, type: "private" };
+}
 function TextInput({
   label,
   value,
@@ -379,8 +431,7 @@ function MeetingOption({ type, selected, onClick, icon, label }) {
           : "border-gray-300 dark:border-gray-600"
       }`}
     >
-      {icon}{" "}
-      <span className="font-medium text-gray-900">{label}</span>{" "}
+      {icon} <span className="font-medium text-gray-900">{label}</span>{" "}
     </button>
   );
 }
@@ -550,8 +601,11 @@ export default function StepTwo({
       case "email":
         if (!value.trim()) {
           error = "Email is required";
-        } else if (!/^\S+@\S+\.\S+$/.test(value)) {
-          error = "Please enter a valid email address";
+        } else {
+          const result = isValidEmail(value);
+          if (!result.valid) {
+            error = result.reason;
+          }
         }
         break;
       case "phone":
@@ -610,7 +664,7 @@ export default function StepTwo({
   const isFormValid = () => {
     return (
       fullName.trim() &&
-      /^\S+@\S+\.\S+$/.test(email) &&
+      isValidEmail(email).valid &&
       phone.trim() &&
       isValidPhone(phone) &&
       termsChecked
@@ -785,22 +839,18 @@ export default function StepTwo({
       >
         <ArrowLeft className="w-4 h-4" />
         Back
-      </button>
-      {" "}
+      </button>{" "}
       <div className="flex gap-2 justify-center items-center text-gray-600">
         <Clock className="w-4 h-4" />{" "}
         <span>
           {formatNiceDate(selectedDateIso)} at {selectedTime}{" "}
-        </span>
-        {" "}
-      </div>
-      {" "}
+        </span>{" "}
+      </div>{" "}
       <div className="max-w-2xl mx-auto bg-white rounded-2xl !mt-8 border border-gray-200 shadow-sm p-6 lg:p-12">
         {" "}
         <div className="font-[LT Superior Serif] text-[36px] font-semibold text-gray-900 mb-3">
           Your Information{" "}
-        </div>
-        {" "}
+        </div>{" "}
         <p className="text-gray-600 text-[14px] mb-8">
           Please provide your details to complete the booking{" "}
         </p>
@@ -914,16 +964,14 @@ export default function StepTwo({
                 {errors.phone || phoneError}
               </div>
             )}
-          </div>
-              {" "}
+          </div>{" "}
           <div>
-                 {" "}
+            {" "}
             <label className="block text-sm font-medium text-gray-700">
-                     How would you prefer to meet?      {" "}
-            </label>
-                 {" "}
+              How would you prefer to meet?{" "}
+            </label>{" "}
             <div className="grid grid-cols-2 gap-3 mt-1.5">
-                    {" "}
+              {" "}
               <MeetingOption
                 type="in_person"
                 selected={meetingPref}
@@ -936,15 +984,13 @@ export default function StepTwo({
                     strokeWidth="2"
                     viewBox="0 0 24 24"
                   >
-                             {" "}
+                    {" "}
                     <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path>
-                              <circle cx="12" cy="10" r="3"></circle>
-                           {" "}
+                    <circle cx="12" cy="10" r="3"></circle>{" "}
                   </svg>
                 }
                 label="In Person"
-              />
-                    {" "}
+              />{" "}
               <MeetingOption
                 type="online"
                 selected={meetingPref}
@@ -957,30 +1003,24 @@ export default function StepTwo({
                     strokeWidth="2"
                     viewBox="0 0 24 24"
                   >
-                             {" "}
-                    <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path>
-                             {" "}
-                    <rect x="2" y="6" width="14" height="12" rx="2"></rect>  
-                         {" "}
+                    {" "}
+                    <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path>{" "}
+                    <rect x="2" y="6" width="14" height="12" rx="2"></rect>{" "}
                   </svg>
                 }
                 label="Online"
-              />
-                   {" "}
-            </div>
-                {" "}
-          </div>
-              {" "}
+              />{" "}
+            </div>{" "}
+          </div>{" "}
           <div>
-                 {" "}
+            {" "}
             <label
               className="text-sm font-medium text-gray-700"
               htmlFor="issues"
             >
-                     What specific issues or concerns would you like to
-              address? (Optional){" "}
-            </label>
-                {" "}
+              What specific issues or concerns would you like to address?
+              (Optional){" "}
+            </label>{" "}
             <div className="!mt-1.5">
               {" "}
               <textarea
@@ -990,8 +1030,7 @@ export default function StepTwo({
                 placeholder="Please share any relevant details..."
                 className="flex w-full rounded-md border-[1px] border-input bg-background px-3 py-2 text-base min-h-[100px] outline-none "
               />
-            </div>
-                {" "}
+            </div>{" "}
           </div>
           <div>
             <div className="flex gap-3 items-start">
@@ -1093,43 +1132,36 @@ export default function StepTwo({
             >
               Pay Later
             </button>
-          </div>
-             {" "}
+          </div>{" "}
         </form>
         {showPayment && (
           <div
             ref={paymentRef}
             className="pt-8 border-t border-gray-200 dark:border-gray-700 animate-slide-up"
           >
-                 {" "}
+            {" "}
             <div className="mb-6">
-                    {" "}
+              {" "}
               <div className="mb-2 text-3xl font-semibold text-gray-900">
-                        Payment       {" "}
-              </div>
-                    {" "}
+                Payment{" "}
+              </div>{" "}
               <p className="text-gray-600">
-                        Consultation Fee:        {" "}
+                Consultation Fee:{" "}
                 <span className="font-semibold text-[#004F97] text-lg">
-                           {formattedPrice}       {" "}
-                </span>
-                      {" "}
-              </p>
-                   {" "}
-            </div>
-                 {" "}
+                  {formattedPrice}{" "}
+                </span>{" "}
+              </p>{" "}
+            </div>{" "}
             {initializingPayment && (
               <div className="p-4 mb-4 text-blue-900 bg-blue-50 rounded-xl border">
-                        Initializing secure checkout…       {" "}
+                Initializing secure checkout…{" "}
               </div>
-            )}
-                 {" "}
+            )}{" "}
             {paymentSetupError && (
               <div className="p-4 mb-4 text-red-700 bg-red-50 rounded-xl border border-red-200">
-                        {paymentSetupError}      {" "}
+                {paymentSetupError}{" "}
               </div>
-            )}
-                 {" "}
+            )}{" "}
             {stripePromise && clientSecret && !paymentSetupError && (
               <Elements
                 stripe={stripePromise}
@@ -1146,26 +1178,22 @@ export default function StepTwo({
                   },
                 }}
               >
-                       {" "}
+                {" "}
                 <PaymentSection
                   amount={price}
                   clientSecret={clientSecret}
                   bookingDetails={buildPayload()}
                   onPayLater={handlePayLater}
                   onPaymentCompleted={handlePayNowSuccess}
-                />
-                      {" "}
+                />{" "}
               </Elements>
-            )}
-                 {" "}
+            )}{" "}
             {!stripePromise && (
               <div className="p-4 text-yellow-800 bg-yellow-50 rounded-xl border border-yellow-200">
-                        Stripe publishable key is missing. Please add 
-                       <code>VITE_STRIPE_PUBLISHABLE_KEY</code> to your
-                environment.       {" "}
+                Stripe publishable key is missing. Please add
+                <code>VITE_STRIPE_PUBLISHABLE_KEY</code> to your environment.{" "}
               </div>
-            )}
-                 {" "}
+            )}{" "}
             {paymentResult && (
               <div
                 className={`mt-4 rounded-xl p-4 ${
@@ -1174,15 +1202,12 @@ export default function StepTwo({
                     : "bg-blue-50 text-blue-900"
                 }`}
               >
-                        {paymentResult.message}      {" "}
+                {paymentResult.message}{" "}
               </div>
-            )}
-                {" "}
+            )}{" "}
           </div>
-        )}
-          {" "}
-      </div>
-        {" "}
+        )}{" "}
+      </div>{" "}
       {showPayLaterModal && (
         <PayLaterModal
           bookingDetails={payLaterPayload}
@@ -1200,8 +1225,7 @@ export default function StepTwo({
           onClose={() => setShowSuccessModal(false)}
           onClearData={onClearData}
         />
-      )}
-       {" "}
+      )}{" "}
     </div>
   );
 }
