@@ -262,6 +262,11 @@ const trackKlaviyoEvent = (payload) => {
     bookingStatus: payload.bookingStatus || "",
     condition: payload.condition || "",
     meetingPref: payload.meetingPref || "",
+    paymentStatus: payload.paid
+      ? "paid"
+      : payload.ChargeID === "PAY_LATER"
+      ? "pay later"
+      : "pending",
     selectedDateIso: payload.selectedDateIso || "",
     selectedTime: payload.selectedTime || "",
     issues: payload.issues || "",
@@ -275,6 +280,10 @@ const trackKlaviyoEvent = (payload) => {
   console.log(
     "🔵 Klaviyo Identify - bookingStatus VALUE:",
     profileProperties.bookingStatus
+  );
+  console.log(
+    "🔵 Klaviyo Identify - paymentStatus VALUE:",
+    profileProperties.paymentStatus
   );
   console.log("🔵 Klaviyo _learnq available:", !!window._learnq);
 
@@ -317,6 +326,10 @@ const trackKlaviyoEvent = (payload) => {
   console.log(
     "🟢 Klaviyo Track - bookingStatus VALUE:",
     eventProperties.bookingStatus
+  );
+  console.log(
+    "🟢 Klaviyo Track - paymentStatus VALUE:",
+    eventProperties.paymentStatus
   );
 
   try {
