@@ -302,7 +302,11 @@ const trackKlaviyoEvent = (payload) => {
     selectedDateIso: payload.selectedDateIso || "",
     selectedTime: payload.selectedTime || "",
     price: trackedPrice,
-    PaymentStatus: payload.paid ? "Paid" : "Pending",
+    PaymentStatus: payload.paid
+      ? "paid"
+      : payload.ChargeID === "PAY_LATER"
+      ? "pay later"
+      : "pending",
     ChargeID: payload.ChargeID || "",
     SubmittedAt: new Date().toISOString(),
     PhoneNumber: payload.phone,
