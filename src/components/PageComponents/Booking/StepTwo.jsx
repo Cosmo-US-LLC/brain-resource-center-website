@@ -302,7 +302,7 @@ const trackKlaviyoEvent = (payload) => {
     selectedDateIso: payload.selectedDateIso || "",
     selectedTime: payload.selectedTime || "",
     price: trackedPrice,
-    PaymentStatus: payload.paid
+    paymentStatus: payload.paid
       ? "paid"
       : payload.ChargeID === "PAY_LATER"
       ? "pay later"
