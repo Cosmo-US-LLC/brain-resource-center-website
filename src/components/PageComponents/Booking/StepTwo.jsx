@@ -272,6 +272,10 @@ const trackKlaviyoEvent = (payload) => {
   // Debug logging to verify what's being sent
   console.log("🔵 Klaviyo Identify - Profile Properties:", profileProperties);
   console.log("🔵 Klaviyo Identify - bookingStatus:", payload.bookingStatus);
+  console.log(
+    "🔵 Klaviyo Identify - bookingStatus VALUE:",
+    profileProperties.bookingStatus
+  );
   console.log("🔵 Klaviyo _learnq available:", !!window._learnq);
 
   try {
@@ -298,7 +302,11 @@ const trackKlaviyoEvent = (payload) => {
     selectedDateIso: payload.selectedDateIso || "",
     selectedTime: payload.selectedTime || "",
     price: trackedPrice,
-    PaymentStatus: payload.paid ? "Paid" : "Pending",
+    PaymentStatus: payload.paid
+      ? "paid"
+      : payload.ChargeID === "PAY_LATER"
+      ? "pay later"
+      : "pending",
     ChargeID: payload.ChargeID || "",
     SubmittedAt: new Date().toISOString(),
     PhoneNumber: payload.phone,
@@ -306,6 +314,10 @@ const trackKlaviyoEvent = (payload) => {
 
   console.log("🟢 Klaviyo Track - Event:", eventName);
   console.log("🟢 Klaviyo Track - Properties:", eventProperties);
+  console.log(
+    "🟢 Klaviyo Track - bookingStatus VALUE:",
+    eventProperties.bookingStatus
+  );
 
   try {
     _learnq.push(["track", eventName, eventProperties]);
@@ -853,6 +865,8 @@ export default function StepTwo({
   const handlePayNowSuccess = (paymentSummary) => {
     // Set bookingStatus in simple format: "meetingPreference - paymentStatus"
     const bookingType = getBookingType(meetingPref, "paid");
+    // Update hiddenFieldValue to reflect paid status
+    setHiddenFieldValue(bookingType);
     const payload = {
       ...buildPayload(),
       bookingStatus: bookingType,
