@@ -143,7 +143,7 @@ function PayLaterModal({
 
   const niceDate = formatNiceDate(selectedDateIso);
   const meetingLabel = meetingPref === "in_person" ? "In Person" : "Online";
-  const isOnline = meetingPref === "online";
+  // const isOnline = meetingPref === "online"; // Not used after message update
 
   const handleClose = () => {
     onClose();
@@ -188,9 +188,8 @@ function PayLaterModal({
           </h2>
           <div className="flex gap-2 justify-center items-center px-4 py-2 mx-auto mb-8 text-sm text-gray-600 bg-blue-50 rounded-lg border border-blue-200 w-fit">
             <Clock className="w-4 h-4 text-blue-600" />
-            {isOnline
-              ? "Your online appointment has been reserved. You will receive a payment link via email to complete your booking."
-              : "Your appointment has been reserved. You will receive a payment link via email to complete your booking and confirm your in-person visit."}
+            We've received your request! One of our representatives will contact
+            you via email regarding your consultation.
           </div>
         </div>
 
@@ -264,8 +263,9 @@ const trackKlaviyoEvent = (payload) => {
     meetingPref: payload.meetingPref || "",
     paymentStatus: payload.paid
       ? "paid"
-      : payload.ChargeID === "PAY_LATER"
-      ? "pay later"
+      : payload.ChargeID === "PAY_LATER" ||
+        payload.ChargeID === "REQUEST_APPOINTMENT"
+      ? "requested"
       : "pending",
     selectedDateIso: payload.selectedDateIso || "",
     selectedTime: payload.selectedTime || "",
@@ -297,7 +297,7 @@ const trackKlaviyoEvent = (payload) => {
   // Step 2: Track the event separately (after profile is updated)
   const eventName = payload.paid
     ? "Booked Consultation"
-    : "Booked Consultation Pay Later";
+    : "Requested Appointment";
   const trackedPrice = payload.paid
     ? payload.price
     : payload.originalPrice || payload.price;
@@ -313,8 +313,9 @@ const trackKlaviyoEvent = (payload) => {
     price: trackedPrice,
     paymentStatus: payload.paid
       ? "paid"
-      : payload.ChargeID === "PAY_LATER"
-      ? "pay later"
+      : payload.ChargeID === "PAY_LATER" ||
+        payload.ChargeID === "REQUEST_APPOINTMENT"
+      ? "requested"
       : "pending",
     ChargeID: payload.ChargeID || "",
     SubmittedAt: new Date().toISOString(),
@@ -634,9 +635,12 @@ export default function StepTwo({
   };
 
   // Helper function to create bookingStatus in simple format: "meetingPreference - paymentStatus"
+  // Updated to return only meeting preference (payment removed from flow)
   const getBookingType = (meetingPref, paymentStatus) => {
+    // For backward compatibility, still accept paymentStatus but ignore it
     const meeting = meetingPref === "in_person" ? "in-person" : "online";
-    return `${meeting} - ${paymentStatus}`;
+    // Return just the meeting preference since payment is removed
+    return meeting;
   };
 
   const validateField = (fieldName, value) => {
@@ -758,7 +762,72 @@ export default function StepTwo({
     }
   };
 
-  const handlePayNow = async () => {
+  // Payment functionality commented out - payment removed from flow
+  // const handlePayNow = async () => {
+  //   // Validate all fields first
+  //   const isValid = validateAllFields();
+
+  //   if (!isValid) {
+  //     // Force re-render to show errors
+  //     setTimeout(() => {
+  //       // Scroll to first error
+  //       const firstErrorField = document.querySelector(
+  //         '[id="fullName"], [id="email"], [id="phone"]'
+  //       );
+  //       if (firstErrorField) {
+  //         firstErrorField.scrollIntoView({
+  //           behavior: "smooth",
+  //           block: "center",
+  //         });
+  //         firstErrorField.focus();
+  //       }
+  //     }, 0);
+  //     return;
+  //   }
+
+  //   // Set bookingStatus in simple format: "meetingPreference - paymentStatus"
+  //   const bookingType = getBookingType(meetingPref, "pending");
+  //   setHiddenFieldValue(bookingType);
+  //   console.log("📋 Meeting Preference:", meetingPref);
+  //   console.log("📋 Payment Status: pending");
+  //   console.log("📋 Booking Status:", bookingType);
+
+  //   setSubmitting(true);
+  //   try {
+  //     const payload = { ...buildPayload(), bookingStatus: bookingType };
+  //     console.log("💳 Pay Now Payload:", payload);
+
+  //     // Track to Klaviyo immediately when user clicks "Proceed to Payment"
+  //     // This ensures data is sent even if payment is not completed
+  //     const klaviyoPayload = {
+  //       ...payload,
+  //       paid: false,
+  //       ChargeID: "PENDING",
+  //       originalPrice: payload.price,
+  //     };
+  //     console.log(
+  //       "📤 Sending to Klaviyo - Booking Status:",
+  //       klaviyoPayload.bookingStatus
+  //     );
+  //     trackKlaviyoEvent(klaviyoPayload);
+
+  //     if (onConfirm) await onConfirm(payload);
+  //     setPaymentResult(null);
+  //     await initializePayment(payload);
+  //     setShowPayment(true);
+  //     // Smooth scroll to payment section with animation
+  //     setTimeout(() => {
+  //       paymentRef.current?.scrollIntoView({
+  //         behavior: "smooth",
+  //         block: "start",
+  //       });
+  //     }, 100);
+  //   } finally {
+  //     setSubmitting(false);
+  //   }
+  // };
+
+  const handleRequestAppointment = () => {
     // Validate all fields first
     const isValid = validateAllFields();
 
@@ -780,94 +849,27 @@ export default function StepTwo({
       return;
     }
 
-    // Set bookingStatus in simple format: "meetingPreference - paymentStatus"
-    const bookingType = getBookingType(meetingPref, "pending");
+    // Set bookingStatus - only track meeting preference (in-person or online)
+    // No payment status needed since payment is removed from flow
+    const bookingType = meetingPref === "in_person" ? "in-person" : "online";
     setHiddenFieldValue(bookingType);
     console.log("📋 Meeting Preference:", meetingPref);
-    console.log("📋 Payment Status: pending");
-    console.log("📋 Booking Status:", bookingType);
-
-    setSubmitting(true);
-    try {
-      const payload = { ...buildPayload(), bookingStatus: bookingType };
-      console.log("💳 Pay Now Payload:", payload);
-
-      // Track to Klaviyo immediately when user clicks "Proceed to Payment"
-      // This ensures data is sent even if payment is not completed
-      const klaviyoPayload = {
-        ...payload,
-        paid: false,
-        ChargeID: "PENDING",
-        originalPrice: payload.price,
-      };
-      console.log(
-        "📤 Sending to Klaviyo - Booking Status:",
-        klaviyoPayload.bookingStatus
-      );
-      trackKlaviyoEvent(klaviyoPayload);
-
-      if (onConfirm) await onConfirm(payload);
-      setPaymentResult(null);
-      await initializePayment(payload);
-      setShowPayment(true);
-      // Smooth scroll to payment section with animation
-      setTimeout(() => {
-        paymentRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }, 100);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handlePayLater = () => {
-    // Validate all fields first
-    const isValid = validateAllFields();
-
-    if (!isValid) {
-      // Force re-render to show errors
-      setTimeout(() => {
-        // Scroll to first error
-        const firstErrorField = document.querySelector(
-          '[id="fullName"], [id="email"], [id="phone"]'
-        );
-        if (firstErrorField) {
-          firstErrorField.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-          firstErrorField.focus();
-        }
-      }, 0);
-      return;
-    }
-
-    // Set bookingStatus in simple format: "meetingPreference - paymentStatus"
-    const bookingType = getBookingType(meetingPref, "pay later");
-    setHiddenFieldValue(bookingType);
-    console.log("📋 Meeting Preference:", meetingPref);
-    console.log("📋 Payment Status: pay later");
     console.log("📋 Booking Status:", bookingType);
 
     const basePayload = buildPayload();
 
     const finalPayload = {
       ...basePayload,
-      bookingStatus: bookingType,
+      bookingStatus: bookingType, // Just "in-person" or "online"
       paid: false,
-      ChargeID: "PAY_LATER",
+      ChargeID: "REQUEST_APPOINTMENT",
       originalPrice: basePayload.price,
       price: 0,
+      paymentStatus: "requested", // Set paymentStatus for Klaviyo tracking
     };
 
+    // Track to Klaviyo - still sends in-person or online
     trackKlaviyoEvent(finalPayload);
-    setPaymentResult({
-      status: "pending",
-      message:
-        "You chose to pay later. We've reserved your slot and sent a payment link to your email.",
-    });
     onConfirm?.(finalPayload);
     setPayLaterPayload(finalPayload);
 
@@ -875,36 +877,37 @@ export default function StepTwo({
     setShowPayLaterModal(true);
   };
 
-  const handlePayNowSuccess = (paymentSummary) => {
-    // Set bookingStatus in simple format: "meetingPreference - paymentStatus"
-    const bookingType = getBookingType(meetingPref, "paid");
-    // Update hiddenFieldValue to reflect paid status
-    setHiddenFieldValue(bookingType);
-    const payload = {
-      ...buildPayload(),
-      bookingStatus: bookingType,
-      paid: true,
-      ChargeID:
-        paymentSummary?.paymentIntentId || paymentSummary?.ChargeID || "",
-      ...paymentSummary,
-    };
-    console.log("📋 Meeting Preference:", meetingPref);
-    console.log("📋 Payment Status: paid");
-    console.log("📋 Booking Status:", bookingType);
-    console.log("📋 ChargeID (Stripe Payment Intent):", payload.ChargeID);
-    console.log("✅ Pay Now Success Payload:", payload);
-    trackKlaviyoEvent(payload);
-    setPaymentResult({
-      status: "success",
-      message: "Payment successful. A receipt has been sent to your email.",
-    });
+  // Payment success handler commented out - payment removed from flow
+  // const handlePayNowSuccess = (paymentSummary) => {
+  //   // Set bookingStatus in simple format: "meetingPreference - paymentStatus"
+  //   const bookingType = getBookingType(meetingPref, "paid");
+  //   // Update hiddenFieldValue to reflect paid status
+  //   setHiddenFieldValue(bookingType);
+  //   const payload = {
+  //     ...buildPayload(),
+  //     bookingStatus: bookingType,
+  //     paid: true,
+  //     ChargeID:
+  //       paymentSummary?.paymentIntentId || paymentSummary?.ChargeID || "",
+  //     ...paymentSummary,
+  //   };
+  //   console.log("📋 Meeting Preference:", meetingPref);
+  //   console.log("📋 Payment Status: paid");
+  //   console.log("📋 Booking Status:", bookingType);
+  //   console.log("📋 ChargeID (Stripe Payment Intent):", payload.ChargeID);
+  //   console.log("✅ Pay Now Success Payload:", payload);
+  //   trackKlaviyoEvent(payload);
+  //   setPaymentResult({
+  //     status: "success",
+  //     message: "Payment successful. A receipt has been sent to your email.",
+  //   });
 
-    setSuccessModalPayload(payload);
-    updateUrlParams("booking_status", "confirmed");
-    setShowSuccessModal(true);
+  //   setSuccessModalPayload(payload);
+  //   updateUrlParams("booking_status", "confirmed");
+  //   setShowSuccessModal(true);
 
-    onPayNow?.(payload);
-  };
+  //   onPayNow?.(payload);
+  // };
 
   return (
     <div className="px-0 py-8 mx-auto max-w-6xl lg:px-8 lg:py-12">
@@ -1187,10 +1190,11 @@ export default function StepTwo({
               <p className="mt-1 ml-7 text-xs text-red-600">{errors.terms}</p>
             )}
           </div>
-          {/* Hidden field to track meeting preference and payment option */}
+          {/* Hidden field to track meeting preference */}
           <input type="hidden" name="bookingStatus" value={hiddenFieldValue} />
           <div className="flex flex-col gap-3 sm:flex-row">
-            <button
+            {/* Payment option commented out - removed from flow */}
+            {/* <button
               onClick={handlePayNow}
               disabled={submitting || initializingPayment}
               className={`inline-flex items-center cursor-pointer justify-center gap-2 flex-1 bg-[#004F97] 
@@ -1202,48 +1206,47 @@ export default function StepTwo({
               {submitting || initializingPayment
                 ? "Processing..."
                 : "Proceed to Payment"}
-            </button>
+            </button> */}
             <button
-              onClick={handlePayLater}
+              onClick={handleRequestAppointment}
               disabled={submitting}
               className={`inline-flex items-center cursor-pointer justify-center
-              gap-2 flex-1 bg-white border-2 border-[#004F97] text-[#004F97]
-              hover:bg-[#004F97]/5 py-[10px] text-base font-medium rounded-md disabled:opacity-60 disabled:cursor-not-allowed transition-all ${
+              gap-2 flex-1 bg-[#004F97] hover:bg-[#004F97]/90 text-white
+              py-[10px] border-2 border-[#004F97] text-base font-medium rounded-md disabled:opacity-60 disabled:cursor-not-allowed transition-all ${
                 !isFormValid() ? "opacity-50" : ""
               }`}
             >
-              Pay Later
+              {submitting ? "Processing..." : "Request an Appointment"}
             </button>
           </div>{" "}
         </form>
-        {showPayment && (
+        {/* Payment section commented out - payment removed from flow */}
+        {/* {showPayment && (
           <div
             ref={paymentRef}
             className="pt-8 border-t border-gray-200 dark:border-gray-700 animate-slide-up"
           >
-            {" "}
             <div className="mb-6">
-              {" "}
               <div className="mb-2 text-3xl font-semibold text-gray-900">
-                Payment{" "}
-              </div>{" "}
+                Payment
+              </div>
               <p className="text-gray-600">
                 Consultation Fee:{" "}
                 <span className="font-semibold text-[#004F97] text-lg">
-                  {formattedPrice}{" "}
-                </span>{" "}
-              </p>{" "}
-            </div>{" "}
+                  {formattedPrice}
+                </span>
+              </p>
+            </div>
             {initializingPayment && (
               <div className="p-4 mb-4 text-blue-900 bg-blue-50 rounded-xl border">
-                Initializing secure checkout…{" "}
+                Initializing secure checkout…
               </div>
-            )}{" "}
+            )}
             {paymentSetupError && (
               <div className="p-4 mb-4 text-red-700 bg-red-50 rounded-xl border border-red-200">
-                {paymentSetupError}{" "}
+                {paymentSetupError}
               </div>
-            )}{" "}
+            )}
             {stripePromise && clientSecret && !paymentSetupError && (
               <Elements
                 stripe={stripePromise}
@@ -1260,22 +1263,21 @@ export default function StepTwo({
                   },
                 }}
               >
-                {" "}
                 <PaymentSection
                   amount={price}
                   clientSecret={clientSecret}
                   bookingDetails={buildPayload()}
                   onPayLater={handlePayLater}
                   onPaymentCompleted={handlePayNowSuccess}
-                />{" "}
+                />
               </Elements>
-            )}{" "}
+            )}
             {!stripePromise && (
               <div className="p-4 text-yellow-800 bg-yellow-50 rounded-xl border border-yellow-200">
                 Stripe publishable key is missing. Please add
-                <code>VITE_STRIPE_PUBLISHABLE_KEY</code> to your environment.{" "}
+                <code>VITE_STRIPE_PUBLISHABLE_KEY</code> to your environment.
               </div>
-            )}{" "}
+            )}
             {paymentResult && (
               <div
                 className={`mt-4 rounded-xl p-4 ${
@@ -1284,11 +1286,11 @@ export default function StepTwo({
                     : "bg-blue-50 text-blue-900"
                 }`}
               >
-                {paymentResult.message}{" "}
+                {paymentResult.message}
               </div>
-            )}{" "}
+            )}
           </div>
-        )}{" "}
+        )} */}
       </div>{" "}
       {showPayLaterModal && (
         <PayLaterModal
