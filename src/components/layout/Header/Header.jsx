@@ -218,7 +218,7 @@ function Header() {
               </svg>
               212-877-2130
             </SecondaryCTA>
-            <PrimaryCTA to="/booking">Book Appointment</PrimaryCTA>
+            <PrimaryCTA to="/booking">Request an Appointment</PrimaryCTA>
           </div>
 
           {/* Mobile Menu - Sheet */}
@@ -328,7 +328,7 @@ function Header() {
                   className="justify-center w-full"
                   onClick={() => setIsSheetOpen(false)}
                 >
-                  Book Appointment
+                  Request an Appointment
                 </PrimaryCTA>
               </div>
             </SheetContent>

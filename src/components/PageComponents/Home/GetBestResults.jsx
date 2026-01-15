@@ -21,20 +21,21 @@ function GetBestResults() {
           {/* Left - Heading */}
           <div className="flex-1 text-center">
             <h2 className="font-[LT Superior Serif] font-semibold text-[32px] md:text-[42px] lg:text-[54px] leading-[1.1] text-white capitalize">
-            Get best results with our experts
+              Get best results with our experts
             </h2>
           </div>
 
           {/* Middle - Text + CTA */}
           <div className="flex flex-col items-center justify-center flex-1 gap-5">
             <p className="text-base leading-7 max-md:text-center text-white md:text-xl">
-            Untreated mental health challenges can significantly impact your overall well-being.
+              Untreated mental health challenges can significantly impact your
+              overall well-being.
             </p>
             <Link
               to="/booking"
               className="inline-flex items-center  bg-gray-50 gap-2 text-[#004F97] border border-[#004F97] font-bold px-6 py-4 rounded-full w-fit hover:!bg-[#004F97] hover:text-white transition-colors group"
             >
-              Book Appointment
+              Request an Appointment
               <ArrowRight size={24} className="group-hover:text-[#fff]" />
             </Link>
           </div>

@@ -47,7 +47,7 @@ function OurResults() {
                 className="inline-flex items-center bg-gray-50 gap-2 text-[#004F97] 
                 border border-[#004F97] font-bold px-6 py-4 rounded-full w-fit hover:!bg-[#004F97] hover:text-white transition-colors group"
               >
-                Book Appointment
+                Request an Appointment
                 <ArrowRight size={24} className="group-hover:text-[#fff]" />
               </Link>
             </div>

@@ -394,10 +394,10 @@ function CoreServices() {
                     className="bg-[#f1f8ff] rounded-xl p-3 md:p-4 flex flex-col items-center justify-center gap-2 md:gap-3 min-h-[100px] md:min-h-[129px]"
                   >
                     <div className="w-6">{feature.icon}</div>
-                    <p className="text-[#002f5b] text-xs md:text-sm leading-[125%] text-center"
-                     dangerouslySetInnerHTML={{ __html: feature.label }}
-                    >
-                    </p>
+                    <p
+                      className="text-[#002f5b] text-xs md:text-sm leading-[125%] text-center"
+                      dangerouslySetInnerHTML={{ __html: feature.label }}
+                    ></p>
                   </div>
                 ))}
               </div>
@@ -417,7 +417,7 @@ function CoreServices() {
         {/* CTA Button */}
         <div className="flex justify-center">
           <PrimaryCTA to="/booking">
-            Book Appointment
+            Request an Appointment
             <ArrowRight size={24} />
           </PrimaryCTA>
         </div>

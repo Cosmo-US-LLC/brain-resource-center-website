@@ -42,9 +42,7 @@ function WhatToExpect() {
             />
             {/* Heading Overlay */}
             <div className="absolute inset-0 p-8 md:p-10">
-              <h2 className="text-[#00203C] max-w-[300px]">
-              How Do We Help?
-              </h2>
+              <h2 className="text-[#00203C] max-w-[300px]">How Do We Help?</h2>
             </div>
           </div>
 
@@ -72,10 +70,10 @@ function WhatToExpect() {
 
                     {/* Content */}
                     <div className="flex flex-col gap-3">
-                      <h3 className="text-[#004f97] max-w-[330px]"
+                      <h3
+                        className="text-[#004f97] max-w-[330px]"
                         dangerouslySetInnerHTML={{ __html: step.title }}
-                      >
-                      </h3>
+                      ></h3>
                       <p className={`text-[#002f5b] desc ${descWidth}`}>
                         {step.description}
                       </p>
@@ -88,7 +86,7 @@ function WhatToExpect() {
             {/* CTA Button */}
             <div className="mt-4">
               <PrimaryCTA to="/booking" className="inline-flex">
-                Book Appointment
+                Request an Appointment
                 <ArrowRight size={24} />
               </PrimaryCTA>
             </div>

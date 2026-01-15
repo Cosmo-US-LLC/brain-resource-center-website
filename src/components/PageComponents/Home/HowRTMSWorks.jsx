@@ -83,7 +83,7 @@ function HowRTMSWorks() {
             </Link> */}
             <div className="mt-1 max-md:hidden">
               <PrimaryCTA to="/booking" className="inline-flex">
-                Book Appointment
+                Request an Appointment
                 <ArrowRight size={22} />
               </PrimaryCTA>
             </div>
@@ -169,7 +169,7 @@ function HowRTMSWorks() {
                         lineHeight: "17px",
                       }}
                     >
-                      Book Appointment
+                      Request an Appointment
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="14"
