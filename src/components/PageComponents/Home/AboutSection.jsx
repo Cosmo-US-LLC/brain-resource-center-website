@@ -23,7 +23,6 @@ const features = [
     icon: icon_4,
     label: "Online / in-person <br/> treatment options",
   },
-
 ];
 
 function AboutSection() {
@@ -62,9 +61,7 @@ function AboutSection() {
                 <div
                   key={index}
                   className={`flex flex-col justify-center w-[100%] max-w-[48%] min-h-[124px] md:max-w-[157px] bg-[#F1F8FF] items-center gap-3 py-4 rounded-[12px] ${
-                    index !== features.length - 1
-                      ? ""
-                      : ""
+                    index !== features.length - 1 ? "" : ""
                   }`}
                 >
                   <div className="flex items-center justify-center">
@@ -103,7 +100,7 @@ function AboutSection() {
         </div>
         <div className="mt-12 flex justify-center">
           <PrimaryCTA to="/booking">
-            Book Appointment
+            Request an Appointment
             <ArrowRight size={24} />
           </PrimaryCTA>
         </div>

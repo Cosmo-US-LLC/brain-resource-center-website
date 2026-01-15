@@ -148,7 +148,7 @@ function SideEffectsComparison() {
                     className="relative z-[1001] pointer-events-auto inline-flex items-center text-[14px] md:text-[16px] hover:!bg-gray-50 gap-2 text-[#fff] border border-[#004F97] hover:!border-[#004F97]
                      font-bold md:px-6 px-3 md:py-4 py-2 rounded-full w-fit !bg-[#004F97] hover:text-[#004F97] transition-colors group"
                   >
-                    Book Appointment
+                    Request an Appointment
                     <ArrowRight size={24} />
                   </Link>
                 </div>
