@@ -235,6 +235,16 @@ function PayLaterModal({
 }
 
 const trackKlaviyoEvent = (payload) => {
+  // Validate required fields
+  if (!payload || !payload.email || !payload.fullName) {
+    console.error("❌ Klaviyo: Missing required fields in payload", {
+      hasEmail: !!payload?.email,
+      hasFullName: !!payload?.fullName,
+      payload,
+    });
+    return;
+  }
+
   // Check if Klaviyo is loaded
   if (typeof window === "undefined") {
     console.warn("⚠️ Klaviyo: window is undefined");
@@ -303,7 +313,9 @@ const trackKlaviyoEvent = (payload) => {
     : payload.originalPrice || payload.price;
 
   const eventProperties = {
+    $email: payload.email, // Email is required for Klaviyo event tracking
     FullName: payload.fullName,
+    Email: payload.email, // Also include as Email property
     IssuesNoted: payload.issues || "",
     condition: payload.condition || "",
     meetingPref: payload.meetingPref || "",
@@ -858,6 +870,20 @@ export default function StepTwo({
 
     const basePayload = buildPayload();
 
+    // Validate email is present before tracking
+    if (!basePayload.email || !basePayload.email.trim()) {
+      console.error("❌ Email is missing from payload");
+      setErrors((prev) => ({
+        ...prev,
+        email: "Email is required",
+      }));
+      setTouched((prev) => ({
+        ...prev,
+        email: true,
+      }));
+      return;
+    }
+
     const finalPayload = {
       ...basePayload,
       bookingStatus: bookingType, // Just "in-person" or "online"
@@ -868,8 +894,21 @@ export default function StepTwo({
       paymentStatus: "requested", // Set paymentStatus for Klaviyo tracking
     };
 
+    console.log("📧 Final Payload Email:", finalPayload.email);
+    console.log("📧 Final Payload Full Name:", finalPayload.fullName);
+    console.log("📧 Complete Final Payload:", finalPayload);
+
     // Track to Klaviyo - still sends in-person or online
-    trackKlaviyoEvent(finalPayload);
+    console.log(
+      "🚀 About to call trackKlaviyoEvent with email:",
+      finalPayload.email
+    );
+    try {
+      trackKlaviyoEvent(finalPayload);
+      console.log("✅ trackKlaviyoEvent called successfully");
+    } catch (error) {
+      console.error("❌ Error calling trackKlaviyoEvent:", error);
+    }
     onConfirm?.(finalPayload);
     setPayLaterPayload(finalPayload);
 
