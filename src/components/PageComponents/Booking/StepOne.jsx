@@ -108,10 +108,11 @@ function generateBookedSlots(iso, timeSlots) {
 
 export default function StepOne({ onContinue, initialData }) {
   const isPastDate = (iso) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const minDate = new Date();
+    minDate.setDate(minDate.getDate() + 3); // Skip today and next 2 days
+    minDate.setHours(0, 0, 0, 0);
     const date = new Date(iso);
-    return date < today;
+    return date < minDate;
   };
   const conditions = [
     "Depression",
@@ -153,16 +154,20 @@ export default function StepOne({ onContinue, initialData }) {
   );
   const [showConditionDropdown, setShowConditionDropdown] = useState(false);
 
-  // Set default date to today or use initialData
-  const todayIso = new Date().toISOString().slice(0, 10);
+  // Set default date to 3 days from today (skipping today and next 2 days) or use initialData
+  const getDefaultDate = () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 3); // Skip today and next 2 days
+    return d.toISOString().slice(0, 10);
+  };
   const [selectedDateIso, setSelectedDateIso] = useState(
-    initialData?.selectedDateIso || todayIso
+    initialData?.selectedDateIso || getDefaultDate()
   );
 
-  // Generate dates excluding Sundays (next 10 days)
-  const dateOptionsIso = Array.from({ length: 10 }, (_, i) => {
+  // Generate dates starting from 3 days after today, excluding Sundays (show 14 days)
+  const dateOptionsIso = Array.from({ length: 18 }, (_, i) => {
     const d = new Date();
-    d.setDate(d.getDate() + i);
+    d.setDate(d.getDate() + i + 3); // Start from 3 days after today (skip today and next 2 days)
     return d.toISOString().slice(0, 10);
   }).filter((iso) => !isSunday(iso)); // Filter out Sundays
 
